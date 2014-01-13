@@ -87,7 +87,12 @@ for i in xrange(len(fileInfo.customInfo)):
             tmpInfo[translation[fileInfo.customInfo[i]["mods"][j]["ID"]]] = fileInfo.customInfo[i]["mods"][j]["value"]
     translatedInfo[tmpInfo["Name"]] = tmpInfo
 
+    
 #Ok, lets write to json
+try:
+    os.makedirs('./output')
+except OSError:
+    pass
 with open("output/original.json", "w") as f:
     f.write(simplejson.dumps(fileInfo.originalInfo, sort_keys=True, indent=4 * ' '))
 with open("output/custom.json", "w") as f:
