@@ -34,15 +34,16 @@ with open("output/output.vmf", "w") as f:
             index = y*data.mapInfo["height"] + x
             z = data.mapInfo["info"][index]["groundHeight"] - 8190
             
-            print("X: "+str(x))
-            print("Y: "+str(y))
-            print("Len: "+str(len))
+            #print("X: "+str(x))
+            #print("Y: "+str(y))
+            #print("Len: "+str(len))
             
             if y < data.mapInfo["height"] - 1:
                 newIndex = (y+1)*data.mapInfo["height"] + x
                 if data.mapInfo["info"][index]["groundHeight"] == data.mapInfo["info"][newIndex]["groundHeight"]:
-                    print("Height is same, lets reuse a side")
-                    continue
+                    if data.mapInfo["info"][index]["nibble1"] & 0xF == data.mapInfo["info"][newIndex]["nibble1"]  & 0xF:
+                        #print("Height is same AND texture is same, lets reuse")
+                        continue
                 else:
                     curY = y
             print("Writing time")
