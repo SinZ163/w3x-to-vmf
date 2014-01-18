@@ -12,14 +12,14 @@ except:
 
 from read_w3e import ReadW3E
 
-def subInfo(template, id, x, x2, y, y2, z):
+def subInfo(template, id, x, x2, y, y2, z, z2):
     toWrite = re.sub("~~ID~~", str(id), template)
     toWrite = re.sub("~~X~~", str(x), toWrite)
     toWrite = re.sub("~~X2~~", str(x2), toWrite)
     toWrite = re.sub("~~Y~~", str(y), toWrite)
     toWrite = re.sub("~~Y2~~", str(y2), toWrite)
     toWrite = re.sub("~~Z~~", str(z), toWrite)
-    
+    toWrite = re.sub("~~Z2~~", str(z2), toWrite)
     return toWrite
     
 class Bytemap():
@@ -41,7 +41,7 @@ data = ReadW3E("input/war3map.w3e")
 mapInfo = ""
 vmfTemplate = {}
 
-for fileName in ["header","footer","planeEntry"]:
+for fileName in ["header","footer","planeEntry","brushHeader","brushFooter"]:
     with open("template/"+fileName+".txt", "r") as f:
         vmfTemplate[fileName] = f.read()
 
@@ -52,8 +52,8 @@ except OSError as error:
     print str(error)
 
 with open("output/output.vmf", "w") as f:
+    brushCount = 0
     f.write(vmfTemplate["header"])
-    
     bloblist = []
     
     heightmap = Bytemap(data.mapInfo["width"], data.mapInfo["height"])
@@ -97,6 +97,7 @@ with open("output/output.vmf", "w") as f:
     # Iterate once over the map to store the height of each tile.
     # This way, we avoid having to use the binary AND every time 
     # we try to retrieve the height of a tile
+    lowestHeight = 10000000
     for x in xrange(data.mapInfo["width"]):
         for y in xrange(data.mapInfo["height"]):
             
@@ -105,8 +106,11 @@ with open("output/output.vmf", "w") as f:
             #The tilepoint "final height" you see on the WE is given by:
             #(ground_height - 0x2000 + (layer - 2)*0x0200)/4
             height = tile["groundHeight"] - 0x2000 + ((tile["nibble2"] & 0xF) -2) *0x0200 / 4
+            if height < lowestHeight:
+                lowestHeight = height
             heightmap.setVal(x, y, height)
-    
+    print("The lowest height found is "+str(lowestHeight))
+    print("which after scaling, is "+str(lowestHeight*16))
     # We iterate a second time to group tiles of similar height together.
     # rectangularCheck uses a brute force approach.
     for x in xrange(data.mapInfo["width"]):
@@ -130,19 +134,35 @@ with open("output/output.vmf", "w") as f:
     print "Preparations are done, now creating the planes..."
     
     for index, plane in enumerate(bloblist):
+        f.write(re.sub("~~ID~~", str(brushCount),vmfTemplate["brushHeader"]))
+        brushCount = brushCount + 1
+        
         startCoords, endCoords, height = plane
         
         startX, startY = startCoords
         endX, endY = endCoords
         
         # We scale the planes up by a factor of 16
-        f.write(subInfo(vmfTemplate["planeEntry"], index, startX*16, endX*16, startY*16, endY*16, height*16))
+        #top face
+        f.write(subInfo(vmfTemplate["planeEntry"], index*6, startX*16, endX*16, startY*16, endY*16, height*16, height*16))
+        #bottom face
+        f.write(subInfo(vmfTemplate["planeEntry"], index*6+1, startX*16, endX*16, startY*16, endY*16, lowestHeight*16, lowestHeight*16))
+        
+        #two faces on the X axis
+        f.write(subInfo(vmfTemplate["planeEntry"], index*6+2, startX*16, startX*16, startY*16, endY*16, lowestHeight*16, height*16))
+        f.write(subInfo(vmfTemplate["planeEntry"], index*6+3, endX*16, endX*16, startY*16, endY*16, lowestHeight*16, height*16))
+        
+        #two faces on the Y axis
+        f.write(subInfo(vmfTemplate["planeEntry"], index*6+4, startX*16, endX*16, startY*16, startY*16, lowestHeight*16, height*16))
+        f.write(subInfo(vmfTemplate["planeEntry"], index*6+5, startX*16, endX*16, endY*16, endY*16, lowestHeight*16, height*16))
         
         # We create an image on which the planes are drawn. 
         # Same color = same plane, but due to the high amount of planes some might have similar colors
         # We calculate the RGB values using a bit of modulus to make the value fit the byte range of the R, G and B values of a color
         if pillow_installed: img.paste((index%(2**8), index%(2**8), index%(2**16)), (startX*4, startY*4, endX*4, endY*4))
-    
+        
+        f.write(vmfTemplate["brushFooter"])
+
     print "It is finished."
     f.write(vmfTemplate["footer"])
     if pillow_installed: img.save("output/img.png", "PNG")

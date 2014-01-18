@@ -26,6 +26,3 @@ world
         "detailvbsp" "detail.vbsp"
         "maxpropscreenwidth" "-1"
         "skyname" "blacksky"
-        solid
-        {
-                "id" "34"
