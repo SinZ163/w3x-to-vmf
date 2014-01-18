@@ -102,7 +102,9 @@ with open("output/output.vmf", "w") as f:
             
             index = y*data.mapInfo["height"] + x
             tile = data.mapInfo["info"][index]
-            height = tile["nibble2"] & 0xF
+            #The tilepoint "final height" you see on the WE is given by:
+            #(ground_height - 0x2000 + (layer - 2)*0x0200)/4
+            height = tile["groundHeight"] - 0x2000 + ((tile["nibble2"] & 0xF) -2) *0x0200 / 4
             heightmap.setVal(x, y, height)
     
     # We iterate a second time to group tiles of similar height together.
