@@ -1,10 +1,5 @@
 import struct
-import time
 import os
-import traceback
-import Image
-import math
-
 #Yoshi, care to help with this
 class DataReader():
     def __init__(self, filename):

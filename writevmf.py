@@ -1,8 +1,5 @@
-import traceback
-import re
 import os
 import array
-import math
 
 # using BHSPitMonkey's Python vmflib: http://github.com/BHSPitMonkey/vmflib
 # Even though it is for Python 3 and above, most of 
