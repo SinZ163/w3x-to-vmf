@@ -1,5 +1,6 @@
 from DataReader import DataReader
 import simplejson
+import os
 #w3u = Units
 #w3t = Items
 #w3b = Destructables
