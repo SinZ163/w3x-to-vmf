@@ -28,7 +28,7 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
-
+#Modified by SinZ so it requires a file object to be given
 from __future__ import print_function
 
 import bz2
@@ -110,17 +110,14 @@ MPQBlockTableEntry.struct_format = '4I'
 
 class MPQArchive(object):
 
-    def __init__(self, filename, listfile=True):
+    def __init__(self, file, listfile=True):
         """Create a MPQArchive object.
 
         You can skip reading the listfile if you pass listfile=False
         to the constructor. The 'files' attribute will be unavailable
         if you do this.
         """
-        if hasattr(filename, 'read'):
-            self.file = filename
-        else:
-            self.file = open(filename, 'rb')
+        self.file = file
         self.header = self.read_header()
         self.hash_table = self.read_table('hash')
         self.block_table = self.read_table('block')
@@ -417,10 +414,14 @@ def main():
                         help="extract files from the archive")
     args = parser.parse_args()
     if args.file:
-        if not args.skip_listfile:
-            archive = MPQArchive(args.file)
+        if hasattr(args.file, 'read'):
+            file = filename
         else:
-            archive = MPQArchive(args.file, listfile=False)
+            file = open(args.file, 'rb')
+        if not args.skip_listfile:
+            archive = MPQArchive(file)
+        else:
+            archive = MPQArchive(file, listfile=False)
         if args.headers:
             archive.print_headers()
         if args.hash_table:

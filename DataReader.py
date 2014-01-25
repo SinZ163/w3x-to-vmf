@@ -83,7 +83,7 @@ class DataReader():
         
         
         
-    def readFlag(self): #not used in w3e, ignoring <- disregard that, no reason not to add it <3
+    def flags(self): #not used in w3e, ignoring <- disregard that, no reason not to add it <3
         #Flags are booleans stored in 4 bytes
         
         # Flags are read starting with the least significant byte first
