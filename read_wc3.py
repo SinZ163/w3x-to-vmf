@@ -3,56 +3,80 @@
 from lib.DataReader import DataReader
 from lib.mpyq import MPQArchive, WC3Map_MPQ
 
+"""
 class WC3Reader():
     def __init__(self,filename):
         self.read = DataReader(filename)
         #self.header = self.readHeader()
-        self.archive = WC3Map_MPQ(self.read.hdlr, listfile=False)
+        self.archive = WC3Map_MPQ(self.read.hdlr, listfile=True)
         try:
             if self.read.index < self.read.maxSize:
                 self.footer = self.readFooter()
         except:
             print("No footer found.")
-    """
-        W3M/W3X header is *always* 512 bytes, will pad with 0x00's if needed
-    """
-    def readHeader(self):
-        headerInfo = {}
-        #should be HM3W
-        headerInfo["magic"] = self.read.charArray(4)
-        #unknown
-        self.read.int()
-        headerInfo["mapName"] = self.read.string()
-        """
-        0x0001: 1=hide minimap in preview screens
-        0x0002: 1=modify ally priorities
-        0x0004: 1=melee map
-        0x0008: 1=playable map size was large and has never been reduced to medium
-        0x0010: 1=masked area are partially visible
-        0x0020: 1=fixed player setting for custom forces
-        0x0040: 1=use custom forces
-        0x0080: 1=use custom techtree
-        0x0100: 1=use custom abilities
-        0x0200: 1=use custom upgrades
-        0x0400: 1=map properties menu opened at least once since map creation
-        0x0800: 1=show water waves on cliff shores
-        0x1000: 1=show water waves on rolling shores
-        """
-        headerInfo["mapFlags"] = self.read.flags()
-        headerInfo["maxPlayers"] = self.read.int()
-        self.read.hdlr.read(512 - self.read.index)
-        
-        return headerInfo
-    """
-        W3M/W3X footer is optional, and only useful for offical W3M maps
-    """
+    
+    #    W3M/W3X footer is optional, and only useful for offical W3M maps
+    
     def readFooter(self):
         footerInfo = {}
         #should be NGIS, "SIGN" backwards
         footerInfo["signID"] = self.read.charArray(4)
         #unknown usage
         footerInfo["bytes"] = self.read.byteArray(256)
-        return footerInfo
+        return footerInfo"""
+
+
+# Generating a basic listfile for the map. Basically, we iterate over the 
+# listfile template and check if we can read each file from the archive. 
+# Depending on the output of the read_file function and whether or not an
+# exception is raised, we add the file together with a flag to a list.
+def generate_listfile(wc3files, mpq):
+    filelist = open(wc3files, "r")
+    
+    listfile = []
+    
+    for line in filelist:
+        try:
+            output = mpq.read_file(line.strip())
+            
+            if output != None:
+                # The file appears to have been found successful
+                listfile.append((line.strip(), True)) 
+            else:
+                # The file doesn't appear to exist, or has a zero size in the archive
+                listfile.append((line.strip(), None)) 
+                
+        except Exception as error:
+            # The file does exist, but there has been some trouble, 
+            # e.g. the file is encrypted or uses an unsupported compression algorithm
+            listfile.append((line.strip(), False))
+            print line.strip(), error
+                                                    
+    return listfile
 
 filename = "map.w3x"
-fileInfo = WC3Reader(filename)
+
+archive = WC3Map_MPQ(filename, listfile=False)
+
+
+print "Trying to generate a listfile"
+
+listfile = generate_listfile("lib/wc3Files.txt", archive)
+
+# We create an empty file
+listfile_file = open("output/listfile.txt", "w")
+listfile_file.write("")
+listfile_file.close()
+
+listfile_file = open("output/listfile.txt", "a")
+
+for entry in listfile:
+    if entry[1] in [True, False]:
+        listfile_file.write(entry[0]+"\n")
+
+# Done! Please note that this is not always the full listfile.
+# Custom maps are likely to have their own listfiles which are located
+# in the archive. Sometimes the listfile (and other files) is encrypted,
+# but there is no decryption yet.
+listfile_file.close()
+    

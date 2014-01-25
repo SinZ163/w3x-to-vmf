@@ -221,7 +221,7 @@ class MPQArchive(object):
             elif compression_type == 16:
                 return bz2.decompress(data[1:])
             else:
-                raise RuntimeError("Unsupported compression type.")
+                raise RuntimeError("Unsupported compression type: {0}".format(compression_type))
 
         hash_entry = self.get_hash_table_entry(filename)
         if hash_entry is None:
@@ -405,12 +405,20 @@ class MPQArchive(object):
 
 # Modified MPQ Reader for WC3 map files
 class WC3Map_MPQ(MPQArchive):
-    def __init__(self, file, listfile=True):
-        self.file = file
+    def __init__(self, filename, listfile=True):
+        if hasattr(filename, 'read'):
+            self.file = filename
+        else:
+            self.file = open(filename, 'rb')
+            
         self.header = self.read_header()
         print(self.header)
+        
         self.hash_table = self.read_table('hash')
+        print(self.hash_table)
+        
         self.block_table = self.read_table('block')
+        
         if listfile:
             self.files = self.read_file('(listfile)').splitlines()
         else:
@@ -426,7 +434,9 @@ class WC3Map_MPQ(MPQArchive):
             header = MPQFileHeader._make(
                 struct.unpack(MPQFileHeader.struct_format, data))
             header = header._asdict()
+            
             if header['format_version'] == 1:
+                
                 data = self.file.read(12)
                 extended_header = MPQFileHeaderExt._make(
                     struct.unpack(MPQFileHeaderExt.struct_format, data))
@@ -472,16 +482,17 @@ class WC3Map_MPQ(MPQArchive):
             header["wc3map_mapFlags"] = datReader.flags()
             header["wc3map_maxPlayers"] = datReader.int()
             self.file.read(512 - datReader.index)
-            print("ut")
-            print(header)
+        else:
+            self.file.seek(512)
             #return headerInfo
-            
+        print(self.file.tell())
         magic = self.file.read(4)
         self.file.seek(512)
+        print(magic)
         
         if magic == b'MPQ\x1a':
             header.update(read_mpq_header())
-            header['offset'] = 0
+            header['offset'] = 512
         elif magic == b'MPQ\x1b':
             user_data_header = read_mpq_user_data_header()
             header.update(read_mpq_header(user_data_header['mpq_header_offset']))
@@ -492,6 +503,20 @@ class WC3Map_MPQ(MPQArchive):
             raise ValueError("Invalid file header.")
 
         return header
+    
+    def extract_files(self, filenames, folder = ""):
+        """Extract given files from the archive to disk."""
+        # Modification: Can extract files to a folder
+        if folder != "":
+            path = folder+"/"
+        else:
+            path = ""
+            
+        for filename in filenames:
+            data = self.read_file(filename)
+            f = open(path+filename, 'wb')
+            f.write(data or "")
+            f.close()
 
 def main():
     import argparse
