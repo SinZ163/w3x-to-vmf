@@ -1,4 +1,4 @@
-from DataReader import DataReader
+from lib.DataReader import DataReader
 import simplejson
 import os
 #w3u = Units
@@ -12,7 +12,7 @@ import os
 #ok, lets open a file
 
 class ObjectReader():
-    from DataReader import DataReader
+    from lib.DataReader import DataReader
 
     #These are the file extentions that have more reading
 

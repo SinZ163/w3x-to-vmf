@@ -1,10 +1,13 @@
-from DataReader import DataReader
-from lib.mpyq import MPQArchive
+#import struct
+
+from lib.DataReader import DataReader
+from lib.mpyq import MPQArchive, WC3Map_MPQ
+
 class WC3Reader():
     def __init__(self,filename):
         self.read = DataReader(filename)
-        self.header = self.readHeader()
-        self.archive = MPQArchive(self.read.hdlr, listfile=False)
+        #self.header = self.readHeader()
+        self.archive = WC3Map_MPQ(self.read.hdlr, listfile=False)
         try:
             if self.read.index < self.read.maxSize:
                 self.footer = self.readFooter()
@@ -38,6 +41,7 @@ class WC3Reader():
         headerInfo["mapFlags"] = self.read.flags()
         headerInfo["maxPlayers"] = self.read.int()
         self.read.hdlr.read(512 - self.read.index)
+        
         return headerInfo
     """
         W3M/W3X footer is optional, and only useful for offical W3M maps

@@ -5,7 +5,7 @@ import traceback
 import Image
 import math
 import simplejson
-from DataReader import DataReader
+from lib.DataReader import DataReader
 
 class ReadW3E():
     def __init__(self, filename):
