@@ -28,7 +28,7 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
-#Modified by SinZ so it requires a file object to be given
+
 from __future__ import print_function
 
 import bz2
@@ -37,6 +37,9 @@ import struct
 import zlib
 from collections import namedtuple
 from io import BytesIO
+
+# Modification by Yoshi2 & SinZ
+from DataReader import DataReader
 
 
 __author__ = "Aku Kotkavuo"
@@ -110,14 +113,17 @@ MPQBlockTableEntry.struct_format = '4I'
 
 class MPQArchive(object):
 
-    def __init__(self, file, listfile=True):
+    def __init__(self, filename, listfile=True):
         """Create a MPQArchive object.
 
         You can skip reading the listfile if you pass listfile=False
         to the constructor. The 'files' attribute will be unavailable
         if you do this.
         """
-        self.file = file
+        if hasattr(filename, 'read'):
+            self.file = filename
+        else:
+            self.file = open(filename, 'rb')
         self.header = self.read_header()
         self.hash_table = self.read_table('hash')
         self.block_table = self.read_table('block')
@@ -180,10 +186,12 @@ class MPQArchive(object):
         table_offset = self.header['%s_table_offset' % table_type]
         table_entries = self.header['%s_table_entries' % table_type]
         key = self._hash('(%s table)' % table_type, 'TABLE')
-
+        
         self.file.seek(table_offset + self.header['offset'])
         data = self.file.read(table_entries * 16)
         data = self._decrypt(data, key)
+        
+        
 
         def unpack_entry(position):
             entry_data = data[position*16:position*16+16]
@@ -395,6 +403,96 @@ class MPQArchive(object):
     encryption_table = _prepare_encryption_table()
 
 
+# Modified MPQ Reader for WC3 map files
+class WC3Map_MPQ(MPQArchive):
+    def __init__(self, file, listfile=True):
+        self.file = file
+        self.header = self.read_header()
+        print(self.header)
+        self.hash_table = self.read_table('hash')
+        self.block_table = self.read_table('block')
+        if listfile:
+            self.files = self.read_file('(listfile)').splitlines()
+        else:
+            self.files = None
+    
+    def read_header(self):
+        """Read the header of a MPQ archive."""
+
+        def read_mpq_header(offset=None):
+            if offset:
+                self.file.seek(offset)
+            data = self.file.read(32)
+            header = MPQFileHeader._make(
+                struct.unpack(MPQFileHeader.struct_format, data))
+            header = header._asdict()
+            if header['format_version'] == 1:
+                data = self.file.read(12)
+                extended_header = MPQFileHeaderExt._make(
+                    struct.unpack(MPQFileHeaderExt.struct_format, data))
+                header.update(extended_header._asdict())
+            return header
+
+        def read_mpq_user_data_header():
+            data = self.file.read(16)
+            header = MPQUserDataHeader._make(
+                struct.unpack(MPQUserDataHeader.struct_format, data))
+            header = header._asdict()
+            header['content'] = self.file.read(header['user_data_header_size'])
+            return header
+
+        magic = self.file.read(4)
+        self.file.seek(0)
+        
+        print(magic)
+        
+        if magic == "HM3W":
+            datReader = DataReader(self.file)
+            header = {}
+            #should be HM3W
+            header["wc3map_magic"] = datReader.charArray(4)
+            #unknown
+            datReader.int()
+            header["wc3map_mapName"] = datReader.string()
+            """
+            0x0001: 1=hide minimap in preview screens
+            0x0002: 1=modify ally priorities
+            0x0004: 1=melee map
+            0x0008: 1=playable map size was large and has never been reduced to medium
+            0x0010: 1=masked area are partially visible
+            0x0020: 1=fixed player setting for custom forces
+            0x0040: 1=use custom forces
+            0x0080: 1=use custom techtree
+            0x0100: 1=use custom abilities
+            0x0200: 1=use custom upgrades
+            0x0400: 1=map properties menu opened at least once since map creation
+            0x0800: 1=show water waves on cliff shores
+            0x1000: 1=show water waves on rolling shores
+            """
+            header["wc3map_mapFlags"] = datReader.flags()
+            header["wc3map_maxPlayers"] = datReader.int()
+            self.file.read(512 - datReader.index)
+            print("ut")
+            print(header)
+            #return headerInfo
+            
+        magic = self.file.read(4)
+        self.file.seek(512)
+        
+        if magic == b'MPQ\x1a':
+            header.update(read_mpq_header())
+            header['offset'] = 0
+        elif magic == b'MPQ\x1b':
+            user_data_header = read_mpq_user_data_header()
+            header.update(read_mpq_header(user_data_header['mpq_header_offset']))
+            header['offset'] = user_data_header['mpq_header_offset']
+            header['user_data_header'] = user_data_header
+            
+        else:
+            raise ValueError("Invalid file header.")
+
+        return header
+
 def main():
     import argparse
     description = "mpyq reads and extracts MPQ archives."
@@ -414,14 +512,10 @@ def main():
                         help="extract files from the archive")
     args = parser.parse_args()
     if args.file:
-        if hasattr(args.file, 'read'):
-            file = filename
-        else:
-            file = open(args.file, 'rb')
         if not args.skip_listfile:
-            archive = MPQArchive(file)
+            archive = MPQArchive(args.file)
         else:
-            archive = MPQArchive(file, listfile=False)
+            archive = MPQArchive(args.file, listfile=False)
         if args.headers:
             archive.print_headers()
         if args.hash_table:
