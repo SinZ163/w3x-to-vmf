@@ -232,13 +232,26 @@ class MPQArchive(object):
         if block_entry.flags & MPQ_FILE_EXISTS:
             if block_entry.archived_size == 0:
                 return None
-
+            
             offset = block_entry.offset + self.header['offset']
             self.file.seek(offset)
+            print(offset, block_entry)
             file_data = self.file.read(block_entry.archived_size)
-
+            print("Durp", len(file_data))
+            
             if block_entry.flags & MPQ_FILE_ENCRYPTED:
-                raise NotImplementedError("Encryption is not supported yet.")
+                backslash = filename.rfind("\\")
+                if backslash != -1:
+                    basekey = filename[backslash+1:]
+                else:
+                    basekey = filename
+                """
+                'TABLE_OFFSET': 0,
+                'HASH_A': 1,
+                'HASH_B': 2,
+                'TABLE': 3"""
+                key = self._hash(basekey, "TABLE_OFFSET")
+                #raise NotImplementedError("Encryption is not supported yet.")
 
             if not block_entry.flags & MPQ_FILE_SINGLE_UNIT:
                 # File consist of many sectors. They all need to be
@@ -250,14 +263,47 @@ class MPQArchive(object):
                     sectors += 1
                 else:
                     crc = False
-                positions = struct.unpack('<%dI' % (sectors + 1),
-                                          file_data[:4*(sectors+1)])
+                    
+                if block_entry.flags & MPQ_FILE_ENCRYPTED:
+                    positions2 = struct.unpack('<%dI' % (sectors + 1),
+                                              file_data[:4*(sectors+1)])
+                    positions = []
+                    
+                    for i in range(sectors+1):
+                        offsetstring = file_data[i*4:(i+1)*4]
+                        offset = self._decrypt(offsetstring[::-1], key-1)
+                        positions.append(struct.unpack("<I", offset)[0])
+                    print(positions)
+                    positions = tuple(positions)
+                        #positions = tuple([self._decrypt(offset, key-1) for offset in positions])
+                    print(positions, positions2)
+                
+                else:
+                    positions = struct.unpack('<%dI' % (sectors + 1),
+                                              file_data[:4*(sectors+1)])
+                
+                
+                
+                
                 result = BytesIO()
                 sector_bytes_left = block_entry.size
+                print(positions)
                 for i in range(len(positions) - (2 if crc else 1)):
+                    print(i)
                     sector = file_data[positions[i]:positions[i+1]]
                     if (block_entry.flags & MPQ_FILE_COMPRESS and
                         (force_decompress or sector_bytes_left > len(sector))):
+                        
+                        print(basekey)
+                        
+                        if block_entry.flags & MPQ_FILE_FIX_KEY:
+                            #newkey = basekey + i
+                            print(basekey, i, offset) 
+                        print("wat", len(sector), sector)
+                        
+                        if block_entry.flags & MPQ_FILE_ENCRYPTED:
+                            sector = self._decrypt(sector, key)
+                        
                         sector = decompress(sector)
 
                     sector_bytes_left -= len(sector)
@@ -268,6 +314,9 @@ class MPQArchive(object):
                 # compression only happens when at least one byte is gained.
                 if (block_entry.flags & MPQ_FILE_COMPRESS and
                     (force_decompress or block_entry.size > block_entry.archived_size)):
+                    if block_entry.flags & MPQ_FILE_ENCRYPTED:
+                        print("duurrrr", len(file_data))
+                        sector = self._decrypt(file_data, key)
                     file_data = decompress(file_data)
 
             return file_data
@@ -356,7 +405,7 @@ class MPQArchive(object):
             if not isinstance(ch, int): ch = ord(ch)
             value = self.encryption_table[(hash_types[hash_type] << 8) + ch]
             seed1 = (value ^ (seed1 + seed2)) & 0xFFFFFFFF
-            seed2 = ch + seed1 + seed2 + (seed2 << 5) + 3 & 0xFFFFFFFF
+            seed2 = (ch + seed1 + seed2 + (seed2 << 5) + 3) & 0xFFFFFFFF
 
         return seed1
 

@@ -36,28 +36,27 @@ def generate_listfile(wc3files, mpq):
     listfile = []
     
     for line in filelist:
-        try:
-            output = mpq.read_file(line.strip())
-            
-            if output != None:
-                # The file appears to have been found successful
-                listfile.append((line.strip(), True)) 
-            else:
-                # The file doesn't appear to exist, or has a zero size in the archive
-                listfile.append((line.strip(), None)) 
+        #try:
+        output = mpq.read_file(line.strip())
+        
+        if output != None:
+            # The file appears to have been found successful
+            listfile.append((line.strip(), True)) 
+        else:
+            # The file doesn't appear to exist, or has a zero size in the archive
+            listfile.append((line.strip(), None)) 
                 
-        except Exception as error:
-            # The file does exist, but there has been some trouble, 
-            # e.g. the file is encrypted or uses an unsupported compression algorithm
-            listfile.append((line.strip(), False))
-            print line.strip(), error
-                                                    
+        #except Exception as error:
+        #    # The file does exist, but there has been some trouble, 
+        #    # e.g. the file is encrypted or uses an unsupported compression algorithm
+        #    listfile.append((line.strip(), False))
+        #    print line.strip(), error
+        #                                            
     return listfile
 
 filename = "map.w3x"
 
 archive = WC3Map_MPQ(filename, listfile=False)
-
 
 print "Trying to generate a listfile"
 
