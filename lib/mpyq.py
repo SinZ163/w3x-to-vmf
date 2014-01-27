@@ -38,7 +38,9 @@ import zlib
 from collections import namedtuple
 from io import BytesIO
 
-# Modification by Yoshi2 & SinZ
+## Modification by Yoshi2 & SinZ
+## Comments prefixed with ## were not made by the original author, 
+## but added as part of the modification of this MPQ library
 from DataReader import DataReader
 
 
@@ -227,33 +229,56 @@ class MPQArchive(object):
         if hash_entry is None:
             return None
         block_entry = self.block_table[hash_entry.block_table_index]
-
+        
+        print("______")
+        print("File {0} HashEntry Offset: {1} BlockEntry Offset: {2}".format(filename, hash_entry, block_entry))
+        
         # Read the block.
         if block_entry.flags & MPQ_FILE_EXISTS:
             if block_entry.archived_size == 0:
                 return None
             
             offset = block_entry.offset + self.header['offset']
-            self.file.seek(offset)
-            print(offset, block_entry)
-            file_data = self.file.read(block_entry.archived_size)
-            print("Filedata length:", len(file_data))
             
+            self.file.seek(offset)
+            file_data = self.file.read(block_entry.archived_size)
+            
+            ## We calculate a sectorIndex value to be used in the
+            ## decryption of the sector data.
+            ## Is this the correct way to calculate it?
+            sectorIndex = offset // 512
+            
+            print("{0} Filedata length: {1}".format(filename, len(file_data)))
+            
+            ## If file is encrypted, create the decryption key as explained 
+            ## in the MPQ documentation on http://www.wc3c.net/tools/specs/QuantamMPQFormat.txt
             if block_entry.flags & MPQ_FILE_ENCRYPTED:
+                ## The key is created by hashing the name of the file after
+                ## removing the path that prefixes the filename. For this,
+                ## we search for the position of the right-most backslash.
                 backslash = filename.rfind("\\")
                 if backslash != -1:
                     basekey = filename[backslash+1:]
                 else:
                     basekey = filename
-                """
-                'TABLE_OFFSET': 0,
-                'HASH_A': 1,
-                'HASH_B': 2,
-                'TABLE': 3"""
-                print("."+basekey+".")
+                
+                ## A hash can be created using one of the following types.
+                ## We should only need the fourth type.
+                ##'TABLE_OFFSET': 0
+                ##'HASH_A': 1
+                ##'HASH_B': 2
+                ##'TABLE': 3
                 key = self._hash(basekey, "TABLE")
-                #raise NotImplementedError("Encryption is not supported yet.")
-
+                
+                ## If the Fix_Key flag is set, we need to calculate the final key
+                ## as '(base key + BlockOffset - ArchiveOffset) XOR FileSize'.
+                ## Is the following code correct?
+                if block_entry.flags&MPQ_FILE_FIX_KEY:
+                    key = (key + block_entry.offset) % block_entry.size
+            
+            print("Implode: {0}, Compress: {1}, Encrypted: {2}, Fix Key: {3}".format((block_entry.flags&MPQ_FILE_IMPLODE) != 0, (block_entry.flags&MPQ_FILE_COMPRESS) != 0, 
+                                                                          (block_entry.flags & MPQ_FILE_ENCRYPTED) != 0, (block_entry.flags&MPQ_FILE_FIX_KEY) != 0))
+            
             if not block_entry.flags & MPQ_FILE_SINGLE_UNIT:
                 # File consist of many sectors. They all need to be
                 # decompressed separately and united.
@@ -265,73 +290,57 @@ class MPQArchive(object):
                     sectors += 1
                 else:
                     crc = False
-                    
+                
+                ## If the file is encrypted, the sector offset table is encrypted, too.
+                ## We need to decrypt it before being able to use it. Without the positions,
+                ## we do not know where each sector of a compressed file starts.
                 if block_entry.flags & MPQ_FILE_ENCRYPTED:
-                    positions2 = struct.unpack('<%dI' % (sectors + 1),
-                                              file_data[:4*(sectors+1)])
-                    positions = []
-                    print("Implode: {0}, Compress: {1}, Fix Key: {2}".format((block_entry.flags&MPQ_FILE_IMPLODE) != 0, (block_entry.flags&MPQ_FILE_COMPRESS) != 0, 
-                                                                          (block_entry.flags&MPQ_FILE_FIX_KEY) != 0))
-                    print(sectors)
-                    if not block_entry.flags & MPQ_FILE_FIX_KEY:
-                        for i in range(sectors+1):
-                            offsetstring = file_data[i*4:(i+1)*4]
-                            offset = self._decrypt(offsetstring, key-1)
-                            positions.append(struct.unpack("<I", offset)[0])
-                        print(positions)
-                        positions = tuple(positions)
-                            #positions = tuple([self._decrypt(offset, key-1) for offset in positions])
-                        print(positions, positions2)
-                    else:
-                        
-                        key = (key + offset - self.header["offset"]) % block_entry.size
-                        print(key)
-                        for i in range(sectors+1):
-                            offsetstring = file_data[i*4:(i+1)*4]
-                            offset = self._decrypt(offsetstring, key-1)
-                            positions.append(struct.unpack("<I", offset)[0])
-                        print(positions)
-                        positions = tuple(positions)
-                        print(positions, positions2)
-                        
+                    sectoroffset_table = file_data[0:(sectors+1)*4]
+                    sectoroffset_table = self._decrypt(sectoroffset_table, key-1)
+                    
+                    positions = struct.unpack('<%dI' % (sectors + 1),
+                                              sectoroffset_table)
                 else:
                     positions = struct.unpack('<%dI' % (sectors + 1),
                                               file_data[:4*(sectors+1)])
-                
                 
                 result = BytesIO()
                 sector_bytes_left = block_entry.size
                 
                 for i in range(len(positions) - (2 if crc else 1)):
+                    
+                    ## Each sector is decrypted using the key + the 0-based index of the sector.
+                    ## Is the following code correct?
+                    if block_entry.flags & MPQ_FILE_ENCRYPTED:
+                        key = key + sectorIndex + i
+                        
                     sector = file_data[positions[i]:positions[i+1]]
+                    
+                    ## We try to decrypt the sector data
+                    if block_entry.flags & MPQ_FILE_ENCRYPTED:
+                            sector = self._decrypt(sector, key)
+                            
                     if (block_entry.flags & MPQ_FILE_COMPRESS and
                         (force_decompress or sector_bytes_left > len(sector))):
                         
-                        #print(basekey)
-                        
-                        if block_entry.flags & MPQ_FILE_FIX_KEY:
-                            #newkey = basekey + i
-                            print(basekey, i, offset) 
-                        print("Sectordata length:", len(sector))
-                        
-                        if block_entry.flags & MPQ_FILE_ENCRYPTED:
-                            sector = self._decrypt(sector, key)
-                        
                         sector = decompress(sector)
-
+                        
                     sector_bytes_left -= len(sector)
                     result.write(sector)
+                    
                 file_data = result.getvalue()
             else:
+                ## A single unit file should only contain a single sector, so we calculate
+                ## the key simply as key + sectorIndex
+                if block_entry.flags & MPQ_FILE_ENCRYPTED:
+                    print("SingleUnit data length:", len(file_data))
+                    key = key + sectorIndex
+                    file_data = self._decrypt(file_data, key)
+                    
                 # Single unit files only need to be decompressed, but
                 # compression only happens when at least one byte is gained.
                 if (block_entry.flags & MPQ_FILE_COMPRESS and
                     (force_decompress or block_entry.size > block_entry.archived_size)):
-                    
-                    if block_entry.flags & MPQ_FILE_ENCRYPTED:
-                        print("SingleUnit data length:", len(file_data))
-                        file_data = self._decrypt(file_data, key)
-                        
                     file_data = decompress(file_data)
 
             return file_data
@@ -423,7 +432,7 @@ class MPQArchive(object):
             seed2 = (ch + seed1 + seed2 + (seed2 << 5) + 3) & 0xFFFFFFFF
 
         return seed1
-
+    
     def _decrypt(self, data, key):
         """Decrypt hash or block table or a sector."""
         seed1 = key
@@ -467,7 +476,7 @@ class MPQArchive(object):
     encryption_table = _prepare_encryption_table()
 
 
-# Modified MPQ Reader for WC3 map files
+## Modified MPQ Reader for WC3 map files
 class WC3Map_MPQ(MPQArchive):
     def __init__(self, filename, listfile=True):
         if hasattr(filename, 'read'):
@@ -523,9 +532,10 @@ class WC3Map_MPQ(MPQArchive):
         if magic == "HM3W":
             datReader = DataReader(self.file)
             header = {}
-            #should be HM3W
+            ## should be HM3W
             header["wc3map_magic"] = datReader.charArray(4)
-            #unknown
+            
+            ## unknown
             datReader.int()
             header["wc3map_mapName"] = datReader.string()
             """
@@ -547,8 +557,10 @@ class WC3Map_MPQ(MPQArchive):
             header["wc3map_maxPlayers"] = datReader.int()
             self.file.read(512 - datReader.index)
         else:
+            ## If the magic isn't HM3W, we will skip the first 512 bytes of the 
+            ## file anyway 
             self.file.seek(512)
-            #return headerInfo
+            
         print(self.file.tell())
         magic = self.file.read(4)
         self.file.seek(512)
@@ -570,7 +582,7 @@ class WC3Map_MPQ(MPQArchive):
     
     def extract_files(self, filenames, folder = ""):
         """Extract given files from the archive to disk."""
-        # Modification: Can extract files to a folder
+        ## Modification: Can extract files to a folder
         if folder != "":
             path = folder+"/"
         else:
