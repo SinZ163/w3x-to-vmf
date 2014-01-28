@@ -278,7 +278,7 @@ class MPQArchive(object):
                 ## as '(base key + BlockOffset - ArchiveOffset) XOR FileSize'.
                 ## Is the following code correct?
                 if block_entry.flags&MPQ_FILE_FIX_KEY:
-                    key = (key + block_entry.offset - self.header['offset']) ^ block_entry.size
+                    key = (key + offset - self.header['offset']) ^ block_entry.size
             
             print("Implode: {0}, Compress: {1}, Encrypted: {2}, Fix Key: {3}".format((block_entry.flags&MPQ_FILE_IMPLODE) != 0, (block_entry.flags&MPQ_FILE_COMPRESS) != 0, 
                                                                           (block_entry.flags & MPQ_FILE_ENCRYPTED) != 0, (block_entry.flags&MPQ_FILE_FIX_KEY) != 0))
@@ -310,7 +310,7 @@ class MPQArchive(object):
                 
                 result = BytesIO()
                 sector_bytes_left = block_entry.size
-                
+                print(positions)
                 for i in range(len(positions) - (2 if crc else 1)):
                     
                     ## Each sector is decrypted using the key + the 0-based index of the sector.
