@@ -210,7 +210,7 @@ class MPQArchive(object):
             if (entry.hash_a == hash_a and entry.hash_b == hash_b):
                 return entry
 
-    def read_file(self, filename, force_decompress=False):
+    def read_file(self, filename, force_decompress=False, raw = False):
         """Read a file from the MPQ archive."""
 
         def decompress(data):
@@ -243,13 +243,23 @@ class MPQArchive(object):
             self.file.seek(offset)
             file_data = self.file.read(block_entry.archived_size)
             
+            if raw == True:
+                return file_data
+            
+            ## Moved sector calculation to the top. It is more useful here.
+            # File consist of many sectors. They all need to be
+            # decompressed separately and united.
+            sector_size = 512 << self.header['sector_size_shift']
+            sectors = block_entry.size // sector_size + 1
+            
             ## We calculate a sectorIndex value to be used in the
             ## decryption of the sector data. Basically, it should be the starting index
-            ## of this particular sector. 512 << self.header['sector_size_shift'] is the
-            ## size of a single logical sector.
+            ## of this particular sector.
             ## Is this the correct way to calculate it?
-            sectorIndex = offset // (512 << self.header['sector_size_shift'])
-            
+            sectorIndex = (offset - self.header['offset']) // (sector_size) + 1
+            print(sector_size, sectors, sectorIndex)
+            #sectorIndex = block_entry.offset & (~sector_size)
+            #print(sectorIndex)
             #print(sectorIndex, self.header['sector_size_shift'])
             
             print("{0} Filedata length: {1}".format(filename, len(file_data)))
@@ -279,15 +289,17 @@ class MPQArchive(object):
                 ## Is the following code correct?
                 if block_entry.flags&MPQ_FILE_FIX_KEY:
                     key = (key + offset - self.header['offset']) ^ block_entry.size
+                
+                print("Key:", key)
             
             print("Implode: {0}, Compress: {1}, Encrypted: {2}, Fix Key: {3}".format((block_entry.flags&MPQ_FILE_IMPLODE) != 0, (block_entry.flags&MPQ_FILE_COMPRESS) != 0, 
                                                                           (block_entry.flags & MPQ_FILE_ENCRYPTED) != 0, (block_entry.flags&MPQ_FILE_FIX_KEY) != 0))
             
             if not block_entry.flags & MPQ_FILE_SINGLE_UNIT:
-                # File consist of many sectors. They all need to be
-                # decompressed separately and united.
-                sector_size = 512 << self.header['sector_size_shift']
-                sectors = block_entry.size // sector_size + 1
+                
+                
+                
+                
                 
                 if block_entry.flags & MPQ_FILE_SECTOR_CRC:
                     crc = True
@@ -310,19 +322,20 @@ class MPQArchive(object):
                 
                 result = BytesIO()
                 sector_bytes_left = block_entry.size
+                
                 print(positions)
                 for i in range(len(positions) - (2 if crc else 1)):
                     
                     ## Each sector is decrypted using the key + the 0-based index of the sector.
                     ## Is the following code correct?
                     if block_entry.flags & MPQ_FILE_ENCRYPTED:
-                        key = key + sectorIndex + i
+                        sectorkey = key + sectorIndex + i
                         
                     sector = file_data[positions[i]:positions[i+1]]
                     
                     ## We try to decrypt the sector data
                     if block_entry.flags & MPQ_FILE_ENCRYPTED:
-                            sector = self._decrypt(sector, key)
+                            sector = self._decrypt(sector, sectorkey)
                             
                     if (block_entry.flags & MPQ_FILE_COMPRESS and
                         (force_decompress or sector_bytes_left > len(sector))):
@@ -338,8 +351,8 @@ class MPQArchive(object):
                 ## the key simply as key + sectorIndex
                 if block_entry.flags & MPQ_FILE_ENCRYPTED:
                     print("SingleUnit data length:", len(file_data))
-                    key = key + sectorIndex
-                    file_data = self._decrypt(file_data, key)
+                    sectorkey = key + sectorIndex
+                    file_data = self._decrypt(file_data, sectorkey)
                     
                 # Single unit files only need to be decompressed, but
                 # compression only happens when at least one byte is gained.
