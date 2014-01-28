@@ -244,9 +244,13 @@ class MPQArchive(object):
             file_data = self.file.read(block_entry.archived_size)
             
             ## We calculate a sectorIndex value to be used in the
-            ## decryption of the sector data.
+            ## decryption of the sector data. Basically, it should be the starting index
+            ## of this particular sector. 512 << self.header['sector_size_shift'] is the
+            ## size of a single logical sector.
             ## Is this the correct way to calculate it?
-            sectorIndex = offset // 512
+            sectorIndex = offset // (512 << self.header['sector_size_shift'])
+            
+            #print(sectorIndex, self.header['sector_size_shift'])
             
             print("{0} Filedata length: {1}".format(filename, len(file_data)))
             
@@ -274,7 +278,7 @@ class MPQArchive(object):
                 ## as '(base key + BlockOffset - ArchiveOffset) XOR FileSize'.
                 ## Is the following code correct?
                 if block_entry.flags&MPQ_FILE_FIX_KEY:
-                    key = (key + block_entry.offset) % block_entry.size
+                    key = (key + block_entry.offset - self.header['offset']) ^ block_entry.size
             
             print("Implode: {0}, Compress: {1}, Encrypted: {2}, Fix Key: {3}".format((block_entry.flags&MPQ_FILE_IMPLODE) != 0, (block_entry.flags&MPQ_FILE_COMPRESS) != 0, 
                                                                           (block_entry.flags & MPQ_FILE_ENCRYPTED) != 0, (block_entry.flags&MPQ_FILE_FIX_KEY) != 0))
