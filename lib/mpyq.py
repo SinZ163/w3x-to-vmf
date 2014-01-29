@@ -216,14 +216,42 @@ class MPQArchive(object):
         def decompress(data):
             """Read the compression type and decompress file data."""
             compression_type = ord(data[0:1])
-            if compression_type == 0:
-                return data
-            elif compression_type == 2:
-                return zlib.decompress(data[1:], 15)
-            elif compression_type == 16:
-                return bz2.decompress(data[1:])
-            else:
-                raise RuntimeError("Unsupported compression type: {0}".format(compression_type))
+            data = data[1:]
+            
+            ## Compression type is actually a mask that contains data about which
+            ## compression algorithms are used. A sector can be compressed using
+            ## several compression algorithms.
+            otherTypes = 0x10 | 0x8 | 0x2 | 0x1 | 0x80 | 0x40
+            print(bin(compression_type), bin(otherTypes))
+            
+            ## A little check to give the program more room for exceptions.
+            ## Can be useful for debugging, might be removed later.
+            if compression_type & ~otherTypes != 0:
+                raise RuntimeError("Unhandled compression types: {0},"
+                                   "can only handle the following flags: ".format(bin(compression_type), bin(otherTypes)))
+            
+            if compression_type & 0x10:
+                data = bz2.decompress(data)
+            
+            ## The Implode check might not belong here. According to documentation,
+            ## compressed data cannot be imploded, and vice versa.
+            if compression_type & 0x8 != 0:
+                raise RuntimeError("Imploded data not supported yet: {0}".format(compression_type))
+            
+            if compression_type & 0x2:
+                data = zlib.decompress(data, 15)
+            
+            if compression_type & 0x1:
+                raise RuntimeError("Huffman algorithm not supported yet: {0}".format(compression_type))
+            
+            if compression_type & 0x80:
+                raise RuntimeError("IMA ADPCM stereo compression not supported yet: {0}".format(compression_type))
+            
+            if compression_type & 0x40:
+                raise RuntimeError("IMA ADPCM mono compression not supported yet: {0}".format(compression_type))
+            
+            return data
+                
 
         hash_entry = self.get_hash_table_entry(filename)
         if hash_entry is None:
@@ -246,18 +274,24 @@ class MPQArchive(object):
             if raw == True:
                 return file_data
             
+            
             ## Moved sector calculation to the top. It is more useful here.
             # File consist of many sectors. They all need to be
             # decompressed separately and united.
-            sector_size = 512 << self.header['sector_size_shift']
+            
+            ## Some WC3 maps like to set the sector size_shift_value high, might
+            ## be an attempt to confuse MPQ readers. Generally it should be 3, 
+            ## hopefully that is always the case 
+            ## sector_size = 512 << self.header['sector_size_shift']
+            sector_size = 512 << 3
             sectors = block_entry.size // sector_size + 1
             
             ## We calculate a sectorIndex value to be used in the
             ## decryption of the sector data. Basically, it should be the starting index
             ## of this particular sector.
             ## Is this the correct way to calculate it?
-            sectorIndex = (offset - self.header['offset']) // (sector_size) + 1
-            print(sector_size, sectors, sectorIndex)
+            sectorIndex = (offset - self.header['offset']) // (sector_size-1) + 1
+            print(sector_size, sectors, sectorIndex, offset, sector_size, self.header['sector_size_shift'])
             #sectorIndex = block_entry.offset & (~sector_size)
             #print(sectorIndex)
             #print(sectorIndex, self.header['sector_size_shift'])
@@ -296,10 +330,6 @@ class MPQArchive(object):
                                                                           (block_entry.flags & MPQ_FILE_ENCRYPTED) != 0, (block_entry.flags&MPQ_FILE_FIX_KEY) != 0))
             
             if not block_entry.flags & MPQ_FILE_SINGLE_UNIT:
-                
-                
-                
-                
                 
                 if block_entry.flags & MPQ_FILE_SECTOR_CRC:
                     crc = True
