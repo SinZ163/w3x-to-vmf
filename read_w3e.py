@@ -50,12 +50,14 @@ class ReadW3E():
         tmpData["nibble2"] = self.read.byte()
         
         return tmpData
-filename = "input/war3map.w3e"
-mapInfo = ReadW3E(filename)
 
-try:
-    os.makedirs('./output')
-except OSError:
-    pass
-with open("output/mapInfo.json", "w") as f:
-    f.write(simplejson.dumps(mapInfo.mapInfo, sort_keys=True, indent=4 * ' '))
+if __name__ == "__main__":
+    filename = "input/war3map.w3e"
+    mapInfo = ReadW3E(filename)
+    
+    try:
+        os.makedirs('./output')
+    except OSError:
+        pass
+    with open("output/mapInfo.json", "w") as f:
+        f.write(simplejson.dumps(mapInfo.mapInfo, sort_keys=True, indent=4 * ' '))
