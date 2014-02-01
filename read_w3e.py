@@ -1,9 +1,8 @@
 class ReadW3E():
-    import struct
     from lib.DataReader import DataReader
     
     def __init__(self, filename):
-        self.read = DataReader(filename)
+        self.read = self.DataReader(filename)
         self.mapInfo = self.ReadMap()
         
     def ReadMap(self):
