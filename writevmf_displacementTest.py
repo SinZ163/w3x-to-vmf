@@ -46,14 +46,16 @@ class QuadBlobs():
         
         local_x, local_y = big_x % self.blobSizeX, big_y % self.blobSizeY
         
-        local_x = local_x * self.blobSizeX
-        local_y = local_y * self.blobSizeY
+        
         
         if local_x > 1: x_offset = 1
         else: x_offset = 0
         
         if local_y > 1: y_offset = 1
         else: y_offset = 0
+        
+        local_x = local_x * self.blobSizeX
+        local_y = local_y * self.blobSizeY
         
         tiledata = self.getBlob(x, y).getSubBlob((local_x+x_offset, local_y+y_offset), 
                                                  (local_x+x_offset+self.blobSizeX, local_y+y_offset+self.blobSizeY))
@@ -65,8 +67,8 @@ class QuadBlobs():
         
         local_x, local_y = big_x % self.blobSizeX, big_y % self.blobSizeY
         
-        local_x = local_x * self.blobSizeX
-        local_y = local_y * self.blobSizeY
+        #local_x = local_x * self.blobSizeX
+        #local_y = local_y * self.blobSizeY
         
         if local_x > 1: x_offset = 1
         else: x_offset = 0
@@ -76,9 +78,45 @@ class QuadBlobs():
         
         blob = self.getBlob(x, y)
         
+        local_x = local_x * self.blobSizeX
+        local_y = local_y * self.blobSizeY
+        
         blob.setValGroup_fromBlob(tile, (local_x+x_offset, local_y+y_offset), 
                                   (local_x+x_offset+self.blobSizeX, local_y+y_offset+self.blobSizeY))
+    
+    ## If you have noticed it, we use offsets to skip one row of data in the middle
+    ## of the blob. As a result, at x = 8 and y = 8 in the tile there will be a steep step down,
+    ## because there is no data. We will fix this using average data.
+    def sewTilesTogether(self, x, y):
+        blob = self.getBlob(x, y)
+        midX, midY = 8, 8
         
+        y = midY
+        for x in range(17):
+            if x == midX:
+                pass
+            else:
+                up, down =  blob.getVal(x, y+1), blob.getVal(x, y-1)
+                blob.setVal(x, y, (up + down) // 2)
+        
+        x = midX
+        for y in range(17):
+            if y == midY:
+                pass
+            else:
+                left, right =  blob.getVal(x+1, y), blob.getVal(x-1, y)
+                blob.setVal(x, y, (left + right) // 2)
+        
+        
+        up, down, left, right = blob.getVal(midX, midY+1), blob.getVal(midX, midY-1), blob.getVal(midX+1, midY), blob.getVal(midX-1, midY)
+        middleHeight = (up+down+left+right) // 4
+        
+        blob.setVal(midX, midY, middleHeight)
+        
+        
+        
+            
+            
         
         
     
@@ -122,8 +160,9 @@ class Bytemap():
                     
             
         
-        for ix in xrange(minCoords[0],maxCoords[0]):
-            for iy in xrange(minCoords[1],maxCoords[1]):
+        
+        for iy in xrange(minCoords[1],maxCoords[1]):
+            for ix in xrange(minCoords[0],maxCoords[0]):
                 yield ix, iy, self.getVal(ix, iy)
                 
     def getValGroup(self, minCoords = (0,0), maxCoords = "max", noCoordinates = False):
@@ -141,8 +180,8 @@ class Bytemap():
         return grouplist
              
     def setValGroup_fromBlob(self, blob, minCoords, maxCoords):
-        for ix in xrange(minCoords[0],maxCoords[0]):
-            for iy in xrange(minCoords[1],maxCoords[1]):
+        for iy in xrange(minCoords[1],maxCoords[1]):
+            for ix in xrange(minCoords[0],maxCoords[0]):
                 miniX, miniY = ix - minCoords[0], iy - minCoords[1]
                 self.setVal(ix, iy, blob.getVal(miniX, miniY))
              
@@ -181,7 +220,7 @@ def make_number_divisible_by_n(num, n):
 def map_list_with_vertex(height):
     return vmflib.types.Vertex(0,0, height)
     
-    
+
     
 if __name__ == "__main__":
     print "Starting..."
@@ -283,7 +322,7 @@ if __name__ == "__main__":
             #if height < lowestHeight:
             #    lowestHeight = height
     
-            heightmap.setVal(x, y, height)
+            heightmap.setVal(x, y, height*10)
     
     Blockgroups = QuadBlobs(xSize//4, ySize//4, 4, 4)
     
@@ -299,16 +338,20 @@ if __name__ == "__main__":
     normals_row = [vmflib.types.Vertex(0,0,1) for i in xrange(17)]
     normals_list = [normals_row for i in xrange(17)]
     
+    choice = ("brick/brick_ext_07", "brick/brick_ext_06")
+    
     for ix in xrange(xSize//4):
         for iy in xrange(ySize//4):
             height = 64
             vert = vmflib.types.Vertex((ix*4*64)-xOffset_real+2*64, (iy*4*64)-yOffset_real+2*64, 0+(height//2))
             block = tools.Block(origin = vert, dimensions=(4*64, 4*64, height))
             
-            block.set_material("brick/brick_ext_07")
+            ## We alternate between two types of textures. This results in a checkered pattern, 
+            ## similar to chess. It is very easy to see where a block starts and ends.
+            block.set_material(choice[(iy+ix*(xSize//4))%2])
+            #block.set_material("brick/brick_ext_07")
             
             Blockgroups.addBlob(ix, iy)
-            
             
             
             
@@ -322,6 +365,8 @@ if __name__ == "__main__":
                     else:
                         currentHeight = heightmap.getVal(newX, newX)
                         
+                        ## We do very simple data interpolation using the heights of the
+                        ## 4 neighbours of a tile.
                         neighbourUp     =   heightmap.getVal_tolerant(newX, newY+1) or currentHeight
                         neighbourDown   =   heightmap.getVal_tolerant(newX, newY-1) or currentHeight
                         neighbourLeft   =   heightmap.getVal_tolerant(newX-1, newY) or currentHeight
@@ -342,13 +387,32 @@ if __name__ == "__main__":
                             leftDist = abs(local_x - local_leftPosition)
                             rightDist = abs(local_x - local_rightPosition)
                             
-                            tile.setVal(iix, iiy, int(math.floor((1.0/upDist) * neighbourUp
+                            
+                            tile.setVal(local_x, local_y, int(math.floor( ((1.0/upDist) * neighbourUp
                                                              + (1.0/downDist) * neighbourDown
                                                              + (1.0/leftDist) * neighbourLeft
-                                                             + (1.0/rightDist) * neighbourRight)))
-                        
+                                                             + (1.0/rightDist) * neighbourRight) 
+                                                            
+                                                             + upDist * currentHeight
+                                                             + downDist * currentHeight
+                                                             + leftDist * currentHeight
+                                                             + rightDist * currentHeight)))
                         Blockgroups.changeTile(newX, newY, tile)
                         
+                        ## A more simple displacement test that uses the tile height for all points
+                        ## of the tile.
+                        """tile = Blockgroups.getTile(newX, newY)
+                        currentVals = tile.getValGroup()
+                        
+                        for point in currentVals:
+                            local_x, local_y, height = point
+                            
+                            tile.setVal(local_x, local_y, currentHeight)
+                        
+                        Blockgroups.changeTile(newX, newY, tile)"""
+            
+            Blockgroups.sewTilesTogether(ix, iy)
+            
             blob = Blockgroups.getBlob(ix,iy)
             
           
