@@ -3,6 +3,7 @@
 
 import os
 import array
+import math
 
 # using BHSPitMonkey's Python vmflib: http://github.com/BHSPitMonkey/vmflib
 # Even though it is for Python 3 and above, most of 
@@ -28,7 +29,7 @@ class QuadBlobs():
         
         self.blobmap = [False for i in xrange(maxX*maxY)]
     
-    def addBlob(self, x, y, height):
+    def addBlob(self, x, y):
         index = y * self.maxX + x
         
         blob = Bytemap(self.blobSizeX**2+1, self.blobSizeY**2+1)
@@ -54,8 +55,8 @@ class QuadBlobs():
         if local_y > 1: y_offset = 1
         else: y_offset = 0
         
-        tiledata = self.getBlob(x, y).getSubBlob((local_x+offset, local_y+offset), 
-                                                 (local_x+offset+self.blobSizeX, local_y+offset+self.blobSizeY))
+        tiledata = self.getBlob(x, y).getSubBlob((local_x+x_offset, local_y+y_offset), 
+                                                 (local_x+x_offset+self.blobSizeX, local_y+y_offset+self.blobSizeY))
         
         return tiledata
     
@@ -75,6 +76,8 @@ class QuadBlobs():
         
         blob = self.getBlob(x, y)
         
+        blob.setValGroup_fromBlob(tile, (local_x+x_offset, local_y+y_offset), 
+                                  (local_x+x_offset+self.blobSizeX, local_y+y_offset+self.blobSizeY))
         
         
         
@@ -96,23 +99,48 @@ class Bytemap():
     
     def getVal(self, x, y):
         index = y * self.maxX + x
+        if x < 0 or y < 0 or x >= self.maxX or y >= self.maxY:
+            raise RuntimeError("Coordinates are out of range: x: {0}, y: {1}, maxX: {2}, maxY: {3}".format(x,y, self.maxX, self.maxY))
         return self.map[index]
-        
     
-    def getValGroup_iter(self, minCoords, maxCoords):
+    ## To avoid blocks of try:except for checking if the index is out of range,
+    ## we just use a special function which checks if the index is in range or not.
+    ## If it isn't, it will return a placeholder value
+    def getVal_tolerant(self, x, y):
+        index = y * self.maxX + x
+        if x < 0 or y < 0 or x >= self.maxX or y >= self.maxY:
+            return False
+        else:
+            return self.map[index]
+    
+    def getValGroup_iter(self, minCoords = (0,0), maxCoords = "max"):
+        
+        ## Can't do this when defining arguments at the same time as the function,
+        ## so we have to do initiate it like this.
+        if maxCoords == "max":
+            maxCoords = (self.maxX, self.maxY) 
+                    
+            
+        
         for ix in xrange(minCoords[0],maxCoords[0]):
             for iy in xrange(minCoords[1],maxCoords[1]):
                 yield ix, iy, self.getVal(ix, iy)
                 
-    def getValGroup(self, minCoords, maxCoords):
+    def getValGroup(self, minCoords = (0,0), maxCoords = "max", noCoordinates = False):
+        if maxCoords == "max":
+            maxCoords = (self.maxX, self.maxY) 
+            
         grouplist = []
         for ix in xrange(minCoords[0],maxCoords[0]):
             for iy in xrange(minCoords[1],maxCoords[1]):
-                grouplist.append((ix, iy, self.getVal(ix, iy)))
+                if noCoordinates:
+                    grouplist.append(self.getVal(ix, iy))
+                else:
+                    grouplist.append((ix, iy, self.getVal(ix, iy)))
         
         return grouplist
              
-    def setValGroup_fromBlob(self, minCoords, maxCoords, blob):
+    def setValGroup_fromBlob(self, blob, minCoords, maxCoords):
         for ix in xrange(minCoords[0],maxCoords[0]):
             for iy in xrange(minCoords[1],maxCoords[1]):
                 miniX, miniY = ix - minCoords[0], iy - minCoords[1]
@@ -122,11 +150,21 @@ class Bytemap():
     def getSubBlob(self, minCoords, maxCoords):
         x, y = maxCoords[0] - minCoords[0], maxCoords[1] - minCoords[1]
         
-        subBlobList = self.getValGroup(minCoords, maxCoords)
+        subBlobList = self.getValGroup(minCoords, maxCoords, True)
         
-        return Bytemap(x, y, subBlobList)
+        return Bytemap(x, y, 0, subBlobList)
     
-    
+    def getRow(self, rowNum):
+        index = y * self.maxX + x
+        
+        start = rowNum * self.maxX
+        end = rowNum * self.maxX + self.maxX
+        
+        return self.map[start:end]
+
+class TileMap(Bytemap):
+    def __init__(self, *args):
+        self.__init__(*args)
     
 ## We make a number divisible by n by rounding up. For that, 
 ## we calculate how much we would have to add to the number for it to
@@ -137,12 +175,16 @@ def make_number_divisible_by_n(num, n):
         return num + remaining
     else:
         return num
-    
 
+## A helper function which will be used with map()
+## on a list of height values to create normals.
+def map_list_with_vertex(height):
+    return vmflib.types.Vertex(0,0, height)
     
     
     
 if __name__ == "__main__":
+    print "Starting..."
     data = ReadW3E("input/war3map.w3e")
     
     print "Original map dimension: xsize: {0}, ysize: {1}".format(data.mapInfo["width"], data.mapInfo["height"])
@@ -243,6 +285,20 @@ if __name__ == "__main__":
     
             heightmap.setVal(x, y, height)
     
+    Blockgroups = QuadBlobs(xSize//4, ySize//4, 4, 4)
+    
+    ## We initialize distance values which will be used for 
+    ## height interpolation.
+    local_upPosition = 5
+    local_downPosition = -1
+    local_leftPosition = -1
+    local_rightPosition = 5
+    
+    ## For the moment, we will not do anything interesting with normals.
+    ## We will set it to 0,0,1 i.e. the normal vector will point straight upwards.
+    normals_row = [vmflib.types.Vertex(0,0,1) for i in xrange(17)]
+    normals_list = [normals_row for i in xrange(17)]
+    
     for ix in xrange(xSize//4):
         for iy in xrange(ySize//4):
             height = 64
@@ -250,7 +306,64 @@ if __name__ == "__main__":
             block = tools.Block(origin = vert, dimensions=(4*64, 4*64, height))
             
             block.set_material("brick/brick_ext_07")
-            vmflib.brush.DispInfo
+            
+            Blockgroups.addBlob(ix, iy)
+            
+            
+            
+            
+            for iix in xrange(4):
+                for iiy in xrange(4):
+                    newX = (ix*4)+iix
+                    newY = (iy*4)+iiy
+                    
+                    if newX >= data.mapInfo["width"] or newY >= data.mapInfo["width"]:
+                        break
+                    else:
+                        currentHeight = heightmap.getVal(newX, newX)
+                        
+                        neighbourUp     =   heightmap.getVal_tolerant(newX, newY+1) or currentHeight
+                        neighbourDown   =   heightmap.getVal_tolerant(newX, newY-1) or currentHeight
+                        neighbourLeft   =   heightmap.getVal_tolerant(newX-1, newY) or currentHeight
+                        neighbourRight  =   heightmap.getVal_tolerant(newX+1, newY) or currentHeight
+                        
+                        #tile = blob.getSubBlob((iix, iiy), (iix+4, iiy+4))
+                        tile = Blockgroups.getTile(newX, newY)
+                        
+                        
+                        currentVals = tile.getValGroup()
+                        
+                        for point in currentVals:
+                            local_x, local_y, height = point
+                            
+                            upDist = abs(local_y - local_upPosition)
+                            downDist = abs(local_y - local_downPosition)
+                            
+                            leftDist = abs(local_x - local_leftPosition)
+                            rightDist = abs(local_x - local_rightPosition)
+                            
+                            tile.setVal(iix, iiy, int(math.floor((1.0/upDist) * neighbourUp
+                                                             + (1.0/downDist) * neighbourDown
+                                                             + (1.0/leftDist) * neighbourLeft
+                                                             + (1.0/rightDist) * neighbourRight)))
+                        
+                        Blockgroups.changeTile(newX, newY, tile)
+                        
+            blob = Blockgroups.getBlob(ix,iy)
+            
+          
+            distances_list = []
+            
+            for rowNumber in xrange(17):
+                row = blob.getRow(rowNumber)
+                distances_list.append(row.tolist())
+                #row = map(map_list_with_vertex, row)
+                #print row
+                
+            
+            dispInfo = vmflib.brush.DispInfo(4, normals_list, distances_list)
+            
+            block.top().children.append(dispInfo)
             
             m.world.children.append(block)
             
