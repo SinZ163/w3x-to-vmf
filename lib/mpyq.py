@@ -2,6 +2,8 @@
 # coding: utf-8
 
 """
+Original Github page for mpyq: http://github.com/eagleflo/mpyq
+
 mpyq is a Python library for reading MPQ (MoPaQ) archives.
 
 LICENSE:
