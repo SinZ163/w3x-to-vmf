@@ -77,5 +77,7 @@ for entry in listfile:
 # Custom maps are likely to have their own listfiles which are located
 # in the archive. Sometimes the listfile (and other files) is encrypted,
 # but there is no decryption yet.
+
+#and sometimes custom maps dont use it at all, as for most cases, wc3 knows what files there are anyway
 listfile_file.close()
     

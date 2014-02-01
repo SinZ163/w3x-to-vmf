@@ -85,5 +85,7 @@ class TopDownViewer:
                         self.draw.line(((x*32,y*32),(x*32, y*32+31)),fill=(0xFF,0,0))
                         #right
                         self.draw.line(((x*32+31,y*32),(x*32+31, y*32+31)),fill=(0xFF,0,0))
-image = TopDownViewer(ReadW3E("input/war3map.w3e"))
-image.img.save("ui/tmp/test.png", "PNG")
+                        
+if __name__ == "__main__":
+    image = TopDownViewer(ReadW3E("input/war3map.w3e"))
+    image.img.save("ui/tmp/test.png", "PNG")

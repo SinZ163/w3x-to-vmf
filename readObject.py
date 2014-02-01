@@ -1,6 +1,3 @@
-from lib.DataReader import DataReader
-import simplejson
-import os
 #w3u = Units
 #w3t = Items
 #w3b = Destructables
@@ -15,8 +12,6 @@ class ObjectReader():
     from lib.DataReader import DataReader
 
     #These are the file extentions that have more reading
-
-    #This is to
     OptionalInts = [
             "w3d",
             "w3a",
@@ -63,40 +58,40 @@ class ObjectReader():
             for i in xrange(tmpLen):
                 tmpInfo.append(self.readObject())
         return tmpInfo
-
-filename = "input/war3map.w3t"
-fileInfo = ObjectReader(filename)
-
-#Now to make a usable file
-translation = {
-    "icla" : "Classification",
-    "unam" : "Name",
-    "ides" : "Description",
-    "utip" : "ShopName", #iunno
-    "utub" : "ToolTip", #iunno
-    "iabi" : "Ability",
-    "iico" : "Icon",
-    "igol" : "GoldCost",
-    "ilum" : "LumberCost",
-    "iusa" : "HasActive"
-}
-translatedInfo = {}
-for i in xrange(len(fileInfo.customInfo)):
-    tmpInfo = {}
-    for j in xrange(len(fileInfo.customInfo[i]["mods"])):
-        if fileInfo.customInfo[i]["mods"][j]["ID"] in translation:
-            tmpInfo[translation[fileInfo.customInfo[i]["mods"][j]["ID"]]] = fileInfo.customInfo[i]["mods"][j]["value"]
-    translatedInfo[tmpInfo["Name"]] = tmpInfo
-
-    
-#Ok, lets write to json
-try:
-    os.makedirs('./output')
-except OSError:
-    pass
-with open("output/original.json", "w") as f:
-    f.write(simplejson.dumps(fileInfo.originalInfo, sort_keys=True, indent=4 * ' '))
-with open("output/custom.json", "w") as f:
-    f.write(simplejson.dumps(fileInfo.customInfo, sort_keys=True, indent=4 * ' '))
-with open("output/translated.json","w") as f:
-    f.write(simplejson.dumps(translatedInfo, sort_keys=True, indent=4 * ' '))
+if __name__ == "__main__":
+    import simplejson
+    import os
+    filename = "input/war3map.w3t"
+    fileInfo = ObjectReader(filename)
+    #Now to make a usable file
+    translation = {
+        "icla" : "Classification",
+        "unam" : "Name",
+        "ides" : "Description",
+        "utip" : "ShopName", #iunno
+        "utub" : "ToolTip", #iunno
+        "iabi" : "Ability",
+        "iico" : "Icon",
+        "igol" : "GoldCost",
+        "ilum" : "LumberCost",
+        "iusa" : "HasActive"
+    }
+    translatedInfo = {}
+    for i in xrange(len(fileInfo.customInfo)):
+        tmpInfo = {}
+        for j in xrange(len(fileInfo.customInfo[i]["mods"])):
+            if fileInfo.customInfo[i]["mods"][j]["ID"] in translation:
+                tmpInfo[translation[fileInfo.customInfo[i]["mods"][j]["ID"]]] = fileInfo.customInfo[i]["mods"][j]["value"]
+        translatedInfo[tmpInfo["Name"]] = tmpInfo
+        
+    #Ok, lets write to json
+    try:
+        os.makedirs('./output')
+    except OSError:
+        pass
+    with open("output/original.json", "w") as f:
+        f.write(simplejson.dumps(fileInfo.originalInfo, sort_keys=True, indent=4 * ' '))
+    with open("output/custom.json", "w") as f:
+        f.write(simplejson.dumps(fileInfo.customInfo, sort_keys=True, indent=4 * ' '))
+    with open("output/translated.json","w") as f:
+        f.write(simplejson.dumps(translatedInfo, sort_keys=True, indent=4 * ' '))

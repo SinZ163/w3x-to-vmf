@@ -1,13 +1,7 @@
-import struct
-import time
-import os
-import traceback
-import Image
-import math
-import simplejson
-from lib.DataReader import DataReader
-
 class ReadW3E():
+    import struct
+    from lib.DataReader import DataReader
+    
     def __init__(self, filename):
         self.read = DataReader(filename)
         self.mapInfo = self.ReadMap()
@@ -52,6 +46,9 @@ class ReadW3E():
         return tmpData
 
 if __name__ == "__main__":
+    import os
+    import simplejson
+    
     filename = "input/war3map.w3e"
     mapInfo = ReadW3E(filename)
     
