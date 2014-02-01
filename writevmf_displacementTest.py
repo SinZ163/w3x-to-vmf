@@ -31,9 +31,9 @@ class QuadBlobs():
     def addBlob(self, x, y, height):
         index = y * self.maxX + x
         
-        bloblist = [0 for i in xrange(self.blobSizeX*self.blobSizeY)]
+        blob = Bytemap(self.blobSizeX**2+1, self.blobSizeY**2+1)
         
-        self.blobmap[index] = bloblist
+        self.blobmap[index] = blob
     
     def getBlob(self, x, y):
         index = y * self.maxX + x
@@ -41,16 +41,55 @@ class QuadBlobs():
         return self.blobmap[index]
     
     def getTile(self, big_x, big_y):
-        x, y = big_x//blobSizeX, big_y//blobSizeY
+        x, y = big_x//self.blobSizeX, big_y//self.blobSizeY
+        
+        local_x, local_y = big_x % self.blobSizeX, big_y % self.blobSizeY
+        
+        local_x = local_x * self.blobSizeX
+        local_y = local_y * self.blobSizeY
+        
+        if local_x > 1: x_offset = 1
+        else: x_offset = 0
+        
+        if local_y > 1: y_offset = 1
+        else: y_offset = 0
+        
+        tiledata = self.getBlob(x, y).getSubBlob((local_x+offset, local_y+offset), 
+                                                 (local_x+offset+self.blobSizeX, local_y+offset+self.blobSizeY))
+        
+        return tiledata
+    
+    def changeTile(self, big_x, big_y, tile):
+        x, y = big_x//self.blobSizeX, big_y//self.blobSizeY
+        
+        local_x, local_y = big_x % self.blobSizeX, big_y % self.blobSizeY
+        
+        local_x = local_x * self.blobSizeX
+        local_y = local_y * self.blobSizeY
+        
+        if local_x > 1: x_offset = 1
+        else: x_offset = 0
+        
+        if local_y > 1: y_offset = 1
+        else: y_offset = 0
+        
+        blob = self.getBlob(x, y)
+        
+        
+        
         
     
             
 class Bytemap():
-    def __init__(self, maxX, maxY):
+    def __init__(self, maxX, maxY, init = -1, initArray = None):
         self.maxX = maxX
         self.maxY = maxY
-        self.map = array.array("h", [-1 for x in xrange(maxX*maxY)])
-    
+        
+        if initArray == None:
+            self.map = array.array("h", [init for x in xrange(maxX*maxY)])
+        else:
+            self.map = array.array("h", initArray)
+            
     def setVal(self, x, y, val):
         index = y * self.maxX + x
         self.map[index] = val
@@ -58,6 +97,7 @@ class Bytemap():
     def getVal(self, x, y):
         index = y * self.maxX + x
         return self.map[index]
+        
     
     def getValGroup_iter(self, minCoords, maxCoords):
         for ix in xrange(minCoords[0],maxCoords[0]):
@@ -68,8 +108,26 @@ class Bytemap():
         grouplist = []
         for ix in xrange(minCoords[0],maxCoords[0]):
             for iy in xrange(minCoords[1],maxCoords[1]):
-                grouplist.append((ix, iy, self.getVal(ix, iy))
-
+                grouplist.append((ix, iy, self.getVal(ix, iy)))
+        
+        return grouplist
+             
+    def setValGroup_fromBlob(self, minCoords, maxCoords, blob):
+        for ix in xrange(minCoords[0],maxCoords[0]):
+            for iy in xrange(minCoords[1],maxCoords[1]):
+                miniX, miniY = ix - minCoords[0], iy - minCoords[1]
+                self.setVal(ix, iy, blob.getVal(miniX, miniY))
+             
+    
+    def getSubBlob(self, minCoords, maxCoords):
+        x, y = maxCoords[0] - minCoords[0], maxCoords[1] - minCoords[1]
+        
+        subBlobList = self.getValGroup(minCoords, maxCoords)
+        
+        return Bytemap(x, y, subBlobList)
+    
+    
+    
 ## We make a number divisible by n by rounding up. For that, 
 ## we calculate how much we would have to add to the number for it to
 ## be divisible without leaving any remains beyond the decimal point.
