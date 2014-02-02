@@ -9,8 +9,8 @@ import time
 # using BHSPitMonkey's Python vmflib: http://github.com/BHSPitMonkey/vmflib
 # Even though it is for Python 3 and above, most of 
 # its main features work on Python 2.7 (As of this moment, 18th January, 2014)
-import vmflib
-import vmflib.tools as tools
+import lib.vmflib
+import lib.vmflib.tools as tools
 
 try:
     from PIL import Image # Uses Pillow to draw a graphic representation of the map
