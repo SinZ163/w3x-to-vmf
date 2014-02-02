@@ -4,7 +4,7 @@ import array
 # using BHSPitMonkey's Python vmflib: http://github.com/BHSPitMonkey/vmflib
 # Even though it is for Python 3 and above, most of 
 # its main features work on Python 2.7 (As of this moment, 18th January, 2014)
-import lib.vmflib
+import lib.vmflib as vmflib
 import lib.vmflib.tools as tools
 
 try:
@@ -35,6 +35,7 @@ print data.mapInfo["width"], data.mapInfo["height"]
 
 # We use the vmf library to create a map for the source engine
 m = vmflib.vmf.ValveMap()
+m.world.skyname = "sky_dotasky_01"
 
 # x_factor and y_factor will limit the size of objects that are drawn, if the map should be smaller
 # Remains from a different program, might be removed in future revisions
@@ -169,11 +170,10 @@ for x in xrange(data.mapInfo["width"]):
 
 scaled_lowestHeight = 16 # Placeholder value for now
 
-# We create a floor and mark it with a different brick texture
-# (brick_ext_06 instead of brick_ext_07)
+# We create a floor and mark it with a different texture
 orig = vmflib.types.Vertex(0,0, 0-scaled_lowestHeight//2)
 floor = tools.Block(origin = orig, dimensions=(xSize_real, ySize_real, scaled_lowestHeight))
-floor.set_material("brick/brick_ext_06")
+floor.set_material("nature/dirtfloor012a")
 
 m.world.children.append(floor)
 print "Created floor at z={0}".format(0-scaled_lowestHeight//2)
@@ -221,7 +221,7 @@ for index, plane in enumerate(bloblist):
         vert = vmflib.types.Vertex((midX*64)-xOffset_real, (midY*64)-yOffset_real, 0+(height//2))
         block = tools.Block(origin = vert, dimensions=(boxWidth*64, boxLength*64, height))
         
-        block.set_material("brick/brick_ext_07")
+        block.set_material("nature/dirt_grass_00")
         
         m.world.children.append(block)
     

@@ -9,7 +9,7 @@ import time
 # using BHSPitMonkey's Python vmflib: http://github.com/BHSPitMonkey/vmflib
 # Even though it is for Python 3 and above, most of 
 # its main features work on Python 2.7 (As of this moment, 18th January, 2014)
-import lib.vmflib
+import lib.vmflib as vmflib
 import lib.vmflib.tools as tools
 
 try:
@@ -33,6 +33,7 @@ if __name__ == "__main__":
     print "Original map dimension: xsize: {0}, ysize: {1}".format(data.mapInfo["width"], data.mapInfo["height"])
     
     m = vmflib.vmf.ValveMap()
+    m.world.skyname = "sky_dotasky_01"
     
     # x_factor and y_factor will limit the size of objects that are drawn, if the map should be smaller
     # Remains from a different program, might be removed in future revisions
@@ -142,7 +143,7 @@ if __name__ == "__main__":
     normals_row = [vmflib.types.Vertex(0,0,1) for i in xrange(17)]
     normals_list = [normals_row for i in xrange(17)]
     
-    choice = ("brick/brick_ext_07", "brick/brick_ext_06")
+    choice = ("nature/dirt_grass_00", "nature/blendrockground002")
     
     print "Time taken for initialization: {0}".format(time.clock()-initTime)
     
@@ -246,10 +247,10 @@ if __name__ == "__main__":
     scaled_lowestHeight = 16 # Placeholder value for now
     
     
-    # We create a floor and mark it with a different brick texture
+    # We create a floor and mark it with a different texture
     orig = vmflib.types.Vertex(0,0, 0-scaled_lowestHeight//2)
     floor = tools.Block(origin = orig, dimensions=(xSize_real, ySize_real, scaled_lowestHeight))
-    floor.set_material("brick/brick_ext_06")
+    floor.set_material("nature/dirtfloor012a")
     
     m.world.children.append(floor)
     print "Building map finished."
