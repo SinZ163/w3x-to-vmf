@@ -4,7 +4,7 @@ Main classes for working with VMF maps.
 
 """
 
-from vmflib import types
+from lib.vmflib import types
 
 
 ###############################################################################
