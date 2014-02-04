@@ -27,7 +27,8 @@ class App(Tkinter.Frame):
         #terrain drop-down
         terrainMenu = Tkinter.Menu(menubar, tearoff=0)
         terrainMenu.add_command(label="Open WC3 Terrain file", command=self.openTerrainFile)
-        menubar.add_cascade(label="Terrain", menu=terrainMenu)
+        terrainMenu.add_command(label="Open WC3 Data file", command=self.openObjectFile)
+        menubar.add_cascade(label="Manual", menu=terrainMenu)
         #help drop-down
         helpMenu = Tkinter.Menu(menubar, tearoff=0)
         helpMenu.add_command(label="About WC3-to-VMF", command=self.about)
@@ -39,10 +40,26 @@ class App(Tkinter.Frame):
         self.master.config(menu=menubar)
         
     def openTerrainFile(self):
-        options = {}
-        options["defaultextension"] = ".w3e"
-        options["filetypes"] = [("Warcraft III Terrain", ".w3e")]
-        options["title"] = "This is a title"
+        options = {
+            "defaultextension" : ".w3e",
+            "filetypes" : [("Warcraft III Terrain", ".w3e")],
+            "title" : "This is a title"
+        }
+        fileHandle = askopenfile(mode="r",**options)
+    def openObjectFile(self):
+        options = {
+            "defaultextension" : ".w3t",
+            "filetypes" : [
+                ("Warcraft III Units",          ".w3u"),
+                ("Warcraft III Items",          ".w3t"),
+                ("Warcraft III Destructables",  ".w3b"),
+                ("Warcraft III Doodats",        ".w3d"),
+                ("Warcraft III Abilities",      ".w3a"),
+                ("Warcraft III Buffs",          ".w3h"),
+                ("Warcraft III Upgrades",       ".w3q")
+            ],
+            "title" : "This is also a title!"
+        }
         fileHandle = askopenfile(mode="r",**options)
         
 

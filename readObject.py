@@ -19,7 +19,7 @@ class ObjectReader():
     ]
     variableTypes = []
     def __init__(self, filename):
-        self.read = DataReader(filename)
+        self.read = self.DataReader(filename)
         self.variableTypes = [
             self.read.int,
             self.read.float,
