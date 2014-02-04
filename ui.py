@@ -1,9 +1,12 @@
-from Tkinter import *
-from tkFileDialog import askopenfile,asksaveasfilename
 import tkMessageBox
-class App(Frame):
+import Tkinter
+
+from tkFileDialog import askopenfile,asksaveasfilename
+
+
+class App(Tkinter.Frame):
     def __init__(self, master=None):
-        Frame.__init__(self, master)
+        Tkinter.Frame.__init__(self, master)
         
         #Lets set the window size and name
         self.master.title("Warcraft III to Dota 2 conversion toolkit.")
@@ -18,15 +21,15 @@ class App(Frame):
         """)
     def menuCreation(self):
         #create the menu bar itself
-        menubar = Menu(self.master)
+        menubar = Tkinter.Menu(self.master)
         #add stuff to it
         
         #terrain drop-down
-        terrainMenu = Menu(menubar, tearoff=0)
+        terrainMenu = Tkinter.Menu(menubar, tearoff=0)
         terrainMenu.add_command(label="Open WC3 Terrain file", command=self.openTerrainFile)
         menubar.add_cascade(label="Terrain", menu=terrainMenu)
         #help drop-down
-        helpMenu = Menu(menubar, tearoff=0)
+        helpMenu = Tkinter.Menu(menubar, tearoff=0)
         helpMenu.add_command(label="About WC3-to-VMF", command=self.about)
         menubar.add_cascade(label="Help", menu=helpMenu)
         #exit button
