@@ -64,25 +64,35 @@ if __name__ == "__main__":
     filename = "input/war3map.w3t"
     fileInfo = ObjectReader(filename)
     #Now to make a usable file
-    translation = {
+    itemTranslation = {
         "icla" : "Classification",
         "unam" : "Name",
         "ides" : "Description",
-        "utip" : "ShopName", #iunno
-        "utub" : "ToolTip", #iunno
-        "iabi" : "Ability",
+        "utip" : "ToolTip", #iunno
+        "utub" : "LongToolTip", #iunno
+        "iabi" : "AbilityList",
         "iico" : "Icon",
         "igol" : "GoldCost",
         "ilum" : "LumberCost",
-        "iusa" : "HasActive"
+        "iusa" : "Usable",
+        "iuse" : "Charges",
+        "iper" : "Perishable",
+        "isto" : "StockMax",
+        "istr" : "StockRegen",
+        "uhot" : "LegacyHotkey",
+        "isst" : "StockStart",
+        "ilev" : "Level",       #No idea
+        "idro" : "Droppable",   
+        "idrp" : "Drop",        #maybe IsDropped
+        "ihtp" : "HP"
     }
-    translatedInfo = {}
+    itemTranslatedInfo = {}
     for i in xrange(len(fileInfo.customInfo)):
         tmpInfo = {}
         for j in xrange(len(fileInfo.customInfo[i]["mods"])):
-            if fileInfo.customInfo[i]["mods"][j]["ID"] in translation:
+            if fileInfo.customInfo[i]["mods"][j]["ID"] in itemTranslation:
                 tmpInfo[translation[fileInfo.customInfo[i]["mods"][j]["ID"]]] = fileInfo.customInfo[i]["mods"][j]["value"]
-        translatedInfo[tmpInfo["Name"]] = tmpInfo
+        itemTranslatedInfo[tmpInfo["Name"]] = tmpInfo
         
     #Ok, lets write to json
     try:
@@ -93,5 +103,10 @@ if __name__ == "__main__":
         f.write(simplejson.dumps(fileInfo.originalInfo, sort_keys=True, indent=4 * ' '))
     with open("output/custom.json", "w") as f:
         f.write(simplejson.dumps(fileInfo.customInfo, sort_keys=True, indent=4 * ' '))
-    with open("output/translated.json","w") as f:
-        f.write(simplejson.dumps(translatedInfo, sort_keys=True, indent=4 * ' '))
+    #Now for translated files
+    try:
+        os.makedirs('./output/translated')
+    except OSError:
+        pass
+    with open("output/translated/itemInfo.json","w") as f:
+        f.write(simplejson.dumps(itemTranslatedInfo, sort_keys=True, indent=4 * ' '))

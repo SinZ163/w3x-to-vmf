@@ -1,8 +1,10 @@
 import tkMessageBox
 import Tkinter
+import ttk
 
-from tkFileDialog import askopenfile,asksaveasfilename
+from tkFileDialog import askopenfilename,asksaveasfilename
 
+from read_w3e import ReadW3E
 
 class App(Tkinter.Frame):
     def __init__(self, master=None):
@@ -10,10 +12,17 @@ class App(Tkinter.Frame):
         
         #Lets set the window size and name
         self.master.title("Warcraft III to Dota 2 conversion toolkit.")
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=1)
+        
         self.master.maxsize(800,600)
         self.configure(height=600,width=800)
         
         self.pack()
+        
+        self.tree = ttk.Treeview(self)
+        self.tree.heading('#0', text="Path", anchor="w")
+        self.tree.insert("", 0, text="hai", open=True)
 
     def about(self):
         tkMessageBox.showinfo("About", """
@@ -45,7 +54,16 @@ class App(Tkinter.Frame):
             "filetypes" : [("Warcraft III Terrain", ".w3e")],
             "title" : "This is a title"
         }
-        fileHandle = askopenfile(mode="r",**options)
+        filename = askopenfilename(**options)
+        mapInfo = ReadW3E(filename)
+        #print(mapInfo.mapInfo)
+        #I actually have no idea what I am doing here
+        TreeFrame = ttk.Frame(self, padding = "3")
+        tree = ttk.Treeview(TreeFrame, columns = ('Values'))
+        tree.column('Values', width = 100, anchor = "center")
+        tree.heading('Values', text='Values')
+        self.JSONTree(tree, '', mapInfo.mapInfo)
+        tree.pack(side="bottom")
     def openObjectFile(self):
         options = {
             "defaultextension" : ".w3t",
@@ -60,8 +78,19 @@ class App(Tkinter.Frame):
             ],
             "title" : "This is also a title!"
         }
-        fileHandle = askopenfile(mode="r",**options)
-        
+        fileHandle = askopenfilename(**options)
+    #voodoo magic is fun?
+    def JSONTree(self, Tree, Parent, Dictionery, TagList = []):
+         for key in Dictionery : 
+          if isinstance(Dictionery[key],dict): 
+           Tree.insert(Parent, 'end', key, text = key)
+           TagList.append(key)
+           JSONTree(Tree, key, Dictionery[key], TagList)
+           pprint(TagList)
+          elif isinstance(Dictionery[key],list): 
+           Tree.insert(Parent, 'end', key, text = key) # Still working on this
+          else : 
+           Tree.insert(Parent, 'end', key, text = key, value = Dictionery[key])
 
 # create the application
 myapp = App()
