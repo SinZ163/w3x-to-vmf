@@ -22,48 +22,40 @@ class QuadBlobs():
         
         return self.blobmap[index]
     
-    def getTile(self, big_x, big_y):
-        x, y = big_x//self.blobSizeX, big_y//self.blobSizeY
-        
-        local_x, local_y = big_x % self.blobSizeX, big_y % self.blobSizeY
-        
-        
-        
-        if local_x > 1: x_offset = 1
+    def getTile(self, blobX, blobY, tileX, tileY):
+        # Displacement maps are not even, so we will calculate an offset
+        # to keep the tiles close to the edges of the blob.
+        # Check the sewTilesTogether function on what happens to the
+        # data in between the tiles. 
+        if tileX > 1: x_offset = 1
         else: x_offset = 0
         
-        if local_y > 1: y_offset = 1
+        if tileY > 1: y_offset = 1
         else: y_offset = 0
         
-        local_x = local_x * self.blobSizeX
-        local_y = local_y * self.blobSizeY
+        tileX = tileX * self.blobSizeX
+        tileY = tileY * self.blobSizeY
         
-        tiledata = self.getBlob(x, y).getSubBlob((local_x+x_offset, local_y+y_offset), 
-                                                 (local_x+x_offset+self.blobSizeX, local_y+y_offset+self.blobSizeY))
+        tiledata = self.getBlob(blobX, blobY).getSubBlob((tileX+x_offset,                   tileY+y_offset), 
+                                                         (tileX+x_offset+self.blobSizeX,    tileY+y_offset+self.blobSizeY))
         
         return tiledata
     
-    def changeTile(self, big_x, big_y, tile):
-        x, y = big_x//self.blobSizeX, big_y//self.blobSizeY
-        
-        local_x, local_y = big_x % self.blobSizeX, big_y % self.blobSizeY
-        
-        #local_x = local_x * self.blobSizeX
-        #local_y = local_y * self.blobSizeY
-        
-        if local_x > 1: x_offset = 1
+    def changeTile(self, blobX, blobY, tileX, tileY, tile):
+        if tileX > 1: x_offset = 1
         else: x_offset = 0
         
-        if local_y > 1: y_offset = 1
+        if tileY > 1: y_offset = 1
         else: y_offset = 0
         
-        blob = self.getBlob(x, y)
+        blob = self.getBlob(blobX, blobY)
         
-        local_x = local_x * self.blobSizeX
-        local_y = local_y * self.blobSizeY
+        tileX = tileX * self.blobSizeX
+        tileY = tileY * self.blobSizeY
         
-        blob.setValGroup_fromBlob(tile, (local_x+x_offset, local_y+y_offset), 
-                                  (local_x+x_offset+self.blobSizeX, local_y+y_offset+self.blobSizeY))
+        blob.setValGroup_fromBlob(tile, 
+                                  (tileX+x_offset,                tileY+y_offset), 
+                                  (tileX+x_offset+self.blobSizeX, tileY+y_offset+self.blobSizeY))
     
     ## If you have noticed it, we use offsets to skip one row of data in the middle
     ## of the blob. As a result, at x = 8 and y = 8 in the tile there will be a steep step down,
@@ -177,12 +169,26 @@ class Bytemap():
         
         return Bytemap(x, y, 0, subBlobList)
     
+    # The data is ordered in such a way so that we can retrieve 
+    # an entire row of data simply by calculating the start and end index.
     def getRow(self, rowNum):
         start = rowNum * self.maxX
         end = rowNum * self.maxX + self.maxX
         
         return self.map[start:end]
+    
+    # Columns are less simple to retrieve, we need to use the getVal method
+    # which handles calculation of indexes. 
+    # List comprehensions are fun, so we will use one.
+    def getColumn(self, columnNum):
+        x = columnNum
+        #print self.maxX
+        column = [self.getVal(x, y) for y in xrange(self.maxY)]
+        
+        return column
+            
+        
 
 class TileMap(Bytemap):
     def __init__(self, *args):
-        self.__init__(*args)
+        Bytemap.__init__(*args)
