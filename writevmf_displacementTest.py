@@ -55,11 +55,15 @@ if __name__ == "__main__":
     
     # The offset variables are used to move the created brushes in such a way
     # so that the middle of the wc3 map is the (0,0) coordinate in the vmf file
-    xOffset_real = xSize_real//2
-    yOffset_real = ySize_real//2
+    #xOffset_real = xSize_real//2
+    #yOffset_real = ySize_real//2
+    xOffset_real = 0
+    yOffset_real = 0
     
-    xOffset = (xSize//2)
-    yOffset = (ySize//2)
+    #xOffset = (xSize//2)
+    #yOffset = (ySize//2)
+    xOffset = 0
+    yOffset = 0
     zOffset = (height//2)
     
     
@@ -162,19 +166,17 @@ if __name__ == "__main__":
             
             Blockgroups.addBlob(ix, iy)
             
-            
-            
             for iix in xrange(4):
                 for iiy in xrange(4):
                     newX = (ix*4)+iix
                     newY = (iy*4)+iiy
                     
-                    if newX >= data.mapInfo["width"] or newY >= data.mapInfo["width"]:
+                    if newX >= data.mapInfo["width"] or newY >= data.mapInfo["height"]:
                         break
                     else:
                         currentHeight = heightmap.getVal(newX, newX)
                         
-                        ## We do very simple data interpolation using the heights of the
+                        """## We do very simple data interpolation using the heights of the
                         ## 4 neighbours of a tile.
                         neighbourUp     =   heightmap.getVal_tolerant(newX, newY+1) or currentHeight
                         neighbourDown   =   heightmap.getVal_tolerant(newX, newY-1) or currentHeight
@@ -206,11 +208,11 @@ if __name__ == "__main__":
                                                              + downDist * currentHeight
                                                              + leftDist * currentHeight
                                                              + rightDist * currentHeight)))
-                        Blockgroups.changeTile(newX, newY, tile)
+                        Blockgroups.changeTile(newX, newY, tile)"""
                         
                         ## A more simple displacement test that uses the tile height for all points
                         ## of the tile.
-                        """tile = Blockgroups.getTile(newX, newY)
+                        tile = Blockgroups.getTile(ix, iy, iix, iiy)
                         currentVals = tile.getValGroup()
                         
                         for point in currentVals:
@@ -218,21 +220,29 @@ if __name__ == "__main__":
                             
                             tile.setVal(local_x, local_y, currentHeight)
                         
-                        Blockgroups.changeTile(newX, newY, tile)"""
+                        Blockgroups.changeTile(ix, iy, iix, iiy, tile)
             
             Blockgroups.sewTilesTogether(ix, iy)
             
-            blob = Blockgroups.getBlob(ix,iy)
+            blob = Blockgroups.getBlob(ix, iy)
           
             distances_list = []
             for rowNumber in xrange(17):
                 row = blob.getRow(rowNumber)
                 row = row.tolist()
-                row.reverse()
+                #row.reverse()
                 distances_list.append(row)
                 #row = map(map_list_with_vertex, row)
                 #print row
-                
+            
+            """distances_list = []
+            for columnNumber in xrange(17):
+                #column = blob.getColumn(columnNumber)
+                ##column = column.tolist()
+                ##colum.reverse()
+                #distances_list.append(column)
+                distances_list.append([(i%2)*32 for i in xrange(17)])"""
+               
             
             dispInfo = vmflib.brush.DispInfo(4, normals_list, distances_list)
             
