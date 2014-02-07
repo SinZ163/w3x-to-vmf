@@ -55,15 +55,15 @@ if __name__ == "__main__":
     
     # The offset variables are used to move the created brushes in such a way
     # so that the middle of the wc3 map is the (0,0) coordinate in the vmf file
-    #xOffset_real = xSize_real//2
-    #yOffset_real = ySize_real//2
-    xOffset_real = 0
-    yOffset_real = 0
+    xOffset_real = xSize_real//2
+    yOffset_real = ySize_real//2
+    #xOffset_real = 0
+    #yOffset_real = 0
     
-    #xOffset = (xSize//2)
-    #yOffset = (ySize//2)
-    xOffset = 0
-    yOffset = 0
+    xOffset = (xSize//2)
+    yOffset = (ySize//2)
+    #xOffset = 0
+    #yOffset = 0
     zOffset = (height//2)
     
     
@@ -212,7 +212,7 @@ if __name__ == "__main__":
                         
                         ## A more simple displacement test that uses the tile height for all points
                         ## of the tile.
-                        tile = Blockgroups.getTile(ix, iy, iix, iiy)
+                        """tile = Blockgroups.getTile(ix, iy, iix, iiy)
                         currentVals = tile.getValGroup()
                         
                         for point in currentVals:
@@ -220,31 +220,36 @@ if __name__ == "__main__":
                             
                             tile.setVal(local_x, local_y, currentHeight)
                         
-                        Blockgroups.changeTile(ix, iy, iix, iiy, tile)
+                        Blockgroups.changeTile(ix, iy, iix, iiy, tile)"""
             
-            Blockgroups.sewTilesTogether(ix, iy)
+            #Blockgroups.sewTilesTogether(ix, iy)
             
-            blob = Blockgroups.getBlob(ix, iy)
+            #blob = Blockgroups.getBlob(ix, iy)
           
-            distances_list = []
+            """distances_list = []
             for rowNumber in xrange(17):
                 row = blob.getRow(rowNumber)
                 row = row.tolist()
                 #row.reverse()
                 distances_list.append(row)
                 #row = map(map_list_with_vertex, row)
-                #print row
+                #print row"""
             
-            """distances_list = []
+            distances_list = []
             for columnNumber in xrange(17):
                 #column = blob.getColumn(columnNumber)
                 ##column = column.tolist()
                 ##colum.reverse()
                 #distances_list.append(column)
-                distances_list.append([(i%2)*32 for i in xrange(17)])"""
+                distances_list.append([(i%2)*32 for i in xrange(17)])
                
             
             dispInfo = vmflib.brush.DispInfo(4, normals_list, distances_list)
+            
+            # We need to change the start position of the displacement map, otherwise
+            # Hammer will be very confused about the order of the displacement data.
+            # Thanks for the tip, penguinwizzard!
+            dispInfo.set_startPosition((ix*4*64)-xOffset_real+0*64, (iy*4*64)-yOffset_real+0*64, 0+(height))
             
             block.top().children.append(dispInfo)
             

@@ -96,6 +96,9 @@ class DispInfo(vmf.VmfClass):
     def set_power(self, power):
         self.power = power
         
+    def set_startPosition(self, x, y, z):
+        self.startposition = "[{0} {1} {2}]".format(x, y, z)
+        
 
 class Normals(vmf.VmfClass):
     
