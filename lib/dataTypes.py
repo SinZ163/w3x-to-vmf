@@ -90,9 +90,6 @@ class QuadBlobs():
         
     
     def sew_brush_neighbours(self, blobx, bloby):
-        # x;y coordinates of the corners of a blob
-        corners = [(0,0), (0, 16), (16, 0), (16, 16)]
-        
         # We create a list of the coordinates of the sides
         # for simple iteration.
         sideUp = [(x, 16) for x in xrange(1, 16)]
@@ -102,9 +99,8 @@ class QuadBlobs():
         
         currBlob = self.getBlob(blobx, bloby)
         
-        
         if bloby+1 < self.maxY: # Boundary check
-            
+            upExists = True
             upperBlob = self.getBlob(blobx, bloby+1)
             
             # We are iterating over two lists at once so we can grab the coordinates
@@ -120,10 +116,11 @@ class QuadBlobs():
 
                 currBlob.setVal(ix, iy, average)
                 upperBlob.setVal(ix_up, iy_up, average)
-                
+        else:
+            upExists = False
                 
         if blobx+1 < self.maxX: # Boundary check
-            
+            rightExists = True
             rightBlob = self.getBlob(blobx+1, bloby)
             
             for coords, coordsRight in zip(sideRight, sideLeft): 
@@ -137,39 +134,77 @@ class QuadBlobs():
                 
                 currBlob.setVal(ix, iy, average)
                 rightBlob.setVal(ix_right, iy_right, average)
-        """if bloby-1 >= 0:
-            lowerBlob = self.getBlob(blobx, bloby-1)
-            for coords, coordsLower in zip(sideDown, sideUp):
-                ix, iy = coords
-                ix_down, iy_down = coordsLower
-                
-                currHeight = currBlob.getVal(ix, iy)
-                otherHeight = lowerBlob.getVal(ix_down, iy_down)
-                
-                diff = abs(currHeight-otherHeight)/2.0
-                average = (currHeight+otherHeight)/2.0
-                
-                diff = currHeight < otherHeight and diff or -diff-64
-                if currHeight == otherHeight: diff = 0
-                
-                currBlob.setVal(ix, iy, currHeight+diff)"""
+        else:
+            rightExists = False
         
-        """if blobx-1 >= 0:
-            leftBlob = self.getBlob(blobx-1, bloby)
-            for coords, coordsLeft in zip(sideLeft, sideRight):
-                ix, iy = coords
-                ix_left, iy_left = coordsLeft
-                
-                currHeight = currBlob.getVal(ix, iy)
-                otherHeight = leftBlob.getVal(ix_left, iy_left)
-                
-                diff = abs(currHeight-otherHeight)/2.0
-                average = (currHeight+otherHeight)/2.0
-                
-                diff = currHeight < otherHeight and diff or -diff-64
-                if currHeight == otherHeight: diff = 0
-                
-                currBlob.setVal(ix, iy, currHeight+diff)"""
+        if upExists == False and rightExists == False:
+            # We are at the upper right corner of the map,
+            # no need to continue.
+            return
+        
+        # Corner sewing
+        upperLeft = (0, 16)
+        lowerLeft = (0, 0)
+        upperRight = (16, 16)
+        lowerRight = (16, 0)
+        
+        upperLeft = (0, 16)
+        lowerLeft = (0, 0)
+        upperRight = (16, 16)
+        lowerRight = (16, 0)
+        
+        
+        
+        # Normal procedure: We calculate an average height value for 
+        # the upper right corner point and its three neighbours (the upper
+        # brush, the right brush, and the upper right brush).
+        upperRightHeight = currBlob.getVal(upperRight[0], upperRight[1])
+        
+        if upExists and rightExists: 
+            upperRightBlob = self.getBlob(blobx+1, bloby+1)
+            upperRightNeighbourHeight = upperRightBlob.getVal(lowerLeft[0], lowerLeft[1])
+        else:
+            upperRightNeighbourHeight = upperRightHeight
+        
+        
+        
+        if upExists: upperNeighbourHeight = upperBlob.getVal(lowerRight[0], lowerRight[1])
+        else: upperNeighbourHeight = upperRightHeight
+        
+        if rightExists: rightNeighbourHeight = rightBlob.getVal(upperLeft[0], upperLeft[1])
+        else: rightNeighbourHeight = upperRightHeight
+        
+        
+        
+        average = (upperRightHeight+upperNeighbourHeight+rightNeighbourHeight+upperRightNeighbourHeight)/4.0
+        
+        currBlob.setVal(upperRight[0], upperRight[1], average)
+        if upExists: upperBlob.setVal(lowerRight[0], lowerRight[1], average)
+        if rightExists: rightBlob.setVal(upperLeft[0], upperLeft[1], average)
+        if upExists and rightExists: upperRightBlob.setVal(lowerLeft[0], lowerLeft[1], average)
+        
+        # Special case 1: we are at x=0, i.e. the leftmost edge of the map.
+        # We need to sew the leftmost corners encountered here, they will not
+        # be picked up by the normal procedure
+        if blobx == 0 and upExists == True:
+            upperLeftHeight = currBlob.getVal(upperLeft[0], upperLeft[1])
+            neighbourHeight = upperBlob.getVal(lowerLeft[0], lowerLeft[1])
+            
+            average = (upperLeftHeight+neighbourHeight)/2.0
+            
+            currBlob.setVal(upperLeft[0], upperLeft[1], average)
+            upperBlob.setVal(lowerLeft[0], lowerLeft[1], average)
+        
+        # Special case 2: we are at y=0, i.e. the lowermost edge of the map. 
+        # Same as special case 1, this time we fix the lower right corners.
+        if bloby == 0 and rightExists == True:
+            lowerRightHeight = currBlob.getVal(lowerRight[0], lowerRight[1])
+            neighbourHeight = rightBlob.getVal(lowerLeft[0], lowerLeft[1])
+            
+            average = (lowerRightHeight+neighbourHeight)/2.0
+            
+            currBlob.setVal(lowerRight[0], lowerRight[1], average)
+            rightBlob.setVal(lowerLeft[0], lowerLeft[1], average)
         
         
         
