@@ -28,19 +28,23 @@ class ReadW3E():
         data["offsetX"] = self.read.float()
         data["offsetY"] = self.read.float()
         return data
+    
     def ReadTileset(self):
         length = self.read.int()
         info = [] 
         for i in range(0,length):
             info.append(self.read.charArray(4))
         return info
+    
     def ReadTile(self):
         tmpData = {}
         tmpData["groundHeight"] = self.read.short()
         tmpData["waterLevel"] = self.read.short() #bit 15 is used for boundary flag 1
-        tmpData["nibble1"] = self.read.byte()
+        #tmpData["nibble1"] = self.read.byte()
+        tmpData["flags"], tmpData["groundTextureType"] = self.read.nibbles()
         tmpData["textureDetails"] = self.read.byte()
-        tmpData["nibble2"] = self.read.byte()
+        #tmpData["nibble2"] = self.read.byte() 
+        tmpData["cliffTextureType"], tmpData["layerHeight"] = self.read.nibbles()
         
         return tmpData
 

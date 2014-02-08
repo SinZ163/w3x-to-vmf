@@ -48,18 +48,20 @@ class DataReader():
         self.index += 1
         data = self.hdlr.read(1)
         return struct.unpack("B", data)[0]
+    
     def byteArray(self, len):
         self.index += len
         data = self.hdlr.read(len)
         bytes = struct.unpack(str(len)+"B", data)
         return bytes
+    
     def nibbles(self):
         #Not in the specifications, but is a 4bit entry
         self.index += 1
         data = self.hdlr.read(1)
         byte = struct.unpack("B", data)[0]
         
-        nibble1, nibble2 = byte & 0xF0, byte & 0x0F
+        nibble1, nibble2 = (byte & 0xF0) >> 4, byte & 0x0F
         return nibble1, nibble2
     
     def string(self):
