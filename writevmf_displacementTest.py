@@ -156,14 +156,7 @@ if __name__ == "__main__":
     
     for ix in xrange(xSize//4):
         for iy in xrange(ySize//4):
-            height = 64
-            vert = vmflib.types.Vertex((ix*4*64)-xOffset_real+2*64, (iy*4*64)-yOffset_real+2*64, 0+(height//2))
-            block = tools.Block(origin = vert, dimensions=(4*64, 4*64, height))
             
-            ## We alternate between two types of textures. This results in a checkered pattern, 
-            ## similar to chess. It is very easy to see where a block starts and ends.
-            block.set_material(choice[(iy+ix*(xSize//4))%2])
-            #block.set_material("brick/brick_ext_07")
             
             blob = Blockgroups.addBlob(ix, iy)
             
@@ -238,6 +231,21 @@ if __name__ == "__main__":
             
             #blob = Blockgroups.getBlob(ix, iy)
           
+            
+            
+    for ix in xrange(xSize//4):
+        for iy in xrange(ySize//4):
+            height = 64
+            vert = vmflib.types.Vertex((ix*4*64)-xOffset_real+2*64, (iy*4*64)-yOffset_real+2*64, 0+(height//2))
+            block = tools.Block(origin = vert, dimensions=(4*64, 4*64, height))
+            
+            ## We alternate between two types of textures. This results in a checkered pattern, 
+            ## similar to chess. It is very easy to see where a block starts and ends.
+            block.set_material(choice[(iy+ix*(xSize//4))%2])
+            #block.set_material("brick/brick_ext_07")
+            
+            blob = Blockgroups.getBlob(ix, iy)
+            
             distances_list = []
             for rowNumber in xrange(17):
                 row = blob.getRow(rowNumber)
