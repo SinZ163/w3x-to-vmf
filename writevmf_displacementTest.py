@@ -135,20 +135,13 @@ if __name__ == "__main__":
     
     Blockgroups = QuadBlobs(xSize//4, ySize//4, 4, 4)
     
-    ## We initialize distance values which will be used for 
-    ## height interpolation.
-    local_upPosition = 5
-    local_downPosition = -1
-    local_leftPosition = -1
-    local_rightPosition = 5
-    
     ## For the moment, we will not do anything interesting with normals.
     ## We will set it to 0,0,1 i.e. the normal vector will point straight upwards.
     normals_row = [vmflib.types.Vertex(0,0,1) for i in xrange(17)]
     normals_list = [normals_row for i in xrange(17)]
     
-    #choice = ("nature/dirt_grass_00", "nature/blendrockground002")
-    choice = ("brick/brick_ext_07", "brick/brick_ext_06")
+    choice = ("nature/dirt_grass_00", "nature/blendrockground002")
+    #choice = ("brick/brick_ext_07", "brick/brick_ext_06")
     
     print "Time taken for initialization: {0}".format(time.clock()-initTime)
     
@@ -170,41 +163,7 @@ if __name__ == "__main__":
                     else:
                         currentHeight = heightmap.getVal(newX, newY)
                         
-                        """## We do very simple data interpolation using the heights of the
-                        ## 4 neighbours of a tile.
-                        neighbourUp     =   heightmap.getVal_tolerant(newX, newY+1) or currentHeight
-                        neighbourDown   =   heightmap.getVal_tolerant(newX, newY-1) or currentHeight
-                        neighbourLeft   =   heightmap.getVal_tolerant(newX-1, newY) or currentHeight
-                        neighbourRight  =   heightmap.getVal_tolerant(newX+1, newY) or currentHeight
-                        
-                        #tile = blob.getSubBlob((iix, iiy), (iix+4, iiy+4))
-                        tile = Blockgroups.getTile(newX, newY)
-                        
-                        
-                        currentVals = tile.getValGroup()
-                        
-                        for point in currentVals:
-                            local_x, local_y, height = point
-                            
-                            upDist = abs(local_y - local_upPosition)
-                            downDist = abs(local_y - local_downPosition)
-                            
-                            leftDist = abs(local_x - local_leftPosition)
-                            rightDist = abs(local_x - local_rightPosition)
-                            
-                            
-                            tile.setVal(local_x, local_y, int(math.floor( ((1.0/upDist) * neighbourUp
-                                                             + (1.0/downDist) * neighbourDown
-                                                             + (1.0/leftDist) * neighbourLeft
-                                                             + (1.0/rightDist) * neighbourRight) 
-                                                            
-                                                             + upDist * currentHeight
-                                                             + downDist * currentHeight
-                                                             + leftDist * currentHeight
-                                                             + rightDist * currentHeight)))
-                        Blockgroups.changeTile(newX, newY, tile)"""
-                        
-                        ## A more simple displacement test that uses the tile height for all points
+                        ## A simple displacement test that uses the tile height for all points
                         ## of the tile.
                         #tile = Blockgroups.getTile(ix, iy, iix, iiy)
                         #currentVals = tile.getValGroup()
@@ -213,13 +172,6 @@ if __name__ == "__main__":
                         
                         if iiy > 1: yoffset = 1
                         else: yoffset = 0
-                        
-                        """for point in currentVals:
-                            local_x, local_y, height = point
-                            
-                            tile.setVal(local_x, local_y, currentHeight*16)
-                        
-                        Blockgroups.changeTile(ix, iy, iix, iiy, tile)"""
                         
                         for point in blob.getValGroup_iter((iix*4+xoffset, iiy*4+yoffset),
                                                            ((iix+1)*4+xoffset, (iiy+1)*4+yoffset)):
