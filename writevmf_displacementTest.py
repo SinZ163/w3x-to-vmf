@@ -108,6 +108,7 @@ if __name__ == "__main__":
     bloblist = []
     
     heightmap = Bytemap(data.mapInfo["width"], data.mapInfo["height"])
+    rampMap = Bytemap(data.mapInfo["width"], data.mapInfo["height"], init = 0, dataType = "B")
     #blobAffinity = Bytemap(data.mapInfo["width"], data.mapInfo["height"])
         
         
@@ -122,7 +123,10 @@ if __name__ == "__main__":
             index = y*data.mapInfo["width"] + x
             tile = data.mapInfo["info"][index]
             
-            height = tile["nibble2"] & 0xF
+            height = tile["layerHeight"]
+            
+            ramp_flag = (tile["flags"] & 0x1)
+            rampMap.setVal(x, y, ramp_flag)
             
             ## voodoo magic, disabled for now until I understand it
             #The tilepoint "final height" you see on the WE is given by:
@@ -131,7 +135,7 @@ if __name__ == "__main__":
             #if height < lowestHeight:
             #    lowestHeight = height
     
-            heightmap.setVal(x, y, height*10)
+            heightmap.setVal(x, y, height)
     
     Blockgroups = QuadBlobs(xSize//4, ySize//4, 4, 4)
     
@@ -140,8 +144,8 @@ if __name__ == "__main__":
     normals_row = [vmflib.types.Vertex(0,0,1) for i in xrange(17)]
     normals_list = [normals_row for i in xrange(17)]
     
-    choice = ("nature/dirt_grass_00", "nature/blendrockground002")
-    #choice = ("brick/brick_ext_07", "brick/brick_ext_06")
+    #choice = ("nature/dirt_grass_00", "nature/blendrockground002")
+    choice = ("brick/brick_ext_07", "brick/brick_ext_06")
     
     print "Time taken for initialization: {0}".format(time.clock()-initTime)
     
@@ -163,21 +167,81 @@ if __name__ == "__main__":
                     else:
                         currentHeight = heightmap.getVal(newX, newY)
                         
-                        ## A simple displacement test that uses the tile height for all points
-                        ## of the tile.
-                        #tile = Blockgroups.getTile(ix, iy, iix, iiy)
-                        #currentVals = tile.getValGroup()
-                        if iix > 1: xoffset = 1
-                        else: xoffset = 0
-                        
-                        if iiy > 1: yoffset = 1
-                        else: yoffset = 0
-                        
-                        for point in blob.getValGroup_iter((iix*4+xoffset, iiy*4+yoffset),
-                                                           ((iix+1)*4+xoffset, (iiy+1)*4+yoffset)):
-                            local_x, local_y, height = point
+                        # Is the ramp flag set? If so, we will try to draw a transition between two layers
+                        if rampMap.getVal(newX, newY) == 1 and False: # for the moment disabled because of issues
+                            upperTile = heightmap.getVal(newX, newY+1)
+                            lowerTile = heightmap.getVal(newX, newY-1)
+                            leftTile = heightmap.getVal(newX-1, newY)
+                            rightTile = heightmap.getVal(newX+1, newY)
                             
-                            blob.setVal(local_x, local_y, currentHeight*16)
+                            # The startX and startY variables are coordinates for the points
+                            # that are closest to the highest tile
+                            startX = 0
+                            startY = 0
+                            
+                            if upperTile < lowerTile: 
+                                startY = 3
+                                directionType = 1
+                            elif upperTile > lowerTile:
+                                startY = 0
+                                directionType = 1
+                                
+                            elif leftTile < rightTile:
+                                startX = 0
+                                directionType = 2
+                            elif leftTile > rightTile:
+                                startX = 3
+                                directionType = 2
+                            
+                            if iix > 1: xoffset = 1
+                            else: xoffset = 0
+                            
+                            if iiy > 1: yoffset = 1
+                            else: yoffset = 0
+                            
+                            if directionType == 1: # A ramp that goes from top to down along the y axis (or vice versa)
+                                for local_y in xrange(4):
+                                    distance = 3 - local_y 
+                                    
+                                    # Attempt to create a weighed average value for points on the ramp
+                                    # Does not appear to work correctly just yet
+                                    average = (((local_y+1)/4.0) * lowerTile + ((distance+1)/4.0) * upperTile) / 2.0
+                                    for local_x in xrange(4):
+                                        average 
+                                        blob.setVal(iix*4+local_x+xoffset, iiy*4+local_y+yoffset, average*64)
+                                        
+                            elif directionType == 2: # A ramp that goes from left to right along the x axis (or vice versa)
+                                for local_x in xrange(4):
+                                    distance = 3 - local_x 
+                                    average = (((local_x+1)/4.0) * leftTile + ((distance+1)/4.0) * rightTile) / 2.0
+                                    for local_y in xrange(4):
+                                        blob.setVal(iix*4+local_x+xoffset, iiy*4+local_y+yoffset, average*64)
+                            """for pointX in xrange(4):
+                                for pointY in xrange(4):
+                                    local_x = 
+                            for point in blob.getValGroup_iter((iix*4+xoffset, iiy*4+yoffset),
+                                                               ((iix+1)*4+xoffset, (iiy+1)*4+yoffset)):
+                                local_x, local_y, height = point
+                                
+                                blob.setVal(local_x, local_y, currentHeight32)"""
+                            
+                            
+                        else:
+                            ## A simple displacement test that uses the tile height for all points
+                            ## of the tile.
+                            #tile = Blockgroups.getTile(ix, iy, iix, iiy)
+                            #currentVals = tile.getValGroup()
+                            if iix > 1: xoffset = 1
+                            else: xoffset = 0
+                            
+                            if iiy > 1: yoffset = 1
+                            else: yoffset = 0
+                            
+                            for point in blob.getValGroup_iter((iix*4+xoffset, iiy*4+yoffset),
+                                                               ((iix+1)*4+xoffset, (iiy+1)*4+yoffset)):
+                                local_x, local_y, height = point
+                                
+                                blob.setVal(local_x, local_y, currentHeight*64)
             
             Blockgroups.sewTilesTogether(ix, iy)
             
@@ -195,6 +259,22 @@ if __name__ == "__main__":
             ## similar to chess. It is very easy to see where a block starts and ends.
             block.set_material(choice[(iy+ix*(xSize//4))%2])
             #block.set_material("brick/brick_ext_07")
+            
+            # Mark blocks which have a single ramp or more with a different texture
+            breakOut = False
+            for iix in xrange(4):
+                newx = ix*4+iix
+                for iiy in xrange(4):
+                    newy = iy*4+iiy
+                    if newx >= data.mapInfo["width"] or newy >= data.mapInfo["height"]:
+                        break
+                    if rampMap.getVal(newx, newy) == 1:
+                        block.set_material("brick/brick_ext_08")
+                        breakOut = True
+                        break
+                if breakOut:
+                    break
+                        
             
             Blockgroups.sew_brush_neighbours(ix, iy)
             blob = Blockgroups.getBlob(ix, iy)
