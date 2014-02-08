@@ -51,7 +51,37 @@ class Side(vmf.VmfClass):
         p = self.properties
         p['id'] = Solid.solid_count
         Solid.solid_count += 1
-
+    
+    def set_dispInfo(self, power, normals, distances):
+        dispInfo = DispInfo(power, normals, distances)
+        
+        
+        
+        # We need to search for the smallest X,Y and the highest Z coordinates of the plane
+        # We set the starting coordinates to the first vertex of the plane, then compare
+        # the coordinates of the other two vertexes to these starting coordinates.
+        startVertex = self.plane.v0
+        
+        smallestX = startVertex.x
+        smallestY = startVertex.y
+        highestZ = startVertex.z
+        
+        for vertex in (self.plane.v1, self.plane.v2):
+            if vertex.x < smallestX:
+                smallestX = vertex.x
+            if vertex.y < smallestY:
+                smallestY = vertex.y
+                
+            if vertex.z > highestZ:
+                highestZ = vertex.z
+        
+        # We need to change the start position of the displacement map, otherwise
+        # Hammer will be very confused about the order of the displacement data.
+        # Thanks for the tip, penguinwizzard!
+        dispInfo.set_startPosition(smallestX, smallestY, highestZ)
+        
+        self.children.append(dispInfo)
+            
 
 class Group(vmf.VmfClass):
 
@@ -95,6 +125,9 @@ class DispInfo(vmf.VmfClass):
 
     def set_power(self, power):
         self.power = power
+        
+    def set_startPosition(self, x, y, z):
+        self.startposition = "[{0} {1} {2}]".format(x, y, z)
         
 
 class Normals(vmf.VmfClass):
