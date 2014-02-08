@@ -244,6 +244,7 @@ if __name__ == "__main__":
             block.set_material(choice[(iy+ix*(xSize//4))%2])
             #block.set_material("brick/brick_ext_07")
             
+            Blockgroups.sew_brush_neighbours(ix, iy)
             blob = Blockgroups.getBlob(ix, iy)
             
             distances_list = []

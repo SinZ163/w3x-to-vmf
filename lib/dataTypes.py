@@ -13,7 +13,7 @@ class QuadBlobs():
     def addBlob(self, x, y):
         index = y * self.maxX + x
         
-        blob = Bytemap(self.blobSizeX**2+1, self.blobSizeY**2+1)
+        blob = Bytemap(self.blobSizeX**2+1, self.blobSizeY**2+1, dataType = "f")
         
         self.blobmap[index] = blob
         
@@ -88,7 +88,92 @@ class QuadBlobs():
         
         blob.setVal(midX, midY, middleHeight)
         
+    
+    def sew_brush_neighbours(self, blobx, bloby):
+        # x;y coordinates of the corners of a blob
+        corners = [(0,0), (0, 16), (16, 0), (16, 16)]
         
+        # We create a list of the coordinates of the sides
+        # for simple iteration.
+        sideUp = [(x, 16) for x in xrange(1, 16)]
+        sideDown = [(x, 0) for x in xrange(1, 16)]
+        sideLeft =  [(0, y) for y in xrange(1, 16)]
+        sideRight = [(16, y) for y in xrange(1, 16)]
+        
+        currBlob = self.getBlob(blobx, bloby)
+        
+        
+        if bloby+1 < self.maxY: # Boundary check
+            
+            upperBlob = self.getBlob(blobx, bloby+1)
+            
+            # We are iterating over two lists at once so we can grab the coordinates
+            # of two neighbouring displacement points.
+            for coords, coordsUpper in zip(sideUp, sideDown):
+                ix, iy = coords
+                ix_up, iy_up = coordsUpper
+                
+                currHeight = currBlob.getVal(ix, iy)
+                otherHeight = upperBlob.getVal(ix_up, iy_up)
+                
+                average = (currHeight+otherHeight)/2.0
+
+                currBlob.setVal(ix, iy, average)
+                upperBlob.setVal(ix_up, iy_up, average)
+                
+                
+        if blobx+1 < self.maxX: # Boundary check
+            
+            rightBlob = self.getBlob(blobx+1, bloby)
+            
+            for coords, coordsRight in zip(sideRight, sideLeft): 
+                ix, iy = coords
+                ix_right, iy_right = coordsRight
+                
+                currHeight = currBlob.getVal(ix, iy)
+                otherHeight = rightBlob.getVal(ix_right, iy_right)
+                
+                average = (currHeight+otherHeight)/2.0
+                
+                currBlob.setVal(ix, iy, average)
+                rightBlob.setVal(ix_right, iy_right, average)
+        """if bloby-1 >= 0:
+            lowerBlob = self.getBlob(blobx, bloby-1)
+            for coords, coordsLower in zip(sideDown, sideUp):
+                ix, iy = coords
+                ix_down, iy_down = coordsLower
+                
+                currHeight = currBlob.getVal(ix, iy)
+                otherHeight = lowerBlob.getVal(ix_down, iy_down)
+                
+                diff = abs(currHeight-otherHeight)/2.0
+                average = (currHeight+otherHeight)/2.0
+                
+                diff = currHeight < otherHeight and diff or -diff-64
+                if currHeight == otherHeight: diff = 0
+                
+                currBlob.setVal(ix, iy, currHeight+diff)"""
+        
+        """if blobx-1 >= 0:
+            leftBlob = self.getBlob(blobx-1, bloby)
+            for coords, coordsLeft in zip(sideLeft, sideRight):
+                ix, iy = coords
+                ix_left, iy_left = coordsLeft
+                
+                currHeight = currBlob.getVal(ix, iy)
+                otherHeight = leftBlob.getVal(ix_left, iy_left)
+                
+                diff = abs(currHeight-otherHeight)/2.0
+                average = (currHeight+otherHeight)/2.0
+                
+                diff = currHeight < otherHeight and diff or -diff-64
+                if currHeight == otherHeight: diff = 0
+                
+                currBlob.setVal(ix, iy, currHeight+diff)"""
+        
+        
+        
+            
         
             
             
@@ -97,14 +182,14 @@ class QuadBlobs():
     
             
 class Bytemap():
-    def __init__(self, maxX, maxY, init = -1, initArray = None):
+    def __init__(self, maxX, maxY, init = -1, initArray = None, dataType = "h"):
         self.maxX = maxX
         self.maxY = maxY
         
         if initArray == None:
-            self.map = array.array("h", [init for x in xrange(maxX*maxY)])
+            self.map = array.array(dataType, [init for x in xrange(maxX*maxY)])
         else:
-            self.map = array.array("h", initArray)
+            self.map = array.array(dataType, initArray)
             
     def setVal(self, x, y, val):
         index = y * self.maxX + x
