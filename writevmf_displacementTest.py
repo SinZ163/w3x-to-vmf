@@ -175,7 +175,7 @@ if __name__ == "__main__":
                     if newX >= data.mapInfo["width"] or newY >= data.mapInfo["height"]:
                         break
                     else:
-                        currentHeight = heightmap.getVal(newX, newX)
+                        currentHeight = heightmap.getVal(newX, newY)
                         
                         """## We do very simple data interpolation using the heights of the
                         ## 4 neighbours of a tile.
