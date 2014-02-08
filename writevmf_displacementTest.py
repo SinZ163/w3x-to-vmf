@@ -108,7 +108,7 @@ if __name__ == "__main__":
     bloblist = []
     
     heightmap = Bytemap(data.mapInfo["width"], data.mapInfo["height"])
-    blobAffinity = Bytemap(data.mapInfo["width"], data.mapInfo["height"])
+    #blobAffinity = Bytemap(data.mapInfo["width"], data.mapInfo["height"])
         
         
     # Iterate once over the map to store the height of each tile.
@@ -147,7 +147,8 @@ if __name__ == "__main__":
     normals_row = [vmflib.types.Vertex(0,0,1) for i in xrange(17)]
     normals_list = [normals_row for i in xrange(17)]
     
-    choice = ("nature/dirt_grass_00", "nature/blendrockground002")
+    #choice = ("nature/dirt_grass_00", "nature/blendrockground002")
+    choice = ("brick/brick_ext_07", "brick/brick_ext_06")
     
     print "Time taken for initialization: {0}".format(time.clock()-initTime)
     
@@ -164,11 +165,11 @@ if __name__ == "__main__":
             block.set_material(choice[(iy+ix*(xSize//4))%2])
             #block.set_material("brick/brick_ext_07")
             
-            Blockgroups.addBlob(ix, iy)
+            blob = Blockgroups.addBlob(ix, iy)
             
             for iix in xrange(4):
+                newX = (ix*4)+iix
                 for iiy in xrange(4):
-                    newX = (ix*4)+iix
                     newY = (iy*4)+iiy
                     
                     if newX >= data.mapInfo["width"] or newY >= data.mapInfo["height"]:
@@ -212,46 +213,59 @@ if __name__ == "__main__":
                         
                         ## A more simple displacement test that uses the tile height for all points
                         ## of the tile.
-                        """tile = Blockgroups.getTile(ix, iy, iix, iiy)
-                        currentVals = tile.getValGroup()
+                        #tile = Blockgroups.getTile(ix, iy, iix, iiy)
+                        #currentVals = tile.getValGroup()
+                        if iix > 1: xoffset = 1
+                        else: xoffset = 0
                         
-                        for point in currentVals:
+                        if iiy > 1: yoffset = 1
+                        else: yoffset = 0
+                        
+                        """for point in currentVals:
                             local_x, local_y, height = point
                             
-                            tile.setVal(local_x, local_y, currentHeight)
+                            tile.setVal(local_x, local_y, currentHeight*16)
                         
                         Blockgroups.changeTile(ix, iy, iix, iiy, tile)"""
+                        
+                        for point in blob.getValGroup_iter((iix*4+xoffset, iiy*4+yoffset),
+                                                           ((iix+1)*4+xoffset, (iiy+1)*4+yoffset)):
+                            local_x, local_y, height = point
+                            
+                            blob.setVal(local_x, local_y, currentHeight*16)
             
-            #Blockgroups.sewTilesTogether(ix, iy)
+            Blockgroups.sewTilesTogether(ix, iy)
             
             #blob = Blockgroups.getBlob(ix, iy)
           
-            """distances_list = []
+            distances_list = []
             for rowNumber in xrange(17):
                 row = blob.getRow(rowNumber)
                 row = row.tolist()
                 #row.reverse()
                 distances_list.append(row)
                 #row = map(map_list_with_vertex, row)
-                #print row"""
+                #print row
             
-            distances_list = []
-            for columnNumber in xrange(17):
+            """distances_list = [[64 for i in xrange(17)]]
+            for columnNumber in xrange(16):
                 #column = blob.getColumn(columnNumber)
                 ##column = column.tolist()
                 ##colum.reverse()
                 #distances_list.append(column)
-                distances_list.append([(i%2)*32 for i in xrange(17)])
+                column = [64]
+                for i in range(4):
+                    column.extend([i*32, i*32, i*32, i*32])
+                distances_list.append(column)"""
                
             
-            dispInfo = vmflib.brush.DispInfo(4, normals_list, distances_list)
+           #dispInfo = vmflib.brush.DispInfo(4, normals_list, distances_list)
             
-            # We need to change the start position of the displacement map, otherwise
-            # Hammer will be very confused about the order of the displacement data.
-            # Thanks for the tip, penguinwizzard!
-            dispInfo.set_startPosition((ix*4*64)-xOffset_real+0*64, (iy*4*64)-yOffset_real+0*64, 0+(height))
             
-            block.top().children.append(dispInfo)
+            #dispInfo.set_startPosition((ix*4*64)-xOffset_real+0*64, (iy*4*64)-yOffset_real+0*64, 0+(height))
+            
+            #block.top().children.append(dispInfo)
+            block.top().set_dispInfo(4, normals_list, distances_list)
             
             m.world.children.append(block)
             

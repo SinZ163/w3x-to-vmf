@@ -16,6 +16,8 @@ class QuadBlobs():
         blob = Bytemap(self.blobSizeX**2+1, self.blobSizeY**2+1)
         
         self.blobmap[index] = blob
+        
+        return blob
     
     def getBlob(self, x, y):
         index = y * self.maxX + x
@@ -158,16 +160,17 @@ class Bytemap():
     def setValGroup_fromBlob(self, blob, minCoords, maxCoords):
         for ix in xrange(minCoords[0],maxCoords[0]):
             for iy in xrange(minCoords[1],maxCoords[1]):
+                
                 miniX, miniY = ix - minCoords[0], iy - minCoords[1]
                 self.setVal(ix, iy, blob.getVal(miniX, miniY))
              
     
     def getSubBlob(self, minCoords, maxCoords):
-        x, y = maxCoords[0] - minCoords[0], maxCoords[1] - minCoords[1]
+        xsize, ysize = maxCoords[0] - minCoords[0], maxCoords[1] - minCoords[1]
         
         subBlobList = self.getValGroup(minCoords, maxCoords, True)
         
-        return Bytemap(x, y, 0, subBlobList)
+        return Bytemap(xsize, ysize, 0, subBlobList)
     
     # The data is ordered in such a way so that we can retrieve 
     # an entire row of data simply by calculating the start and end index.
