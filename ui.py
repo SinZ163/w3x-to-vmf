@@ -2,99 +2,88 @@ import tkMessageBox
 import Tkinter
 import ttk
 
+import traceback
+
 from tkFileDialog import askopenfilename,asksaveasfilename
 
 from read_w3e import ReadW3E
 
-class App(Tkinter.Frame):
-    def __init__(self, master=None):
-        Tkinter.Frame.__init__(self, master)
-        
-        #Lets set the window size and name
-        self.master.title("Warcraft III to Dota 2 conversion toolkit.")
-        self.columnconfigure(0, weight=1)
-        self.rowconfigure(0, weight=1)
-        
-        self.master.maxsize(800,600)
-        self.configure(height=600,width=800)
-        
-        self.pack()
-        
-        self.tree = ttk.Treeview(self)
-        self.tree.heading('#0', text="Path", anchor="w")
-        self.tree.insert("", 0, text="hai", open=True)
+try:
+	from PIL import Image, ImageTk
+	print("yes PIL, maybe topdown")
+	from topdownViewer import TopDownViewer
+	useTopDown = True
+	print("yes PIL, yes topdown")
+except:
+	useTopDown = False
+	print("no PIL, no topdown")
+	print(traceback.format_exc())
+	
+class TerrainTab(Tkinter.Frame):
+	def	__init__(self, master=None):
+		Tkinter.Frame.__init__(self, master)
+		self.configure(height=600,width=800)
+		self.openButton = Tkinter.Button(self, text="Open!", command=self.openFile).grid(row=0,column=0)
+		
+		self.filenameText = Tkinter.StringVar()
+		self.filename = Tkinter.Label(self, textvariable=self.filenameText).grid(row=0,column=1)
+		
+		tmp="disabled"
+		if useTopDown:
+			tmp = "normal"
+		self.topDownOption = Tkinter.IntVar()
+		self.topDown = Tkinter.Checkbutton(self, text="Show TopDown (beta)", anchor="w", variable=self.topDownOption,state=tmp).grid(row=1)
+		
+		self.headerInfoText = Tkinter.StringVar()
+		self.headerInfo = Tkinter.Label(self, textvariable=self.headerInfoText).grid(row=2)
+		
+		if useTopDown:
+			global topdown
+			topdown = Tkinter.PhotoImage(data="R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7")
+			self.topDown = Tkinter.Label(self, image=topdown)
+			self.topDown.image = topdown
+			self.topDown.grid(row=3)
+		self.pack()
+	def	openFile(self):
+		options = {
+			"defaultextension" : ".w3e",
+			"filetypes"	: [("Warcraft III Terrain", ".w3e")],
+			"title" : "This is a title"
+		}
+		filename = askopenfilename(**options)
+		self.filenameText.set(filename)
+		if filename:
+			mapInfo = ReadW3E(filename)
+			self.headerInfoText.set("offsetX: {offsetX}\r\noffsetY: {offsetY}\r\nwidth: {width}\r\nheight: {height}\r\n".format(**mapInfo.mapInfo))
+			if self.topDownOption:
+				print("Time to generate a topdown")
+				#time to run TopDownViewer
+				topdownInstance = TopDownViewer(mapInfo)
+				global topdown
+				topdown = topdownInstance.img
+				self.topDown.configure(image=topdown)
+				self.topDown.image = topdown
+		else:
+			self.headerInfoText.set("")
+class DataTab(Tkinter.Frame):
+	def	__init__(self, master=None):
+		Tkinter.Frame.__init__(self, master)
+		self.configure(height=600,width=800)
+class InfoTab(Tkinter.Frame):
+	def	__init__(self, master=None):
+		Tkinter.Frame.__init__(self, master)
+		self.configure(height=600,width=800)
+		self.infoLabel = Tkinter.Label(self, text="WC3-to-VMF is a toolkit made by SinZ and Yoshi2 \r\nThis project is available on Github: http://github.com/SinZ163/w3x-to-vmf/").pack()
+root = Tkinter.Tk()
+root.title("Warcraft III to Dota 2 conversion toolkit.")
+tabHandle = ttk.Notebook(root)
 
-    def about(self):
-        tkMessageBox.showinfo("About", """
-        WC3-to-VMF is a toolkit made by SinZ and Yoshi2
-        """)
-    def menuCreation(self):
-        #create the menu bar itself
-        menubar = Tkinter.Menu(self.master)
-        #add stuff to it
-        
-        #terrain drop-down
-        terrainMenu = Tkinter.Menu(menubar, tearoff=0)
-        terrainMenu.add_command(label="Open WC3 Terrain file", command=self.openTerrainFile)
-        terrainMenu.add_command(label="Open WC3 Data file", command=self.openObjectFile)
-        menubar.add_cascade(label="Manual", menu=terrainMenu)
-        #help drop-down
-        helpMenu = Tkinter.Menu(menubar, tearoff=0)
-        helpMenu.add_command(label="About WC3-to-VMF", command=self.about)
-        menubar.add_cascade(label="Help", menu=helpMenu)
-        #exit button
-        menubar.add_command(label="Exit", command=self.master.quit)
-        
-        #add it to the window
-        self.master.config(menu=menubar)
-        
-    def openTerrainFile(self):
-        options = {
-            "defaultextension" : ".w3e",
-            "filetypes" : [("Warcraft III Terrain", ".w3e")],
-            "title" : "This is a title"
-        }
-        filename = askopenfilename(**options)
-        mapInfo = ReadW3E(filename)
-        #print(mapInfo.mapInfo)
-        #I actually have no idea what I am doing here
-        TreeFrame = ttk.Frame(self, padding = "3")
-        tree = ttk.Treeview(TreeFrame, columns = ('Values'))
-        tree.column('Values', width = 100, anchor = "center")
-        tree.heading('Values', text='Values')
-        self.JSONTree(tree, '', mapInfo.mapInfo)
-        tree.pack(side="bottom")
-    def openObjectFile(self):
-        options = {
-            "defaultextension" : ".w3t",
-            "filetypes" : [
-                ("Warcraft III Units",          ".w3u"),
-                ("Warcraft III Items",          ".w3t"),
-                ("Warcraft III Destructables",  ".w3b"),
-                ("Warcraft III Doodats",        ".w3d"),
-                ("Warcraft III Abilities",      ".w3a"),
-                ("Warcraft III Buffs",          ".w3h"),
-                ("Warcraft III Upgrades",       ".w3q")
-            ],
-            "title" : "This is also a title!"
-        }
-        fileHandle = askopenfilename(**options)
-    #voodoo magic is fun?
-    def JSONTree(self, Tree, Parent, Dictionery, TagList = []):
-         for key in Dictionery : 
-          if isinstance(Dictionery[key],dict): 
-           Tree.insert(Parent, 'end', key, text = key)
-           TagList.append(key)
-           JSONTree(Tree, key, Dictionery[key], TagList)
-           pprint(TagList)
-          elif isinstance(Dictionery[key],list): 
-           Tree.insert(Parent, 'end', key, text = key) # Still working on this
-          else : 
-           Tree.insert(Parent, 'end', key, text = key, value = Dictionery[key])
+terrainTab = TerrainTab(tabHandle)
+dataTab = DataTab(tabHandle)
+infoTab = InfoTab(tabHandle)
 
-# create the application
-myapp = App()
-myapp.menuCreation()
-
-# start the program
-myapp.mainloop()
+tabHandle.add(terrainTab, text="Terrain")
+tabHandle.add(dataTab, text="Data")
+tabHandle.add(infoTab, text="Info")
+tabHandle.pack()
+root.mainloop()

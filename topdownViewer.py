@@ -1,11 +1,5 @@
-#import Image
-#import ImageFont
-#import ImageDraw
-from PIL import Image, ImageFont, ImageDraw
-
-from read_w3e import ReadW3E
 class TopDownViewer:
-                    
+    from PIL import Image, ImageFont, ImageDraw         
     def __init__(self, mapInfo):
         self.textures = self.Texture("ui/WC3 Art/ground",
                    {"Ashen_Leaves.tga" : "Alvd",
@@ -16,13 +10,13 @@ class TopDownViewer:
                     "Ice_Ice.tga" : "Iice",
                     "Ice_RuneBricks.tga" : "Irbk",
                     "Ice_Snow.tga" : "Isnw"})
-        self.placeholder = Image.open("ui/WC3 Art/placeholder.tga")
+        self.placeholder = self.Image.open("ui/WC3 Art/placeholder.tga")
         
-        self.font = ImageFont.truetype("arial.ttf", 15)
+        self.font = self.ImageFont.truetype("arial.ttf", 15)
         self.data = mapInfo
-        self.img = Image.new("RGB", (self.data.mapInfo["width"]*32, self.data.mapInfo["height"]*32))
+        self.img = self.Image.new("RGB", (self.data.mapInfo["width"]*32, self.data.mapInfo["height"]*32))
 
-        self.draw = ImageDraw.Draw(self.img)
+        self.draw = self.ImageDraw.Draw(self.img)
         self.work()
     def Texture(self, folder, textDict):
         textureInfo = {
@@ -31,7 +25,7 @@ class TopDownViewer:
             "dict" : {}
         }
         for file in textDict:
-            tile = Image.open(folder+"/"+file)
+            tile = self.Image.open(folder+"/"+file)
             minimap = textDict[file]
             width, height = tile.size
             subtile_list = []
@@ -87,5 +81,6 @@ class TopDownViewer:
                         self.draw.line(((x*32+31,y*32),(x*32+31, y*32+31)),fill=(0xFF,0,0))
                         
 if __name__ == "__main__":
+    from read_w3e import ReadW3E
     image = TopDownViewer(ReadW3E("input/war3map.w3e"))
     image.img.save("ui/tmp/test.png", "PNG")
