@@ -1,6 +1,7 @@
 class TopDownViewer:
     from PIL import Image, ImageFont, ImageDraw         
-    def __init__(self, mapInfo):
+    def __init__(self, mapInfo, debug=False):
+        self.debug = debug
         self.textures = self.Texture("ui/WC3 Art/ground",
                    {"Ashen_Leaves.tga" : "Alvd",
                     "City_DirtRough.tga" : "Ydtr",
@@ -59,13 +60,15 @@ class TopDownViewer:
                         self.img.paste(self.textures["dict"][type][subindex], (x*32, y*32))#
                         #bla = str(bin(subindex))[2:]
                         #print bla.zfill(8)
-                        self.draw.text((x*32+1, y*32), str(hex(subindex)), font = self.font, fill = (0, 255, 33))
-                        self.draw.text((x*32+1, y*32+15), str(type), font = self.font, fill = (140, 140, 140, 200))
+                        if self.debug:
+                            self.draw.text((x*32+1, y*32), str(hex(subindex)), font = self.font, fill = (0, 255, 33))
+                            self.draw.text((x*32+1, y*32+15), str(type), font = self.font, fill = (140, 140, 140, 200))
                     except:
                         #pass
                         self.img.paste(self.placeholder, (x*32, y*32))
-                        self.draw.text((x*32+1, y*32), str(hex(subindex)), font = self.font, fill = (255, 0, 33))
-                        self.draw.text((x*32+1, y*32+15), str(type), font = self.font, fill = (140, 140, 140, 200))
+                        if self.debug:
+                            self.draw.text((x*32+1, y*32), str(hex(subindex)), font = self.font, fill = (255, 0, 33))
+                            self.draw.text((x*32+1, y*32+15), str(type), font = self.font, fill = (140, 140, 140, 200))
                     #is it a ramp
                     flags = tile["nibble1"] >> 4
                     #print(flags)
