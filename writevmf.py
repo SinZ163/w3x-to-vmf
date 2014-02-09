@@ -153,7 +153,7 @@ for x in xrange(data.mapInfo["width"]):
         index = y*data.mapInfo["width"] + x
         tile = data.mapInfo["info"][index]
         
-        height = tile["nibble2"] & 0xF
+        height = tile["layerHeight"]
         
         ## voodoo magic, disabled for now until I understand it
         #The tilepoint "final height" you see on the WE is given by:
