@@ -4,19 +4,44 @@ class TopDownViewer:
         self.debug = debug
         self.textures = self.Texture("ui/WC3 Art/ground",
                    {"Ashen_Leaves.tga" : "Alvd",
+                    "City_Dirt.tga" : "Ydrt",
                     "City_DirtRough.tga" : "Ydtr",
+                    "City_BlackMarble.tga" : "Yblm",
+                    "City_BrickTiles.tga" : "Ybtl",
+                    "City_SquareTiles.tga" : "Ysqd",
+                    "City_RoundTiles.tga" : "Yrtl",
+                    "City_Grass.tga" : "Ygsb",
+                    "City_GrassTrim.tga" : "Yhdg",
+                    "City_WhiteMarble.tga" : "Ywmb",
                     "Ice_Dirt.tga" : "Idrt",
                     "Ice_DarkIce.tga" : "Idki",
                     "Ice_DirtRough.tga" : "Idtr",
                     "Ice_Ice.tga" : "Iice",
                     "Ice_RuneBricks.tga" : "Irbk",
                     "Ice_Snow.tga" : "Isnw",
+                    "Lords_Dirt.tga" : "Ldrt",
+                    "Lords_DirtRough.tga" : "Ldro",
+                    "Lords_Grass.tga" : "Lgrs",
+                    "Lords_GrassDark.tga" : "Lgrd",
+                    "Lords_Rock.tga" : "Lrok",
                     "Lordw_Dirt.tga" : "Wdrt",
                     "Lordw_DirtRough.tga" : "Wdro",
                     "Lordw_SnowGrass.tga" : "Wsng",
                     "Lordw_Rock.tga" : "Wrok",
                     "Lordw_Grass.tga" : "Wgrs",
-                    "Lordw_Snow.tga" : "Wsnw"})
+                    "Lordw_Snow.tga" : "Wsnw",
+                    "Ruins_Dirt.tga" : "Zdrt",
+                    "Ruins_DirtRough.tga" : "Zdtr",
+                    "Ruins_DirtGrass.tga" : "Zdrg",
+                    "Ruins_SmallBricks.tga" : "Zbks",
+                    "Ruins_Sand.tga" : "Zsan",
+                    "Ruins_LargeBricks.tga" : "Zbkl",
+                    "Ruins_RoundTiles.tga" : "Ztil",
+                    "Ruins_Grass.tga" : "Zgrs",
+                    "Ruins_GrassDark.tga" : "Zvin",
+                    "Village_Crops.tga" : "Vcrp",
+                    "Village_GrassShort.tga" : "Vgrs",
+                    "VillageFall_CobblePath.tga" : "Qcbp"})
 
 
         self.placeholder = self.Image.open("ui/WC3 Art/placeholder.tga")
@@ -50,7 +75,7 @@ class TopDownViewer:
     def work(self):
         for x in xrange(self.data.mapInfo["width"]):
             for y in xrange(self.data.mapInfo["height"]):
-                index = y*self.data.mapInfo["height"] + x
+                index = y*self.data.mapInfo["width"] + x
                 
                 tile = self.data.mapInfo["info"][index]
                 
@@ -111,6 +136,7 @@ class TopDownViewer:
                         
 if __name__ == "__main__":
     from read_w3e import ReadW3E
+    import sys
     settings = {
         "invalidTile" : True,
         "validTile" : False,
@@ -119,5 +145,5 @@ if __name__ == "__main__":
         "water" : True,
         "blight" : True
     }
-    image = TopDownViewer(ReadW3E("input/war3map.w3e"), settings)
+    image = TopDownViewer(ReadW3E(sys.argv[1]), settings)
     image.img.save("ui/tmp/test.png", "PNG")
