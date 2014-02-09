@@ -3,14 +3,14 @@ import os
 
 class DataReader():
     def __init__(self, filename):
-        if isinstance(filename, str):
-            self.hdlr = open(filename, "rb") 
-            self.maxSize = os.path.getsize(filename) 
-            self.index = 0
-        else:
-            self.hdlr = filename
-            self.maxSize = os.path.getsize(self.hdlr.name)
-            self.index = self.hdlr.tell()
+        #if isinstance(filename, str):
+        self.hdlr = open(filename, "rb") 
+        self.maxSize = os.path.getsize(filename) 
+        self.index = 0
+        #else:
+        #    self.hdlr = filename
+        #    self.maxSize = os.path.getsize(self.hdlr.name)
+        #    self.index = self.hdlr.tell()
             
         
     def int(self):

@@ -1,6 +1,6 @@
 class TopDownViewer:
     from PIL import Image, ImageFont, ImageDraw         
-    def __init__(self, mapInfo, debug=False):
+    def __init__(self, mapInfo, debug={"validTile" : False, "invalidTile" : False, "height" : False, "ramp" : False, "water" : False, "blight" : False}):
         self.debug = debug
         self.textures = self.Texture("ui/WC3 Art/ground",
                    {"Ashen_Leaves.tga" : "Alvd",
@@ -10,7 +10,15 @@ class TopDownViewer:
                     "Ice_DirtRough.tga" : "Idtr",
                     "Ice_Ice.tga" : "Iice",
                     "Ice_RuneBricks.tga" : "Irbk",
-                    "Ice_Snow.tga" : "Isnw"})
+                    "Ice_Snow.tga" : "Isnw",
+                    "Lordw_Dirt.tga" : "Wdrt",
+                    "Lordw_DirtRough.tga" : "Wdro",
+                    "Lordw_SnowGrass.tga" : "Wsng",
+                    "Lordw_Rock.tga" : "Wrok",
+                    "Lordw_Grass.tga" : "Wgrs",
+                    "Lordw_Snow.tga" : "Wsnw"})
+
+
         self.placeholder = self.Image.open("ui/WC3 Art/placeholder.tga")
         
         self.font = self.ImageFont.truetype("arial.ttf", 15)
@@ -47,7 +55,7 @@ class TopDownViewer:
                 tile = self.data.mapInfo["info"][index]
                 
                 
-                tiletype = tile["nibble1"] & 0xF
+                tiletype = tile["groundTextureType"]
                 type = self.data.mapInfo["groundTileSets"][tiletype]
                 
                 y = self.data.mapInfo["height"] - y-1
@@ -60,30 +68,56 @@ class TopDownViewer:
                         self.img.paste(self.textures["dict"][type][subindex], (x*32, y*32))#
                         #bla = str(bin(subindex))[2:]
                         #print bla.zfill(8)
-                        if self.debug:
+                        if self.debug["validTile"]:
                             self.draw.text((x*32+1, y*32), str(hex(subindex)), font = self.font, fill = (0, 255, 33))
                             self.draw.text((x*32+1, y*32+15), str(type), font = self.font, fill = (140, 140, 140, 200))
                     except:
                         #pass
                         self.img.paste(self.placeholder, (x*32, y*32))
-                        if self.debug:
+                        if self.debug["invalidTile"]:
                             self.draw.text((x*32+1, y*32), str(hex(subindex)), font = self.font, fill = (255, 0, 33))
                             self.draw.text((x*32+1, y*32+15), str(type), font = self.font, fill = (140, 140, 140, 200))
-                    #is it a ramp
-                    flags = tile["nibble1"] >> 4
-                    #print(flags)
-                    #print("Ramp: "+str(flags & 1))
-                    if flags & 1:
-                        #top
-                        self.draw.line(((x*32,y*32),(x*32+31,y*32)),fill=(0xFF,0,0))
-                        #bottom
-                        self.draw.line(((x*32,y*32+31),(x*32+31,y*32+31)),fill=(0xFF,0,0))
-                        #left
-                        self.draw.line(((x*32,y*32),(x*32, y*32+31)),fill=(0xFF,0,0))
-                        #right
-                        self.draw.line(((x*32+31,y*32),(x*32+31, y*32+31)),fill=(0xFF,0,0))
+                    if self.debug["ramp"]:
+                        #is it a ramp
+                        if tile["flags"] & 1:
+                            #top
+                            self.draw.line(((x*32,y*32),(x*32+31,y*32)),fill=(0xFF,0,0))
+                            #bottom
+                            self.draw.line(((x*32,y*32+31),(x*32+31,y*32+31)),fill=(0xFF,0,0))
+                            #left
+                            self.draw.line(((x*32,y*32),(x*32, y*32+31)),fill=(0xFF,0,0))
+                            #right
+                            self.draw.line(((x*32+31,y*32),(x*32+31, y*32+31)),fill=(0xFF,0,0))
+                    if self.debug["water"]:
+                        if tile["flags"] & 4:
+                            #top
+                            self.draw.line(((x*32+1,y*32+1),(x*32+30,y*32+1)),fill=(0,0,0xFF))
+                            #bottom
+                            self.draw.line(((x*32+1,y*32+30),(x*32+30,y*32+30)),fill=(0,0,0xFF))
+                            #left
+                            self.draw.line(((x*32+1,y*32+1),(x*32+1, y*32+30)),fill=(0,0,0xFF))
+                            #right
+                            self.draw.line(((x*32+30,y*32+1),(x*32+30, y*32+30)),fill=(0,0,0xFF))
+                    if self.debug["blight"]:
+                        if tile["flags"] & 2:
+                            #top
+                            self.draw.line(((x*32+2, y*32+2),(x*32+29,y*32+2)), fill=(0xFF,0,0xFF))
+                            #bottom
+                            self.draw.line(((x*32+2,y*32+29),(x*32+29,y*32+29)),fill=(0xFF,0,0xFF))
+                            #left
+                            self.draw.line(((x*32+2,y*32+2),(x*32+2,y*32+29)),  fill=(0xFF,0,0xFF))
+                            #right
+                            self.draw.line(((x*32+29,y*32+2),(x*32+29,y*32+29)),fill=(0xFF,0,0xFF))
                         
 if __name__ == "__main__":
     from read_w3e import ReadW3E
-    image = TopDownViewer(ReadW3E("input/war3map.w3e"))
+    settings = {
+        "invalidTile" : True,
+        "validTile" : False,
+        "ramp" : True,
+        "height" : True,
+        "water" : True,
+        "blight" : True
+    }
+    image = TopDownViewer(ReadW3E("input/war3map.w3e"), settings)
     image.img.save("ui/tmp/test.png", "PNG")
