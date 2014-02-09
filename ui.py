@@ -1,7 +1,7 @@
 import tkMessageBox
 import Tkinter
 import ttk
-from tkFileDialog import askopenfilename,asksaveasfilename
+from tkFileDialog import askopenfilename, asksaveasfilename
 
 import simplejson
 import traceback
@@ -20,46 +20,6 @@ except:
     print(traceback.format_exc())
 
 class TerrainTab(Tkinter.Frame):
-    class TopDownTab(Tkinter.Frame):        
-        def __init__(self, master=None):
-            Tkinter.Frame.__init__(self, master)
-            self.img = Tkinter.PhotoImage(data="R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7") 
-            self.configure(height=600,width=800)
-            
-            self.grid_rowconfigure(0,weight=1)
-            self.grid_columnconfigure(0,weight=1)
-            
-            
-            self.xscrollbar = Tkinter.Scrollbar(self, orient=Tkinter.HORIZONTAL)
-            self.xscrollbar.grid(row=1, sticky=Tkinter.E+Tkinter.W)
-            
-            self.yscrollbar = Tkinter.Scrollbar(self)
-            self.yscrollbar.grid(row=0,column=1, sticky=Tkinter.N+Tkinter.S)
-            
-            self.canvas = Tkinter.Canvas(self, bd=0, xscrollcommand=self.xscrollbar.set, yscrollcommand=self.yscrollbar.set)
-            
-            self.xscrollbar.config(command=self.canvas.xview)
-            self.yscrollbar.config(command=self.canvas.yview)
-            
-            self.canvas.grid(row=0, sticky=Tkinter.N+Tkinter.S+Tkinter.E+Tkinter.W)
-            
-            self.id = self.canvas.create_image(0,0,image=self.img, anchor=Tkinter.NW)
-            
-            self.pack(fill=Tkinter.BOTH, expand=1)
-        def setImage(self, img):
-            self.img = ImageTk.PhotoImage(img)
-            self.canvas.config(scrollregion=(0,0,img.size[0], img.size[1]))
-            self.canvas.itemconfig(self.id, image=self.img)
-    class HeaderInfoTab(Tkinter.Frame):
-        def __init__(self, master=None):
-            Tkinter.Frame.__init__(self, master)
-            self.configure(height=600,width=800)
-            
-            self.mainText = Tkinter.StringVar()
-            self.mainLabel = Tkinter.Label(self, textvariable=self.mainText, anchor=Tkinter.W, justify=Tkinter.LEFT).grid(row=0)
-            self.pack()
-        def setText(self, text):
-            self.mainText.set(text)
     def    __init__(self, master=None):
         Tkinter.Frame.__init__(self, master)
         self.configure(height=600,width=800)
@@ -88,9 +48,12 @@ class TerrainTab(Tkinter.Frame):
         self.tabHandle.pack(fill=Tkinter.BOTH, expand=1)
         #end tabs
         self.pack(fill=Tkinter.BOTH, expand=1)
+        
     def onTopDown(self):
         pass
-    def    openFile(self):
+    
+    def openFile(self):
+        
         options = {
             "initialdir" : "input/",
             "initialfile" : "war3map.w3e",
@@ -115,6 +78,51 @@ class TerrainTab(Tkinter.Frame):
             self.headerTab.setText(simplejson.dumps(tmpInfo, sort_keys=True, indent=4 * ' '))
         else:
             self.headerInfoText.set("")
+            
+    class TopDownTab(Tkinter.Frame):        
+        def __init__(self, master=None):
+            Tkinter.Frame.__init__(self, master)
+            self.img = Tkinter.PhotoImage(data="R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7") 
+            self.configure(height=600,width=800)
+            
+            self.grid_rowconfigure(0,weight=1)
+            self.grid_columnconfigure(0,weight=1)
+            
+            
+            self.xscrollbar = Tkinter.Scrollbar(self, orient=Tkinter.HORIZONTAL)
+            self.xscrollbar.grid(row=1, sticky=Tkinter.E+Tkinter.W)
+            
+            self.yscrollbar = Tkinter.Scrollbar(self)
+            self.yscrollbar.grid(row=0,column=1, sticky=Tkinter.N+Tkinter.S)
+            
+            self.canvas = Tkinter.Canvas(self, bd=0, xscrollcommand=self.xscrollbar.set, yscrollcommand=self.yscrollbar.set)
+            
+            self.xscrollbar.config(command=self.canvas.xview)
+            self.yscrollbar.config(command=self.canvas.yview)
+            
+            self.canvas.grid(row=0, sticky=Tkinter.N+Tkinter.S+Tkinter.E+Tkinter.W)
+            
+            self.id = self.canvas.create_image(0,0,image=self.img, anchor=Tkinter.NW)
+            
+            self.pack(fill=Tkinter.BOTH, expand=1)
+            
+        def setImage(self, img):
+            self.img = ImageTk.PhotoImage(img)
+            self.canvas.config(scrollregion=(0,0,img.size[0], img.size[1]))
+            self.canvas.itemconfig(self.id, image=self.img)
+            
+    class HeaderInfoTab(Tkinter.Frame):
+        def __init__(self, master=None):
+            Tkinter.Frame.__init__(self, master)
+            self.configure(height=600,width=800)
+            
+            self.mainText = Tkinter.StringVar()
+            self.mainLabel = Tkinter.Label(self, textvariable=self.mainText, anchor=Tkinter.W, justify=Tkinter.LEFT).grid(row=0)
+            self.pack()
+            
+        def setText(self, text):
+            self.mainText.set(text)
+    
 class DataTab(Tkinter.Frame):
     def    __init__(self, master=None):
         Tkinter.Frame.__init__(self, master)
@@ -126,6 +134,7 @@ class InfoTab(Tkinter.Frame):
         self.configure(height=600,width=800)
         self.infoLabel = Tkinter.Label(self, text="WC3-to-VMF is a toolkit made by SinZ and Yoshi2 \r\nThis project is available on Github: http://github.com/SinZ163/w3x-to-vmf/").pack()
         self.pack(fill=Tkinter.BOTH, expand=1)
+        
 root = Tkinter.Tk()
 
 root.title("Warcraft III to Dota 2 conversion toolkit.")
