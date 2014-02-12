@@ -7,6 +7,9 @@ import simplejson
 import traceback
 
 from read_w3e import ReadW3E
+from read_object import ObjectReader, TranslationHandle
+
+from pprint import pprint as pprint
 
 try:
     from PIL import Image, ImageTk
@@ -22,7 +25,6 @@ except:
 class TerrainTab(Tkinter.Frame):
     def    __init__(self, master=None):
         Tkinter.Frame.__init__(self, master)
-        self.configure(height=600,width=800)
         self.settingFrame = Tkinter.Frame(self)
         self.openButton = Tkinter.Button(self.settingFrame, text="Open!", command=self.openFile).pack(side=Tkinter.LEFT)
         
@@ -83,7 +85,6 @@ class TerrainTab(Tkinter.Frame):
         def __init__(self, master=None):
             Tkinter.Frame.__init__(self, master)
             self.img = Tkinter.PhotoImage(data="R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7") 
-            self.configure(height=600,width=800)
             
             self.grid_rowconfigure(0,weight=1)
             self.grid_columnconfigure(0,weight=1)
@@ -114,7 +115,6 @@ class TerrainTab(Tkinter.Frame):
     class HeaderInfoTab(Tkinter.Frame):
         def __init__(self, master=None):
             Tkinter.Frame.__init__(self, master)
-            self.configure(height=600,width=800)
             
             self.mainText = Tkinter.StringVar()
             self.mainLabel = Tkinter.Label(self, textvariable=self.mainText, anchor=Tkinter.W, justify=Tkinter.LEFT).grid(row=0)
@@ -124,14 +124,95 @@ class TerrainTab(Tkinter.Frame):
             self.mainText.set(text)
     
 class DataTab(Tkinter.Frame):
-    def    __init__(self, master=None):
+    class GenericTreeTab(Tkinter.Frame):
+        def __init__(self, master=None):
+            Tkinter.Frame.__init__(self, master)
+            
+            self.yscrollbar = Tkinter.Scrollbar(self)
+            self.yscrollbar.grid(row=0,column=1, sticky=Tkinter.N+Tkinter.S)
+            
+            self.tree = ttk.Treeview(self, columns=('Values'),yscrollcommand=self.yscrollbar.set)
+            self.tree.column('Values', width=100, anchor='center')
+            self.tree.heading('Values', text='Values')
+            
+            self.tree.grid(row=0,column=0, sticky=Tkinter.N+Tkinter.S+Tkinter.E+Tkinter.W)
+            
+            self.yscrollbar.config(command=self.tree.yview)
+            
+            self.pack(fill=Tkinter.BOTH, expand=1)
+        def serializeInfo(self, info, parent=""):
+            if type(info) is dict:
+                for key, value in info.iteritems():
+                    newParent = self.tree.insert(parent,"end", text=key)
+                    self.serializeInfo(value, newParent)
+            elif type(info) is list:
+                i = 0
+                for value in info:
+                    newParent = self.tree.insert(parent,"end", text=i)
+                    self.serializeInfo(value, newParent)
+                #do list stuff here
+            else:
+                self.tree.insert(parent, "end", text=info)
+                #do normal stuff here
+        def setInfo(self, info):
+            #print(info)
+            x = self.tree.get_children()
+            for item in x:
+                self.tree.delete(item)
+            self.serializeInfo(info)
+    def __init__(self, master=None):
         Tkinter.Frame.__init__(self, master)
-        self.configure(height=600,width=800)
+        #Row 0
+        self.settingFrame = Tkinter.Frame(self)
+        self.openButton = Tkinter.Button(self.settingFrame, text="Open!", command=self.openFile).pack(side=Tkinter.LEFT)
+        
+        self.filenameText = Tkinter.StringVar()
+        self.filename = Tkinter.Label(self.settingFrame, textvariable=self.filenameText).pack(side=Tkinter.LEFT)
+        self.settingFrame.pack()
+        #Row 1        
+        self.translateVar =  Tkinter.IntVar()
+        self.translate = Tkinter.Checkbutton(self, text="Translation", anchor="w", variable=self.translateVar,state="disabled").pack()
+        #Row 2
+        self.tabHandle = ttk.Notebook(self)
+        
+        self.originalTab = self.GenericTreeTab(self.tabHandle)
+        self.customTab = self.GenericTreeTab(self.tabHandle)
+        self.transTab = self.GenericTreeTab(self.tabHandle)
+        
+        self.tabHandle.add(self.originalTab, text="OriginalInfo")
+        self.tabHandle.add(self.customTab, text="CustomInfo")
+        self.tabHandle.add(self.transTab, text="Translation")
+        self.tabHandle.pack(fill=Tkinter.BOTH, expand=1)
+        
         self.pack(fill=Tkinter.BOTH, expand=1)
+        
+    def openFile(self):
+        options = {
+            "initialdir" : "input/",
+            "defaultextension" : ".w3t",
+            "filetypes" : [
+                ("Warcraft III Units",          ".w3u"),
+                ("Warcraft III Items",          ".w3t"),
+                ("Warcraft III Destructables",  ".w3b"),
+                ("Warcraft III Doodats",        ".w3d"),
+                ("Warcraft III Abilities",      ".w3a"),
+                ("Warcraft III Buffs",          ".w3h"),
+                ("Warcraft III Upgrades",       ".w3q")
+            ],
+            "title" : "This is also a title!"
+        }
+        filename = askopenfilename(**options)
+        self.filenameText.set(filename)
+        if filename:
+            #this is where we do stuff
+            fileInfo = ObjectReader(filename)
+            self.originalTab.setInfo(fileInfo.originalInfo)
+            self.customTab.setInfo(fileInfo.customInfo)
+            translated = TranslationHandle(fileInfo)
+            self.transTab.setInfo(translated.info)
 class InfoTab(Tkinter.Frame):
-    def    __init__(self, master=None):
+    def __init__(self, master=None):
         Tkinter.Frame.__init__(self, master)
-        self.configure(height=600,width=800)
         self.infoLabel = Tkinter.Label(self, text="WC3-to-VMF is a toolkit made by SinZ and Yoshi2 \r\nThis project is available on Github: http://github.com/SinZ163/w3x-to-vmf/").pack()
         self.pack(fill=Tkinter.BOTH, expand=1)
         
