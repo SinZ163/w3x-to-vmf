@@ -4,6 +4,9 @@ class GenericTreeTab(Tkinter.Frame):
     def __init__(self, master=None):
         Tkinter.Frame.__init__(self, master)
         
+        self.grid_rowconfigure(0,weight=1)
+        self.grid_columnconfigure(0,weight=1)
+            
         self.xscrollbar = AutoScrollbar(self,orient=Tkinter.HORIZONTAL)
         self.xscrollbar.grid(row=1,column=0, sticky=Tkinter.E+Tkinter.W)
         
@@ -11,7 +14,7 @@ class GenericTreeTab(Tkinter.Frame):
         self.yscrollbar.grid(row=0,column=1, sticky=Tkinter.N+Tkinter.S)
        
         self.tree = ttk.Treeview(self, columns=('Values'),xscrollcommand=self.xscrollbar.set,yscrollcommand=self.yscrollbar.set)
-        self.tree.column('Values', width=100, anchor='center')
+        self.tree.column('Values', width=100, anchor=Tkinter.W)
         self.tree.heading('Values', text='Values')
         
         self.tree.grid(row=0,column=0, sticky=Tkinter.N+Tkinter.S+Tkinter.E+Tkinter.W)
@@ -19,20 +22,19 @@ class GenericTreeTab(Tkinter.Frame):
         self.xscrollbar.config(command=self.tree.xview)
         self.yscrollbar.config(command=self.tree.yview)
         
-        self.pack(fill=Tkinter.BOTH, expand=Tkinter.YES)
+        self.pack(fill=Tkinter.BOTH, expand=1)
     def serializeInfo(self, info, parent=""):
         if type(info) is dict:
             for key, value in info.iteritems():
                 if type(value) is dict or type(value) is list:
-                    newParent = self.tree.insert(parent,"end", text=key)
+                    newParent = self.tree.insert(parent,"end", text=key, open=True)
                     self.serializeInfo(value, newParent)
                 else:
-                    print(str(value))
                     self.tree.insert(parent,"end", text=key, values=[unicode(str(value), "utf-8")])
         elif type(info) is list:
             i = 0
             for value in info:
-                newParent = self.tree.insert(parent,"end", text=i)
+                newParent = self.tree.insert(parent,"end", text=i, open=True)
                 self.serializeInfo(value, newParent)
                 i = i + 1
             #do list stuff here

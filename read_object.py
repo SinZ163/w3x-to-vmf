@@ -32,7 +32,6 @@ class ObjectReader():
         if fileSplit[len(fileSplit)-1] in self.OptionalInts:
             modInfo["level"] = self.read.int()
             modInfo["pointer"] = self.read.int()
-        print(varType)
         modInfo["value"] = self.variableTypes[varType]()
         self.read.int() #verify / end thing
         return modInfo
