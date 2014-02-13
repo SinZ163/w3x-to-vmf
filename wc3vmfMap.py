@@ -15,16 +15,18 @@ except:
 import lib.vmflib as vmflib
 import lib.vmflib.tools as tools
 
+
 from read_w3e import ReadW3E
 from lib.dataTypes import QuadBlobs, Bytemap
 from lib.helperFunctions import make_number_divisible_by_n, map_list_with_vertex
 
+from VmfGenerators import original, displacement
 
 # A class that centralizes a lot of the functions used 
 # in writevmf and writevmf_displacementTest.
-class Warvmf_Map():
-    def __init__(self, war_filename, vmf_filename):
-        self.wc3_filename = war_filename
+class WarvmfMap():
+    def __init__(self, wc3_filename, vmf_filename):
+        self.wc3_filename = wc3_filename
         self.vmf_filename = vmf_filename
         
         self.debug_timetaken = {}
@@ -32,21 +34,24 @@ class Warvmf_Map():
         self.__readWar3map__()
         self.__setup_vmf__()
         
+        self.vmfGenerators = {"original" : original.VmfGen(self),
+                              "displacement" : displacement.VmfGen(self)}
+        
     
     def __readWar3map__(self):
         start = timer()
-        self.data = ReadW3E(self.war_filename)
+        self.data = ReadW3E(self.wc3_filename)
         self.debug_timetaken["WC3 Map Reading"] = timer()-start
         
-        self.WC3map_xSize = data.mapInfo["width"]
-        self.WC3map_ySize = data.mapInfo["height"]
+        self.WC3map_xSize = self.data.mapInfo["width"]
+        self.WC3map_ySize = self.data.mapInfo["height"]
         self.WC3map_zSize = 15 # The maximal layer height for a wc3 map is 15 
         
         self.WC3map_heightmap, self.WC3map_rampmap, maxHeight = self.__war3_setup_bytemaps__()
     
     def __war3_setup_bytemaps__(self):
-        heightmap = Bytemap(data.mapInfo["width"], data.mapInfo["height"])
-        rampMap = Bytemap(data.mapInfo["width"], data.mapInfo["height"], init = 0, dataType = "B")
+        heightmap = Bytemap(self.WC3map_xSize, self.WC3map_ySize)
+        rampMap = Bytemap(self.WC3map_xSize, self.WC3map_ySize, init = 0, dataType = "B")
         
         # Not sure if the maximal height of a WC3 map is useful,
         # we will keep it in mind.
@@ -73,7 +78,7 @@ class Warvmf_Map():
                 if height > maxHeight: maxHeight = height
                 heightmap.setVal(x, y, height)
         
-        return heightmap, rampmap, maxHeight
+        return heightmap, rampMap, maxHeight
         
         
     
@@ -123,13 +128,27 @@ class Warvmf_Map():
         skybox_ceiling.set_material("tools/toolsskybox")
         
         
+        lowestHeight = 16 # Placeholder value for now
+
+        # We create a floor and mark it with a normal texture
+        orig = vmflib.types.Vertex(0, 0, 0-lowestHeight//2)
+        floor = tools.Block(origin = orig, dimensions=(self.vmfmap_xSize, self.vmfmap_ySize, lowestHeight))
+        floor.set_material("nature/dirtfloor012a")
+        
         self.m.world.children.append(skybox_back)
         self.m.world.children.append(skybox_front)
         self.m.world.children.append(skybox_left)
         self.m.world.children.append(skybox_right)
         self.m.world.children.append(skybox_ceiling)
         
+        self.m.world.children.append(floor)
+    
+    def generateVmf(self, method):
+        pass
         
+        
+        
+wc3map = WarvmfMap("input/war3map.w3e", "output/war3map.vmf")
         
         
         
