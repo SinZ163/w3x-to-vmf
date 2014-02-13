@@ -6,6 +6,7 @@ from tkFileDialog import askopenfilename, asksaveasfilename
 import simplejson
 import traceback
 
+import lib.uiHelperFunctions as UIUtils
 from read_w3e import ReadW3E
 from read_object import ObjectReader, TranslationHandle
 
@@ -124,42 +125,6 @@ class TerrainTab(Tkinter.Frame):
             self.mainText.set(text)
     
 class DataTab(Tkinter.Frame):
-    class GenericTreeTab(Tkinter.Frame):
-        def __init__(self, master=None):
-            Tkinter.Frame.__init__(self, master)
-            
-            self.yscrollbar = Tkinter.Scrollbar(self)
-            self.yscrollbar.grid(row=0,column=1, sticky=Tkinter.N+Tkinter.S)
-            
-            self.tree = ttk.Treeview(self, columns=('Values'),yscrollcommand=self.yscrollbar.set)
-            self.tree.column('Values', width=100, anchor='center')
-            self.tree.heading('Values', text='Values')
-            
-            self.tree.grid(row=0,column=0, sticky=Tkinter.N+Tkinter.S+Tkinter.E+Tkinter.W)
-            
-            self.yscrollbar.config(command=self.tree.yview)
-            
-            self.pack(fill=Tkinter.BOTH, expand=1)
-        def serializeInfo(self, info, parent=""):
-            if type(info) is dict:
-                for key, value in info.iteritems():
-                    newParent = self.tree.insert(parent,"end", text=key)
-                    self.serializeInfo(value, newParent)
-            elif type(info) is list:
-                i = 0
-                for value in info:
-                    newParent = self.tree.insert(parent,"end", text=i)
-                    self.serializeInfo(value, newParent)
-                #do list stuff here
-            else:
-                self.tree.insert(parent, "end", text=info)
-                #do normal stuff here
-        def setInfo(self, info):
-            #print(info)
-            x = self.tree.get_children()
-            for item in x:
-                self.tree.delete(item)
-            self.serializeInfo(info)
     def __init__(self, master=None):
         Tkinter.Frame.__init__(self, master)
         #Row 0
@@ -175,9 +140,9 @@ class DataTab(Tkinter.Frame):
         #Row 2
         self.tabHandle = ttk.Notebook(self)
         
-        self.originalTab = self.GenericTreeTab(self.tabHandle)
-        self.customTab = self.GenericTreeTab(self.tabHandle)
-        self.transTab = self.GenericTreeTab(self.tabHandle)
+        self.originalTab = UIUtils.GenericTreeTab(self.tabHandle)
+        self.customTab = UIUtils.GenericTreeTab(self.tabHandle)
+        self.transTab = UIUtils.GenericTreeTab(self.tabHandle)
         
         self.tabHandle.add(self.originalTab, text="OriginalInfo")
         self.tabHandle.add(self.customTab, text="CustomInfo")
@@ -191,8 +156,8 @@ class DataTab(Tkinter.Frame):
             "initialdir" : "input/",
             "defaultextension" : ".w3t",
             "filetypes" : [
-                ("Warcraft III Units",          ".w3u"),
                 ("Warcraft III Items",          ".w3t"),
+                ("Warcraft III Units",          ".w3u"),           
                 ("Warcraft III Destructables",  ".w3b"),
                 ("Warcraft III Doodats",        ".w3d"),
                 ("Warcraft III Abilities",      ".w3a"),
