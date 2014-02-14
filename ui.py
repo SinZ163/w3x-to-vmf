@@ -26,34 +26,38 @@ except:
 class TerrainTab(Tkinter.Frame):
     def    __init__(self, master=None):
         Tkinter.Frame.__init__(self, master)
-        self.settingFrame = Tkinter.Frame(self)
-        self.openButton = Tkinter.Button(self.settingFrame, text="Open!", command=self.openFile).pack(side=Tkinter.LEFT)
+        self.openFrame = Tkinter.Frame(self)
+        self.openButton = Tkinter.Button(self.openFrame, text="Open!", command=self.openFile).pack(side=Tkinter.LEFT)
         
         self.filenameText = Tkinter.StringVar()
-        self.filename = Tkinter.Label(self.settingFrame, textvariable=self.filenameText).pack(side=Tkinter.LEFT)
-        self.settingFrame.pack()
+        self.filename = Tkinter.Label(self.openFrame, textvariable=self.filenameText).pack(side=Tkinter.LEFT)
+        self.openFrame.pack()
         #settings
+        self.settingsFrame = Tkinter.Frame(self)
         tmp="disabled"
         if useTopDown:
             tmp = "normal"
         self.topDownOption = Tkinter.IntVar()
-        self.topDown = Tkinter.Checkbutton(self, text="Generate TopDown (beta)", anchor="w", variable=self.topDownOption,state=tmp, command=self.onTopDown).pack()
+        self.topDown = Tkinter.Checkbutton(self.settingsFrame, text="Generate TopDown (beta)", anchor="w", variable=self.topDownOption,state=tmp).pack(side=Tkinter.LEFT)
+        self.rawOption = Tkinter.IntVar()
+        self.rawButton = Tkinter.Checkbutton(self.settingsFrame,text="Visualise raw info (slow)", anchor="w", variable=self.rawOption).pack(side=Tkinter.LEFT)
+        
+        self.settingsFrame.pack()
         #end settings
         #start tabs
         self.tabHandle = ttk.Notebook(self)
         
         self.topDownTab = self.TopDownTab()
         self.headerTab = self.HeaderInfoTab()
+        self.rawTab = UIUtils.GenericTreeTab()
         
         self.tabHandle.add(self.headerTab, text="HeaderInfo")
         self.tabHandle.add(self.topDownTab, text="TopDownViewer", state=tmp)
+        self.tabHandle.add(self.rawTab, text="Raw Info")
         
         self.tabHandle.pack(fill=Tkinter.BOTH, expand=1)
         #end tabs
         self.pack(fill=Tkinter.BOTH, expand=1)
-        
-    def onTopDown(self):
-        pass
     
     def openFile(self):
         
@@ -68,7 +72,8 @@ class TerrainTab(Tkinter.Frame):
         self.filenameText.set(filename)
         if filename:
             mapInfo = ReadW3E(filename)
-            
+            if self.rawOption.get() == 1:
+                self.rawTab.setInfo(mapInfo.mapInfo)
             if self.topDownOption.get() == 1:
                 print("Time to generate a topdown")
                 #time to run TopDownViewer
@@ -91,10 +96,10 @@ class TerrainTab(Tkinter.Frame):
             self.grid_columnconfigure(0,weight=1)
             
             
-            self.xscrollbar = Tkinter.Scrollbar(self, orient=Tkinter.HORIZONTAL)
+            self.xscrollbar = UIUtils.AutoScrollbar(self, orient=Tkinter.HORIZONTAL)
             self.xscrollbar.grid(row=1, sticky=Tkinter.E+Tkinter.W)
             
-            self.yscrollbar = Tkinter.Scrollbar(self)
+            self.yscrollbar = UIUtils.AutoScrollbar(self)
             self.yscrollbar.grid(row=0,column=1, sticky=Tkinter.N+Tkinter.S)
             
             self.canvas = Tkinter.Canvas(self, bd=0, xscrollcommand=self.xscrollbar.set, yscrollcommand=self.yscrollbar.set)
@@ -106,13 +111,30 @@ class TerrainTab(Tkinter.Frame):
             
             self.id = self.canvas.create_image(0,0,image=self.img, anchor=Tkinter.NW)
             
+            self.zoomFrame = Tkinter.Frame(self)
+            self.zoomIn = Tkinter.Button(self.zoomFrame, text="Zoom In!",command=self.zoomIn).pack(side=Tkinter.LEFT)
+            self.zoomOut = Tkinter.Button(self.zoomFrame, text="Zoom Out!",command=self.zoomOut).pack(side=Tkinter.LEFT)
+            self.zoomWarning = Tkinter.Label(self.zoomFrame, text="Warning, spamming the zoom buttons will eat your RAM alive and may crash!").pack(side=Tkinter.LEFT)
+            self.zoomFrame.grid(row=2,column=0,columnspan=1, sticky=Tkinter.E+Tkinter.W)
             self.pack(fill=Tkinter.BOTH, expand=1)
-            
         def setImage(self, img):
+            self.originalImg = img
+            self.ratio = 1
             self.img = ImageTk.PhotoImage(img)
             self.canvas.config(scrollregion=(0,0,img.size[0], img.size[1]))
             self.canvas.itemconfig(self.id, image=self.img)
-            
+        def zoomIn(self):
+            self.ratio = self.ratio + 0.1
+            img = self.originalImg.resize((int(self.originalImg.size[0]*self.ratio), int(self.originalImg.size[1]*self.ratio)))
+            self.img = ImageTk.PhotoImage(img)
+            self.canvas.config(scrollregion=(0,0,img.size[0], img.size[1]))
+            self.canvas.itemconfig(self.id, image=self.img)
+        def zoomOut(self):
+            self.ratio = self.ratio - 0.1
+            img = self.originalImg.resize((int(self.originalImg.size[0]*self.ratio), int(self.originalImg.size[1]*self.ratio)))
+            self.img = ImageTk.PhotoImage(img)
+            self.canvas.config(scrollregion=(0,0,img.size[0], img.size[1]))
+            self.canvas.itemconfig(self.id, image=self.img)
     class HeaderInfoTab(Tkinter.Frame):
         def __init__(self, master=None):
             Tkinter.Frame.__init__(self, master)

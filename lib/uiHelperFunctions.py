@@ -34,8 +34,11 @@ class GenericTreeTab(Tkinter.Frame):
         elif type(info) is list:
             i = 0
             for value in info:
-                newParent = self.tree.insert(parent,"end", text=i, open=True)
-                self.serializeInfo(value, newParent)
+                if type(value) is dict or type(value) is list:
+                    newParent = self.tree.insert(parent,"end", text=i, open=True)
+                    self.serializeInfo(value, newParent)
+                else:
+                    self.tree.insert(parent,"end", text=i, values=[unicode(str(value), "utf-8")])
                 i = i + 1
             #do list stuff here
         else:
