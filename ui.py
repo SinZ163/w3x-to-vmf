@@ -24,7 +24,7 @@ except:
     print(traceback.format_exc())
 
 class TerrainTab(Tkinter.Frame):
-    def    __init__(self, master=None):
+    def __init__(self, master=None):
         Tkinter.Frame.__init__(self, master)
         self.openFrame = Tkinter.Frame(self)
         self.openButton = Tkinter.Button(self.openFrame, text="Open!", command=self.openFile).pack(side=Tkinter.LEFT)
@@ -58,6 +58,8 @@ class TerrainTab(Tkinter.Frame):
         self.tabHandle.pack(fill=Tkinter.BOTH, expand=1)
         #end tabs
         self.pack(fill=Tkinter.BOTH, expand=1)
+        
+        self.WC3_Topdown_ImageGen = TopDownViewer()
     
     def openFile(self):
         
@@ -72,14 +74,16 @@ class TerrainTab(Tkinter.Frame):
         self.filenameText.set(filename)
         if filename:
             mapInfo = ReadW3E(filename)
+            
             if self.rawOption.get() == 1:
                 self.rawTab.setInfo(mapInfo.mapInfo)
+                
             if self.topDownOption.get() == 1:
                 print("Time to generate a topdown")
                 #time to run TopDownViewer
-                topdownInstance = TopDownViewer(mapInfo)
+                topdownImage = self.WC3_Topdown_ImageGen.createImage(mapInfo)
                 print("Generated.")
-                self.topDownTab.setImage(topdownInstance.img)
+                self.topDownTab.setImage(topdownImage)
                 
             tmpInfo = mapInfo.mapInfo
             del tmpInfo["info"]
@@ -117,24 +121,28 @@ class TerrainTab(Tkinter.Frame):
             self.zoomWarning = Tkinter.Label(self.zoomFrame, text="Warning, spamming the zoom buttons will eat your RAM alive and may crash!").pack(side=Tkinter.LEFT)
             self.zoomFrame.grid(row=2,column=0,columnspan=1, sticky=Tkinter.E+Tkinter.W)
             self.pack(fill=Tkinter.BOTH, expand=1)
+            
         def setImage(self, img):
             self.originalImg = img
             self.ratio = 1
             self.img = ImageTk.PhotoImage(img)
             self.canvas.config(scrollregion=(0,0,img.size[0], img.size[1]))
             self.canvas.itemconfig(self.id, image=self.img)
+            
         def zoomIn(self):
             self.ratio = self.ratio + 0.1
             img = self.originalImg.resize((int(self.originalImg.size[0]*self.ratio), int(self.originalImg.size[1]*self.ratio)))
             self.img = ImageTk.PhotoImage(img)
             self.canvas.config(scrollregion=(0,0,img.size[0], img.size[1]))
             self.canvas.itemconfig(self.id, image=self.img)
+            
         def zoomOut(self):
             self.ratio = self.ratio - 0.1
             img = self.originalImg.resize((int(self.originalImg.size[0]*self.ratio), int(self.originalImg.size[1]*self.ratio)))
             self.img = ImageTk.PhotoImage(img)
             self.canvas.config(scrollregion=(0,0,img.size[0], img.size[1]))
             self.canvas.itemconfig(self.id, image=self.img)
+            
     class HeaderInfoTab(Tkinter.Frame):
         def __init__(self, master=None):
             Tkinter.Frame.__init__(self, master)
@@ -190,6 +198,7 @@ class DataTab(Tkinter.Frame):
         }
         filename = askopenfilename(**options)
         self.filenameText.set(filename)
+        
         if filename:
             #this is where we do stuff
             fileInfo = ObjectReader(filename)
@@ -197,6 +206,7 @@ class DataTab(Tkinter.Frame):
             self.customTab.setInfo(fileInfo.customInfo)
             translated = TranslationHandle(fileInfo)
             self.transTab.setInfo(translated.info)
+            
 class InfoTab(Tkinter.Frame):
     def __init__(self, master=None):
         Tkinter.Frame.__init__(self, master)
