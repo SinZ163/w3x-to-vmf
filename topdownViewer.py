@@ -1,8 +1,9 @@
-class TopDownViewer:
-    from PIL import Image, ImageFont, ImageDraw         
-    def __init__(self, mapInfo, debug={"validTile" : False, "invalidTile" : False, "height" : False, "ramp" : False, "water" : False, "blight" : False}):
-        self.debug = debug
-        self.textures = self.Texture("ui/WC3 Art/ground",
+from PIL import Image, ImageFont, ImageDraw
+
+class TopDownViewer:         
+    def __init__(self):
+        
+        self.textures = self.__texture__("ui/WC3 Art/ground",
                    {"Ashen_Leaves.tga" : "Alvd",
                     "City_Dirt.tga" : "Ydrt",
                     "City_DirtRough.tga" : "Ydtr",
@@ -44,106 +45,144 @@ class TopDownViewer:
                     "VillageFall_CobblePath.tga" : "Qcbp"})
 
 
-        self.placeholder = self.Image.open("ui/WC3 Art/placeholder.tga")
+        self.placeholder = Image.open("ui/WC3 Art/placeholder.tga")
         
-        self.font = self.ImageFont.truetype("arial.ttf", 15)
-        self.data = mapInfo
-        self.img = self.Image.new("RGB", (self.data.mapInfo["width"]*32, self.data.mapInfo["height"]*32))
+        self.font = ImageFont.truetype("arial.ttf", 15)
+        print "everything initiated"
+        
+    
+    def createImage(self, mapData, debug={"validTile" : False, "invalidTile" : False, "height" : False,
+                                        "ramp" : False, "water" : False, "blight" : False}):
+        img = Image.new("RGB", (mapData.mapInfo["width"]*32, mapData.mapInfo["height"]*32))
 
-        self.draw = self.ImageDraw.Draw(self.img)
-        self.work()
-    def Texture(self, folder, textDict):
+        draw = ImageDraw.Draw(img)
+        self.__work__(img, draw, mapData, debug)
+        
+        return img
+        
+    def __texture__(self, folder, textDict):
         textureInfo = {
             "textureDict" : textDict,
             "folder" : folder,
             "dict" : {}
         }
         for file in textDict:
-            tile = self.Image.open(folder+"/"+file)
+            
+            tile = Image.open(folder+"/"+file)
             minimap = textDict[file]
             width, height = tile.size
             subtile_list = []
-            for ix in range(width/64):
-                for iy in range(height/64):
+            
+            for ix in xrange(width/64):
+                for iy in xrange(height/64):
+                    
+                    averageBrightness = False
+                    
                     ix2, iy2 = ix+1, iy+1
                     cropped = tile.crop((ix*64, iy*64, ix2*64, iy2*64))
-                    subtile_list.append(cropped.resize((32,32)))
+
+                    resized = cropped.resize((32,32), Image.ANTIALIAS)
                     
+                    # pixelData should contain 4 values: Red, Green, Blue and Alpha.
+                    # We only need the colour values.
+                    # We calculate the grayscale color according to the following page:
+                    # http://en.wikipedia.org/wiki/Grayscale#Colorimetric_.28luminance-preserving.29_conversion_to_grayscale
+                    # Y = 0.2126*R + 0.7152*G + 0.0722*B
+                    for pixelData in resized.getdata(): 
+                        if averageBrightness == False:
+                            averageBrightness = (pixelData[0]*0.2126 + pixelData[1]*0.7152 + pixelData[2]*0.0722)
+                        else:
+                            currentBrightness = (pixelData[0]*0.2126 + pixelData[1]*0.7152 + pixelData[2]*0.0722)
+                            averageBrightness = (averageBrightness+currentBrightness) / 2.0
+                    
+                    # We round the number and convert it to an integer that
+                    # represents the average brightness somewhat accurately.
+                    averageBrightness = int(round(averageBrightness))
+                    
+                    subtile_list.append((resized, averageBrightness))
             textureInfo["dict"][minimap] = subtile_list
             
         return textureInfo
-    def work(self):
-        for x in xrange(self.data.mapInfo["width"]):
-            for y in xrange(self.data.mapInfo["height"]):
-                index = y*self.data.mapInfo["width"] + x
+    
+    def averageColor(self, *args):
+        print args
+    
+    def __work__(self, img, draw, mapData, debug):
+        for x in xrange(mapData.mapInfo["width"]):
+            for y in xrange(mapData.mapInfo["height"]):
+                index = y*mapData.mapInfo["width"] + x
                 
-                tile = self.data.mapInfo["info"][index]
+                tile = mapData.mapInfo["info"][index]
                 
                 
                 tiletype = tile["groundTextureType"]
-                type = self.data.mapInfo["groundTileSets"][tiletype]
+                type = mapData.mapInfo["groundTileSets"][tiletype]
                 
-                y = self.data.mapInfo["height"] - y-1
+                y = mapData.mapInfo["height"] - y-1
                 
                 if type in self.textures["dict"]:
                     #subindex = tile["textureDetails"]
                     subindex = 0
                     
                     try:
-                        self.img.paste(self.textures["dict"][type][subindex], (x*32, y*32))#
-                        #bla = str(bin(subindex))[2:]
-                        #print bla.zfill(8)
-                        if self.debug["validTile"]:
-                            self.draw.text((x*32+1, y*32), str(hex(subindex)), font = self.font, fill = (0, 255, 33))
-                            self.draw.text((x*32+1, y*32+15), str(type), font = self.font, fill = (140, 140, 140, 200))
+                        texture, brightness = self.textures["dict"][type][subindex] 
+                        img.paste(texture, (x*32, y*32))
+                        
+                        colorMod = 127.0/float(brightness)
+                        
+                        if debug["validTile"]:
+                            draw.text((x*32+2, y*32+1), str(hex(subindex)), font = self.font, fill = (0, int(255*colorMod), int(33*colorMod)))
+                            draw.text((x*32+2, y*32+14), str(type), font = self.font, fill = (int(140*colorMod), int(140*colorMod), int(140*colorMod), 200))
+                            #draw.text((x*32+1, y*32), str(tile["layerHeight"]), font = self.font, fill = (0, 255, 33))
                     except:
-                        #pass
-                        self.img.paste(self.placeholder, (x*32, y*32))
-                        if self.debug["invalidTile"]:
-                            self.draw.text((x*32+1, y*32), str(hex(subindex)), font = self.font, fill = (255, 0, 33))
-                            self.draw.text((x*32+1, y*32+15), str(type), font = self.font, fill = (140, 140, 140, 200))
-                    if self.debug["ramp"]:
+                        img.paste(self.placeholder, (x*32, y*32))
+                        if debug["invalidTile"]:
+                            draw.text((x*32+1, y*32), str(hex(subindex)), font = self.font, fill = (255, 0, 33))
+                            draw.text((x*32+1, y*32+15), str(type), font = self.font, fill = (140, 140, 140, 200))
+                    if debug["ramp"]:
                         #is it a ramp
                         if tile["flags"] & 1:
                             #top
-                            self.draw.line(((x*32,y*32),(x*32+31,y*32)),fill=(0xFF,0,0))
+                            draw.line(((x*32,y*32),(x*32+31,y*32)),fill=(0xFF,0,0))
                             #bottom
-                            self.draw.line(((x*32,y*32+31),(x*32+31,y*32+31)),fill=(0xFF,0,0))
+                            draw.line(((x*32,y*32+31),(x*32+31,y*32+31)),fill=(0xFF,0,0))
                             #left
-                            self.draw.line(((x*32,y*32),(x*32, y*32+31)),fill=(0xFF,0,0))
+                            draw.line(((x*32,y*32),(x*32, y*32+31)),fill=(0xFF,0,0))
                             #right
-                            self.draw.line(((x*32+31,y*32),(x*32+31, y*32+31)),fill=(0xFF,0,0))
-                    if self.debug["water"]:
+                            draw.line(((x*32+31,y*32),(x*32+31, y*32+31)),fill=(0xFF,0,0))
+                    if debug["water"]:
                         if tile["flags"] & 4:
                             #top
-                            self.draw.line(((x*32+1,y*32+1),(x*32+30,y*32+1)),fill=(0,0,0xFF))
+                            draw.line(((x*32+1,y*32+1),(x*32+30,y*32+1)),fill=(0,0,0xFF))
                             #bottom
-                            self.draw.line(((x*32+1,y*32+30),(x*32+30,y*32+30)),fill=(0,0,0xFF))
+                            draw.line(((x*32+1,y*32+30),(x*32+30,y*32+30)),fill=(0,0,0xFF))
                             #left
-                            self.draw.line(((x*32+1,y*32+1),(x*32+1, y*32+30)),fill=(0,0,0xFF))
+                            draw.line(((x*32+1,y*32+1),(x*32+1, y*32+30)),fill=(0,0,0xFF))
                             #right
-                            self.draw.line(((x*32+30,y*32+1),(x*32+30, y*32+30)),fill=(0,0,0xFF))
-                    if self.debug["blight"]:
+                            draw.line(((x*32+30,y*32+1),(x*32+30, y*32+30)),fill=(0,0,0xFF))
+                    if debug["blight"]:
                         if tile["flags"] & 2:
                             #top
-                            self.draw.line(((x*32+2, y*32+2),(x*32+29,y*32+2)), fill=(0xFF,0,0xFF))
+                            draw.line(((x*32+2, y*32+2),(x*32+29,y*32+2)), fill=(0xFF,0,0xFF))
                             #bottom
-                            self.draw.line(((x*32+2,y*32+29),(x*32+29,y*32+29)),fill=(0xFF,0,0xFF))
+                            draw.line(((x*32+2,y*32+29),(x*32+29,y*32+29)),fill=(0xFF,0,0xFF))
                             #left
-                            self.draw.line(((x*32+2,y*32+2),(x*32+2,y*32+29)),  fill=(0xFF,0,0xFF))
+                            draw.line(((x*32+2,y*32+2),(x*32+2,y*32+29)),  fill=(0xFF,0,0xFF))
                             #right
-                            self.draw.line(((x*32+29,y*32+2),(x*32+29,y*32+29)),fill=(0xFF,0,0xFF))
+                            draw.line(((x*32+29,y*32+2),(x*32+29,y*32+29)),fill=(0xFF,0,0xFF))
+                            
                         
 if __name__ == "__main__":
     from read_w3e import ReadW3E
     import sys
-    settings = {
+    debugSettings = {
         "invalidTile" : True,
-        "validTile" : False,
+        "validTile" : True,
         "ramp" : True,
         "height" : True,
         "water" : True,
         "blight" : True
     }
-    image = TopDownViewer(ReadW3E(sys.argv[1]), settings)
-    image.img.save("ui/tmp/test.png", "PNG")
+    image = TopDownViewer()
+    img = image.createImage(ReadW3E(sys.argv[1]), debugSettings)
+    img.save("ui/tmp/test.png", "PNG")
