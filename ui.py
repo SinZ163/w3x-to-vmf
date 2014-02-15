@@ -119,6 +119,10 @@ class TerrainTab(Tkinter.Frame):
             self.zoomIn = Tkinter.Button(self.zoomFrame, text="Zoom In!",command=self.zoomIn).pack(side=Tkinter.LEFT)
             self.zoomOut = Tkinter.Button(self.zoomFrame, text="Zoom Out!",command=self.zoomOut).pack(side=Tkinter.LEFT)
             self.zoomWarning = Tkinter.Label(self.zoomFrame, text="Warning, spamming the zoom buttons will eat your RAM alive and may crash!").pack(side=Tkinter.LEFT)
+            
+            self.zoomFactor = Tkinter.Label(self.zoomFrame, text="Current zoom factor: 1.0x")
+            self.zoomFactor.pack(side=Tkinter.LEFT)
+            
             self.zoomFrame.grid(row=2,column=0,columnspan=1, sticky=Tkinter.E+Tkinter.W)
             self.pack(fill=Tkinter.BOTH, expand=1)
             
@@ -130,18 +134,34 @@ class TerrainTab(Tkinter.Frame):
             self.canvas.itemconfig(self.id, image=self.img)
             
         def zoomIn(self):
-            self.ratio = self.ratio + 0.1
-            img = self.originalImg.resize((int(self.originalImg.size[0]*self.ratio), int(self.originalImg.size[1]*self.ratio)))
-            self.img = ImageTk.PhotoImage(img)
-            self.canvas.config(scrollregion=(0,0,img.size[0], img.size[1]))
-            self.canvas.itemconfig(self.id, image=self.img)
+            if self.ratio + 0.1 < 1.6: # maximum zoom limit: 1.5x
+                if self.id: self.canvas.delete(self.id)
+                
+                self.ratio = self.ratio + 0.1
+                self.zoomFactor.config(text = "Current zoom factor: {0}x".format(float(self.ratio)))
+                
+                img = self.originalImg.resize((int(self.originalImg.size[0]*self.ratio), int(self.originalImg.size[1]*self.ratio)))
+                self.img = ImageTk.PhotoImage(img)
+                
+                self.canvas.create_image(0, 0, image=self.img, anchor=Tkinter.NW)
+                
+                #self.canvas.config(scrollregion=(0,0,img.size[0], img.size[1]))
+                #self.canvas.itemconfig(self.id, image=self.img)
             
         def zoomOut(self):
-            self.ratio = self.ratio - 0.1
-            img = self.originalImg.resize((int(self.originalImg.size[0]*self.ratio), int(self.originalImg.size[1]*self.ratio)))
-            self.img = ImageTk.PhotoImage(img)
-            self.canvas.config(scrollregion=(0,0,img.size[0], img.size[1]))
-            self.canvas.itemconfig(self.id, image=self.img)
+            if self.ratio-0.1 > 0.1: # minimum zoom limit: 0.1x
+                if self.id: self.canvas.delete(self.id)
+                
+                self.ratio = self.ratio - 0.1
+                self.zoomFactor.config(text = "Current zoom factor: {0}x".format(float(self.ratio)))
+                
+                img = self.originalImg.resize((int(self.originalImg.size[0]*self.ratio), int(self.originalImg.size[1]*self.ratio)))
+                self.img = ImageTk.PhotoImage(img)
+                
+                self.canvas.create_image(0, 0, image=self.img, anchor=Tkinter.NW)
+                
+                #self.canvas.config(scrollregion=(0,0,img.size[0], img.size[1]))
+                #self.canvas.itemconfig(self.id, image=self.img)
             
     class HeaderInfoTab(Tkinter.Frame):
         def __init__(self, master=None):
