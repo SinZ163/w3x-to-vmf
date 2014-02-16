@@ -83,7 +83,6 @@ class TerrainTab(Tkinter.Frame):
         self.filenameText.set(filename)
         if filename:
             mapInfo = ReadW3E(filename)
-            self.mapInfo = mapInfo
             
             if self.rawOption.get() == 1:
                 self.rawTab.setInfo(mapInfo.mapInfo)
@@ -203,28 +202,32 @@ class TerrainTab(Tkinter.Frame):
                                                   variable=self.water, onvalue = True, offvalue = False)
             self.blightCheck = Tkinter.Checkbutton(self, text="Highlight Undead Ground (Violet)", anchor="w", 
                                                    variable=self.blight, onvalue = True, offvalue = False)
+            self.rampCheck = Tkinter.Checkbutton(self, text="Highlight Ramp Tiles (Red)", anchor="w", 
+                                                 variable=self.ramp, onvalue = True, offvalue = False)
+            self.heightCheck = Tkinter.Checkbutton(self, text="Show Tile Height (Not added yet)", anchor="w",
+                                                   variable=self.height, onvalue = True, offvalue = False, state = "disabled")
             self.validTileCheck = Tkinter.Checkbutton(self, text="Show Tileinfo for known tiles", anchor="w", 
                                                       variable=self.validTile, onvalue = True, offvalue = False)
             self.invalidTileCheck = Tkinter.Checkbutton(self, text="Show Tileinfo for unknown tiles", anchor="w", 
                                                         variable=self.invalidTile, onvalue = True, offvalue = False)
-            self.rampCheck = Tkinter.Checkbutton(self, text="Highlight Ramp Tiles (Red)", anchor="w", 
-                                                 variable=self.ramp, onvalue = True, offvalue = False)
-            self.heightCheck = Tkinter.Checkbutton(self, text="Show Tile Height (Not added yet)", anchor="w",
-                                                   variable=self.height, onvalue = True, offvalue = False)
+            
+            
             
             if self.debugSettings["water"] == True: self.waterCheck.select()
             if self.debugSettings["blight"] == True: self.blightCheck.select()
-            if self.debugSettings["validTile"] == True: self.validTileCheck.select()
-            if self.debugSettings["invalidTile"] == True: self.invalidTileCheck.select()
             if self.debugSettings["ramp"] == True: self.rampCheck.select()
             if self.debugSettings["height"] == True: self.heightCheck.select()
+            if self.debugSettings["validTile"] == True: self.validTileCheck.select()
+            if self.debugSettings["invalidTile"] == True: self.invalidTileCheck.select()
+            
             
             self.waterCheck.pack(fill = "both")
             self.blightCheck.pack(fill = "both")
-            self.validTileCheck.pack(fill = "both")
-            self.invalidTileCheck.pack(fill = "both")
             self.rampCheck.pack(fill = "both")
             self.heightCheck.pack(fill = "both")
+            self.validTileCheck.pack(fill = "both")
+            self.invalidTileCheck.pack(fill = "both")
+            
             
         def apply(self):
             self.master.debugSettings["water"] = self.water.get()
