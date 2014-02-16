@@ -106,7 +106,19 @@ class TopDownViewer:
     
     def averageColor(self, *args):
         print args
-    
+    def drawFlag(self, draw, x, y, ring, colour, size=32):
+        topLeft = (x*size+ring,y*size+ring)
+        topRight = (x*size+(size-ring-1),y*size+ring)
+        botLeft = (x*size+ring,y*size+(size-ring-1))
+        botRight = (x*size+(size-ring-1),y*size+(size-ring-1))
+        #top
+        draw.line((topLeft,topRight),fill=colour)
+        #bot
+        draw.line((botLeft,botRight),fill=colour)
+        #left
+        draw.line((topLeft,botLeft),fill=colour)
+        #right
+        draw.line((topRight,botRight),fill=colour)
     def __work__(self, img, draw, mapData, debug):
         for x in xrange(mapData.mapInfo["width"]):
             for y in xrange(mapData.mapInfo["height"]):
@@ -139,37 +151,12 @@ class TopDownViewer:
                         if debug["invalidTile"]:
                             draw.text((x*32+1, y*32), str(hex(subindex)), font = self.font, fill = (255, 0, 33))
                             draw.text((x*32+1, y*32+15), str(type), font = self.font, fill = (140, 140, 140, 200))
-                    if debug["ramp"]:
-                        #is it a ramp
-                        if tile["flags"] & 1:
-                            #top
-                            draw.line(((x*32,y*32),(x*32+31,y*32)),fill=(0xFF,0,0))
-                            #bottom
-                            draw.line(((x*32,y*32+31),(x*32+31,y*32+31)),fill=(0xFF,0,0))
-                            #left
-                            draw.line(((x*32,y*32),(x*32, y*32+31)),fill=(0xFF,0,0))
-                            #right
-                            draw.line(((x*32+31,y*32),(x*32+31, y*32+31)),fill=(0xFF,0,0))
-                    if debug["water"]:
-                        if tile["flags"] & 4:
-                            #top
-                            draw.line(((x*32+1,y*32+1),(x*32+30,y*32+1)),fill=(0,0,0xFF))
-                            #bottom
-                            draw.line(((x*32+1,y*32+30),(x*32+30,y*32+30)),fill=(0,0,0xFF))
-                            #left
-                            draw.line(((x*32+1,y*32+1),(x*32+1, y*32+30)),fill=(0,0,0xFF))
-                            #right
-                            draw.line(((x*32+30,y*32+1),(x*32+30, y*32+30)),fill=(0,0,0xFF))
-                    if debug["blight"]:
-                        if tile["flags"] & 2:
-                            #top
-                            draw.line(((x*32+2, y*32+2),(x*32+29,y*32+2)), fill=(0xFF,0,0xFF))
-                            #bottom
-                            draw.line(((x*32+2,y*32+29),(x*32+29,y*32+29)),fill=(0xFF,0,0xFF))
-                            #left
-                            draw.line(((x*32+2,y*32+2),(x*32+2,y*32+29)),  fill=(0xFF,0,0xFF))
-                            #right
-                            draw.line(((x*32+29,y*32+2),(x*32+29,y*32+29)),fill=(0xFF,0,0xFF))
+                    if debug["ramp"] and tile["flags"] & 1:
+                        self.drawFlag(draw, x, y, 0, (0xFF,0,0),size=32)
+                    if debug["water"] and tile["flags"] & 4:
+                        self.drawFlag(draw, x, y, 1, (0,0,0xFF),size=32)
+                    if debug["blight"] and tile["flags"] & 2:
+                        self.drawFlag(draw, x, y, 2, (0xFF,0,0xFF),size=32)
                             
                         
 if __name__ == "__main__":
