@@ -1,6 +1,7 @@
 import tkMessageBox
 import Tkinter
 import ttk
+import tkSimpleDialog
 from tkFileDialog import askopenfilename, asksaveasfilename
 
 import simplejson
@@ -37,17 +38,22 @@ class TerrainTab(Tkinter.Frame):
         tmp="disabled"
         if useTopDown:
             tmp = "normal"
+        
+        self.debugInfo = Tkinter.Button(self.settingsFrame, text="TopDown Settings",command=self.newDebugInfo, state = tmp).pack(side=Tkinter.LEFT)
+        
         self.topDownOption = Tkinter.IntVar()
         self.topDown = Tkinter.Checkbutton(self.settingsFrame, text="Generate TopDown (beta)", anchor="w", variable=self.topDownOption,state=tmp).pack(side=Tkinter.LEFT)
         self.rawOption = Tkinter.IntVar()
         self.rawButton = Tkinter.Checkbutton(self.settingsFrame,text="Visualise raw info (slow)", anchor="w", variable=self.rawOption).pack(side=Tkinter.LEFT)
+        
+        
         
         self.settingsFrame.pack()
         #end settings
         #start tabs
         self.tabHandle = ttk.Notebook(self)
         
-        self.topDownTab = self.TopDownTab()
+        self.topDownTab = self.TopDownTab(self)
         self.headerTab = self.HeaderInfoTab()
         self.rawTab = UIUtils.GenericTreeTab()
         
@@ -60,6 +66,9 @@ class TerrainTab(Tkinter.Frame):
         self.pack(fill=Tkinter.BOTH, expand=1)
         
         self.WC3_Topdown_ImageGen = TopDownViewer()
+        
+        self.debugSettings = {"validTile" : False, "invalidTile" : False, "height" : False,
+                              "ramp" : False, "water" : False, "blight" : False}
     
     def openFile(self):
         
@@ -74,6 +83,7 @@ class TerrainTab(Tkinter.Frame):
         self.filenameText.set(filename)
         if filename:
             mapInfo = ReadW3E(filename)
+            self.mapInfo = mapInfo
             
             if self.rawOption.get() == 1:
                 self.rawTab.setInfo(mapInfo.mapInfo)
@@ -81,7 +91,7 @@ class TerrainTab(Tkinter.Frame):
             if self.topDownOption.get() == 1:
                 print("Time to generate a topdown")
                 #time to run TopDownViewer
-                topdownImage = self.WC3_Topdown_ImageGen.createImage(mapInfo)
+                topdownImage = self.WC3_Topdown_ImageGen.createImage(mapInfo, self.debugSettings)
                 print("Generated.")
                 self.topDownTab.setImage(topdownImage)
                 
@@ -95,6 +105,8 @@ class TerrainTab(Tkinter.Frame):
         def __init__(self, master=None):
             Tkinter.Frame.__init__(self, master)
             self.img = Tkinter.PhotoImage(data="R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7") 
+            
+            self.master = master
             
             self.grid_rowconfigure(0,weight=1)
             self.grid_columnconfigure(0,weight=1)
@@ -126,6 +138,11 @@ class TerrainTab(Tkinter.Frame):
             self.zoomFrame.grid(row=2,column=0,columnspan=1, sticky=Tkinter.E+Tkinter.W)
             self.pack(fill=Tkinter.BOTH, expand=1)
             
+            self.debugInfoOpen = False
+            self.debugWindow = None
+            
+            
+            
         def setImage(self, img):
             self.originalImg = img
             self.ratio = 1
@@ -145,7 +162,7 @@ class TerrainTab(Tkinter.Frame):
                 
                 self.canvas.create_image(0, 0, image=self.img, anchor=Tkinter.NW)
                 
-                #self.canvas.config(scrollregion=(0,0,img.size[0], img.size[1]))
+                self.canvas.config(scrollregion=(0,0,img.size[0], img.size[1]))
                 #self.canvas.itemconfig(self.id, image=self.img)
             
         def zoomOut(self):
@@ -160,8 +177,63 @@ class TerrainTab(Tkinter.Frame):
                 
                 self.canvas.create_image(0, 0, image=self.img, anchor=Tkinter.NW)
                 
-                #self.canvas.config(scrollregion=(0,0,img.size[0], img.size[1]))
+                self.canvas.config(scrollregion=(0,0,img.size[0], img.size[1]))
                 #self.canvas.itemconfig(self.id, image=self.img)
+        
+    def newDebugInfo(self):
+        self.debugWindow = self.DApplication(self)
+    
+    class DApplication(tkSimpleDialog.Dialog):
+        def __init__(self, master=None):
+            self.debugSettings = dict(master.debugSettings)
+            
+            self.water = Tkinter.BooleanVar()
+            self.blight = Tkinter.BooleanVar()
+            self.validTile = Tkinter.BooleanVar()
+            self.invalidTile = Tkinter.BooleanVar()
+            self.ramp = Tkinter.BooleanVar()
+            self.height = Tkinter.BooleanVar()
+            
+            self.master = master
+            
+            tkSimpleDialog.Dialog.__init__(self, master, "Debug Settings")
+            
+        def body(self, master):
+            self.waterCheck = Tkinter.Checkbutton(self, text="Highlight Water (Blue)", anchor="w",
+                                                  variable=self.water, onvalue = True, offvalue = False)
+            self.blightCheck = Tkinter.Checkbutton(self, text="Highlight Undead Ground (Violet)", anchor="w", 
+                                                   variable=self.blight, onvalue = True, offvalue = False)
+            self.validTileCheck = Tkinter.Checkbutton(self, text="Show Tileinfo for known tiles", anchor="w", 
+                                                      variable=self.validTile, onvalue = True, offvalue = False)
+            self.invalidTileCheck = Tkinter.Checkbutton(self, text="Show Tileinfo for unknown tiles", anchor="w", 
+                                                        variable=self.invalidTile, onvalue = True, offvalue = False)
+            self.rampCheck = Tkinter.Checkbutton(self, text="Highlight Ramp Tiles (Red)", anchor="w", 
+                                                 variable=self.ramp, onvalue = True, offvalue = False)
+            self.heightCheck = Tkinter.Checkbutton(self, text="Show Tile Height (Not added yet)", anchor="w",
+                                                   variable=self.height, onvalue = True, offvalue = False)
+            
+            if self.debugSettings["water"] == True: self.waterCheck.select()
+            if self.debugSettings["blight"] == True: self.blightCheck.select()
+            if self.debugSettings["validTile"] == True: self.validTileCheck.select()
+            if self.debugSettings["invalidTile"] == True: self.invalidTileCheck.select()
+            if self.debugSettings["ramp"] == True: self.rampCheck.select()
+            if self.debugSettings["height"] == True: self.heightCheck.select()
+            
+            self.waterCheck.pack(fill = "both")
+            self.blightCheck.pack(fill = "both")
+            self.validTileCheck.pack(fill = "both")
+            self.invalidTileCheck.pack(fill = "both")
+            self.rampCheck.pack(fill = "both")
+            self.heightCheck.pack(fill = "both")
+            
+        def apply(self):
+            self.master.debugSettings["water"] = self.water.get()
+            self.master.debugSettings["blight"] = self.blight.get()
+            self.master.debugSettings["validTile"] = self.validTile.get()
+            self.master.debugSettings["invalidTile"] = self.invalidTile.get()
+            self.master.debugSettings["ramp"] = self.ramp.get()
+            self.master.debugSettings["height"] = self.height.get()
+            
             
     class HeaderInfoTab(Tkinter.Frame):
         def __init__(self, master=None):
