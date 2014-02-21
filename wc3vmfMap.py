@@ -20,7 +20,7 @@ from read_w3e import ReadW3E
 from lib.dataTypes import QuadBlobs, Bytemap
 from lib.helperFunctions import make_number_divisible_by_n, map_list_with_vertex
 
-from VmfGenerators import original, displacement
+from VmfGenerators import brushBlocks, displacement
 
 # A class that centralizes a lot of the functions used 
 # in writevmf and writevmf_displacementTest.
@@ -34,7 +34,7 @@ class WarvmfMap():
         self.__readWar3map__()
         self.__setup_vmf__()
         
-        self.vmfGenerators = {"original" : original.VmfGen(self),
+        self.vmfGenerators = {"brush" : brushBlocks.VmfGen(self),
                               "displacement" : displacement.VmfGen(self)}
         
     
@@ -97,7 +97,7 @@ class WarvmfMap():
         # The resulting vmf map has to be much bigger than the WC3 map.
         self.vmfmap_xSize = self.WC3map_xSize * self.tileSize
         self.vmfmap_ySize = self.WC3map_ySize * self.tileSize
-        self.vmfmap_zSize = self.WC3map_zSize * self.tileHeight
+        self.vmfmap_zSize = self.WC3map_zSize * self.tileHeight * 2 # We double the height for more room on the map
         
         # Two constants we will use to keep the middle of the vmf map 
         # at the coordinates 0,0. This allows us to keep the map in the bounds
@@ -144,11 +144,17 @@ class WarvmfMap():
         self.m.world.children.append(floor)
     
     def generateVmf(self, method):
-        pass
+        self.vmfGenerators[method].create_vmf()
+    
+    def saveVmf(self):
+        #self.vmfGenerators[method].save_vmf()
+        self.m.write_vmf(self.vmf_filename)
         
         
         
 wc3map = WarvmfMap("input/war3map.w3e", "output/war3map.vmf")
+wc3map.generateVmf("brush")
+wc3map.saveVmf()
         
         
         

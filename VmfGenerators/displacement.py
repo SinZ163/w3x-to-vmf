@@ -75,109 +75,109 @@ class VmfGen():
                                     for local_y in xrange(4):
                                         distance = 3 - local_y 
                                         
-                                    # Attempt to create a weighed average value for points on the ramp
-                                    # Does not appear to work correctly just yet
-                                    average = (((local_y+1)/4.0) * lowerTile + ((distance+1)/4.0) * upperTile) / 2.0
+                                        # Attempt to create a weighed average value for points on the ramp
+                                        # Does not appear to work correctly just yet
+                                        average = (((local_y+1)/4.0) * lowerTile + ((distance+1)/4.0) * upperTile) / 2.0
+                                        for local_x in xrange(4):
+                                            average 
+                                            blob.setVal(iix*4+local_x+xoffset, iiy*4+local_y+yoffset, average*64)
+                                            
+                                elif directionType == 2: # A ramp that goes from left to right along the x axis (or vice versa)
                                     for local_x in xrange(4):
-                                        average 
-                                        blob.setVal(iix*4+local_x+xoffset, iiy*4+local_y+yoffset, average*64)
-                                        
-                            elif directionType == 2: # A ramp that goes from left to right along the x axis (or vice versa)
-                                for local_x in xrange(4):
-                                    distance = 3 - local_x 
-                                    average = (((local_x+1)/4.0) * leftTile + ((distance+1)/4.0) * rightTile) / 2.0
-                                    for local_y in xrange(4):
-                                        blob.setVal(iix*4+local_x+xoffset, iiy*4+local_y+yoffset, average*64)
-                            """for pointX in xrange(4):
-                                for pointY in xrange(4):
-                                    local_x = 
-                            for point in blob.getValGroup_iter((iix*4+xoffset, iiy*4+yoffset),
-                                                               ((iix+1)*4+xoffset, (iiy+1)*4+yoffset)):
-                                local_x, local_y, height = point
+                                        distance = 3 - local_x 
+                                        average = (((local_x+1)/4.0) * leftTile + ((distance+1)/4.0) * rightTile) / 2.0
+                                        for local_y in xrange(4):
+                                            blob.setVal(iix*4+local_x+xoffset, iiy*4+local_y+yoffset, average*64)
+                                """for pointX in xrange(4):
+                                    for pointY in xrange(4):
+                                        local_x = 
+                                for point in blob.getValGroup_iter((iix*4+xoffset, iiy*4+yoffset),
+                                                                   ((iix+1)*4+xoffset, (iiy+1)*4+yoffset)):
+                                    local_x, local_y, height = point
+                                    
+                                    blob.setVal(local_x, local_y, currentHeight32)"""
                                 
-                                blob.setVal(local_x, local_y, currentHeight32)"""
-                            
-                            
-                        else:
-                            ## A simple displacement test that uses the tile height for all points
-                            ## of the tile.
-                            #tile = Blockgroups.getTile(ix, iy, iix, iiy)
-                            #currentVals = tile.getValGroup()
-                            if iix > 1: xoffset = 1
-                            else: xoffset = 0
-                            
-                            if iiy > 1: yoffset = 1
-                            else: yoffset = 0
-                            
-                            for point in blob.getValGroup_iter((iix*4+xoffset, iiy*4+yoffset),
-                                                               ((iix+1)*4+xoffset, (iiy+1)*4+yoffset)):
-                                local_x, local_y, height = point
                                 
-                                blob.setVal(local_x, local_y, currentHeight*64)
+                            else:
+                                ## A simple displacement test that uses the tile height for all points
+                                ## of the tile.
+                                #tile = Blockgroups.getTile(ix, iy, iix, iiy)
+                                #currentVals = tile.getValGroup()
+                                if iix > 1: xoffset = 1
+                                else: xoffset = 0
+                                
+                                if iiy > 1: yoffset = 1
+                                else: yoffset = 0
+                                
+                                for point in blob.getValGroup_iter((iix*4+xoffset, iiy*4+yoffset),
+                                                                   ((iix+1)*4+xoffset, (iiy+1)*4+yoffset)):
+                                    local_x, local_y, height = point
+                                    
+                                    blob.setVal(local_x, local_y, currentHeight*64)
             
-            Blockgroups.sewTilesTogether(ix, iy)
+                Blockgroups.sewTilesTogether(ix, iy)
             
-            #blob = Blockgroups.getBlob(ix, iy)
+                #blob = Blockgroups.getBlob(ix, iy)
           
             
             
-    for ix in xrange(xSize//4):
-        for iy in xrange(ySize//4):
-            height = 64
-            vert = vmflib.types.Vertex((ix*4*64)-xOffset_real+2*64, (iy*4*64)-yOffset_real+2*64, 0+(height//2))
-            block = tools.Block(origin = vert, dimensions=(4*64, 4*64, height))
-            
-            ## We alternate between two types of textures. This results in a checkered pattern, 
-            ## similar to chess. It is very easy to see where a block starts and ends.
-            block.set_material(choice[(iy+ix*(xSize//4))%2])
-            #block.set_material("brick/brick_ext_07")
-            
-            # Mark blocks which have a single ramp or more with a different texture
-            breakOut = False
-            for iix in xrange(4):
-                newx = ix*4+iix
-                for iiy in xrange(4):
-                    newy = iy*4+iiy
-                    if newx >= data.mapInfo["width"] or newy >= data.mapInfo["height"]:
+        for ix in xrange(xSize//4):
+            for iy in xrange(ySize//4):
+                height = 64
+                vert = vmflib.types.Vertex((ix*4*64)-xOffset_real+2*64, (iy*4*64)-yOffset_real+2*64, 0+(height//2))
+                block = tools.Block(origin = vert, dimensions=(4*64, 4*64, height))
+                
+                ## We alternate between two types of textures. This results in a checkered pattern, 
+                ## similar to chess. It is very easy to see where a block starts and ends.
+                block.set_material(choice[(iy+ix*(xSize//4))%2])
+                #block.set_material("brick/brick_ext_07")
+                
+                # Mark blocks which have a single ramp or more with a different texture
+                breakOut = False
+                for iix in xrange(4):
+                    newx = ix*4+iix
+                    for iiy in xrange(4):
+                        newy = iy*4+iiy
+                        if newx >= data.mapInfo["width"] or newy >= data.mapInfo["height"]:
+                            break
+                        if rampMap.getVal(newx, newy) == 1:
+                            block.set_material("brick/brick_ext_08")
+                            breakOut = True
+                            break
+                    if breakOut:
                         break
-                    if rampMap.getVal(newx, newy) == 1:
-                        block.set_material("brick/brick_ext_08")
-                        breakOut = True
-                        break
-                if breakOut:
-                    break
-                        
-            
-            Blockgroups.sew_brush_neighbours(ix, iy)
-            blob = Blockgroups.getBlob(ix, iy)
-            
-            distances_list = []
-            for rowNumber in xrange(17):
-                row = blob.getRow(rowNumber)
-                row = row.tolist()
-                #row.reverse()
-                distances_list.append(row)
-                #row = map(map_list_with_vertex, row)
-                #print row
-            
-            """distances_list = [[64 for i in xrange(17)]]
-            for columnNumber in xrange(16):
-                #column = blob.getColumn(columnNumber)
-                ##column = column.tolist()
-                ##colum.reverse()
-                #distances_list.append(column)
-                column = [64]
-                for i in range(4):
-                    column.extend([i*32, i*32, i*32, i*32])
-                distances_list.append(column)"""
-               
-            
-           #dispInfo = vmflib.brush.DispInfo(4, normals_list, distances_list)
-            
-            
-            #dispInfo.set_startPosition((ix*4*64)-xOffset_real+0*64, (iy*4*64)-yOffset_real+0*64, 0+(height))
-            
-            #block.top().children.append(dispInfo)
-            block.top().set_dispInfo(4, normals_list, distances_list)
-            
-            m.world.children.append(block)
+                            
+                
+                Blockgroups.sew_brush_neighbours(ix, iy)
+                blob = Blockgroups.getBlob(ix, iy)
+                
+                distances_list = []
+                for rowNumber in xrange(17):
+                    row = blob.getRow(rowNumber)
+                    row = row.tolist()
+                    #row.reverse()
+                    distances_list.append(row)
+                    #row = map(map_list_with_vertex, row)
+                    #print row
+                
+                """distances_list = [[64 for i in xrange(17)]]
+                for columnNumber in xrange(16):
+                    #column = blob.getColumn(columnNumber)
+                    ##column = column.tolist()
+                    ##colum.reverse()
+                    #distances_list.append(column)
+                    column = [64]
+                    for i in range(4):
+                        column.extend([i*32, i*32, i*32, i*32])
+                    distances_list.append(column)"""
+                   
+                
+               #dispInfo = vmflib.brush.DispInfo(4, normals_list, distances_list)
+                
+                
+                #dispInfo.set_startPosition((ix*4*64)-xOffset_real+0*64, (iy*4*64)-yOffset_real+0*64, 0+(height))
+                
+                #block.top().children.append(dispInfo)
+                block.top().set_dispInfo(4, normals_list, distances_list)
+                
+                m.world.children.append(block)
