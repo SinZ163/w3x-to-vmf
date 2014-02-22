@@ -126,6 +126,9 @@ class TerrainTab(Tkinter.Frame):
             
             self.id = self.canvas.create_image(0,0,image=self.img, anchor=Tkinter.NW)
             
+            self.saveButton = Tkinter.Button(self, text="Save!", command=self.save)
+            self.saveButton.grid(row=2,column=0)
+            
             self.zoomFrame = Tkinter.Frame(self)
             self.zoomIn = Tkinter.Button(self.zoomFrame, text="Zoom In!",command=self.zoomIn).pack(side=Tkinter.LEFT)
             self.zoomOut = Tkinter.Button(self.zoomFrame, text="Zoom Out!",command=self.zoomOut).pack(side=Tkinter.LEFT)
@@ -134,7 +137,7 @@ class TerrainTab(Tkinter.Frame):
             self.zoomFactor = Tkinter.Label(self.zoomFrame, text="Current zoom factor: 1.0x")
             self.zoomFactor.pack(side=Tkinter.LEFT)
             
-            self.zoomFrame.grid(row=2,column=0,columnspan=1, sticky=Tkinter.E+Tkinter.W)
+            self.zoomFrame.grid(row=3,column=0,columnspan=1, sticky=Tkinter.E+Tkinter.W)
             self.pack(fill=Tkinter.BOTH, expand=1)
             
             self.debugInfoOpen = False
@@ -178,7 +181,39 @@ class TerrainTab(Tkinter.Frame):
                 
                 self.canvas.config(scrollregion=(0,0,img.size[0], img.size[1]))
                 #self.canvas.itemconfig(self.id, image=self.img)
-        
+        def save(self):
+            saveDialog = self.SaveDialog(self)
+            if saveDialog.result:
+                options = {
+                    "initialdir" : "output/",
+                    "initialfile" : "topdown.png",
+                    "defaultextension" : ".png",
+                    "filetypes"    : [("PNG", ".png"),("JPEG", ".jpg")],
+                    "title" : "This is a title"
+                }
+                location = asksaveasfilename(**options)
+                if location:
+                    extention = location.split(".")
+                    extention = extention[len(extention)-1]
+                    if saveDialog.result == 1:
+                        self.originalImg.save(location, extention.upper())
+        class SaveDialog(tkSimpleDialog.Dialog):
+            def __init__(self, master=None):
+                self.master = master
+                self.option = Tkinter.IntVar()
+                
+                tkSimpleDialog.Dialog.__init__(self, master, "Save Options")
+            def body(self, master):
+                
+                self.origRadio = Tkinter.Radiobutton(master, text="Original Size:", variable=self.option, value=1)
+                self.origRadio.grid(row=0)
+                
+                self.zoomRadio = Tkinter.Radiobutton(master, text="Zoomed Size:", variable=self.option, value=2, state="disabled")
+                self.zoomRadio.grid(row=1)
+                
+                return self.origRadio
+            def apply(self):
+                self.result = self.option.get()
     def newDebugInfo(self):
         self.debugWindow = self.DApplication(self)
     
