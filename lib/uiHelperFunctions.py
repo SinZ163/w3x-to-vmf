@@ -25,12 +25,12 @@ class GenericTreeTab(Tkinter.Frame):
         self.pack(fill=Tkinter.BOTH, expand=1)
     def serializeInfo(self, info, parent=""):
         if type(info) is dict:
-            for key, value in info.iteritems():
-                if type(value) is dict or type(value) is list:
+            for key in sorted(info.iterkeys()):
+                if type(info[key]) is dict or type(info[key]) is list:
                     newParent = self.tree.insert(parent,"end", text=key, open=True)
-                    self.serializeInfo(value, newParent)
+                    self.serializeInfo(info[key], newParent)
                 else:
-                    self.tree.insert(parent,"end", text=key, values=[unicode(str(value), "utf-8")])
+                    self.tree.insert(parent,"end", text=key, values=[unicode(str(info[key]), "utf-8")])
         elif type(info) is list:
             i = 0
             for value in info:

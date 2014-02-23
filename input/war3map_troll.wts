@@ -1,0 +1,4877 @@
+﻿STRING 1
+{
+|cff00cc00Troll & Elves Speed x4
+}
+
+STRING 2
+{
+5+
+}
+
+STRING 3
+{
+A troll has been spotted in the woods (what is more normal?). The last elf this drill is hot ass. The elves must prepare their defenses in time to avoid being cut down by the troll.
+This is a speed version with some bug fixes.
+AFAIK this version contains no cheats.
+Intelligent Sound!
+}
+
+STRING 4
+{
+VisionElf, IaMfReNcH edit Mokra~
+}
+
+STRING 5
+{
+Speed versions by Alexeng1995
+}
+
+STRING 6
+{
+Troll & Elves Speed x4
+}
+
+STRING 7
+{
+|cff00cc00Selecting an area (host)
+|cffff0000 - Left arrow: |cffffcc00 previous area
+|cffff0000 - Right arrow: |cffffcc00 next area
+|cffff0000 - Up arrow: |cffffcc00 approving current area
+|cffff0000 - Down arrow: |cffffcc00 random area
+|cff00cc00Commands:
+|cffff0000-givegold |cffff9900 <amount> |cffff0000 (-gg) |cffffcc00: Gives gold to the player which belong to your selection
+|cffff0000-givelumber |cffff9900 <amount> |cffff0000 (-gl) |cffffcc00: Gives Wood to the player which belong to your selection
+|cffff0000-clear |cffffcc00: Reset selection
+}
+
+STRING 125
+// Abilities: A002 (Regeneration), Name (Name)
+{
+Regeneration
+}
+
+STRING 126
+// Abilities: A003 (Défense), Name (Name)
+{
+Défense
+}
+
+STRING 127
+// Abilities: A004 (Dégats), Name (Name)
+{
+Dégats
+}
+
+STRING 128
+// Abilities: A005 (Mana), Name (Name)
+{
+Mana
+}
+
+STRING 129
+// Abilities: A007 (Vie), Name (Name)
+{
+Vie
+}
+
+STRING 130
+// Abilities: A001 (Stats), Name (Name)
+{
+Stats
+}
+
+STRING 132
+// Abilities: A009 (Stats), Name (Name)
+{
+Stats
+}
+
+STRING 134
+// Abilities: A00A (Stats), Name (Name)
+{
+Stats
+}
+
+STRING 136
+// Abilities: A018 (Stats), Name (Name)
+{
+Stats
+}
+
+STRING 155
+// Abilities: A00C (Dégats), Name (Name)
+{
+Dégats
+}
+
+STRING 157
+// Abilities: A00D (Dégats), Name (Name)
+{
+Dégats
+}
+
+STRING 159
+// Abilities: A00E (Dégats), Name (Name)
+{
+Dégats
+}
+
+STRING 180
+// Abilities: A00F (Regeneration), Name (Name)
+{
+Regeneration
+}
+
+STRING 182
+// Abilities: A00G (Regeneration), Name (Name)
+{
+Regeneration
+}
+
+STRING 184
+// Abilities: A00H (Regeneration), Name (Name)
+{
+Regeneration
+}
+
+STRING 210
+// Abilities: A00I (Vie), Name (Name)
+{
+Vie
+}
+
+STRING 212
+// Abilities: A00J (Vie), Name (Name)
+{
+Vie
+}
+
+STRING 214
+// Abilities: A00K (Vie), Name (Name)
+{
+Vie
+}
+
+STRING 229
+// Abilities: A00L (Défense), Name (Name)
+{
+Défense
+}
+
+STRING 231
+// Abilities: A00M (Défense), Name (Name)
+{
+Défense
+}
+
+STRING 289
+// Abilities: A00N (Dégats), Name (Name)
+{
+Dégats
+}
+
+STRING 542
+// Units: u001 (Tent), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 543
+// Units: u003 (Rock 2), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 544
+// Units: u004 (Rock 3), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 545
+// Units: u005 (Rock 4), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 546
+// Units: u006 (Rock 5), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 547
+// Units: u007 (House), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 548
+// Units: u008 (House 2), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 549
+// Units: h002 (Heavy defensive tower), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 550
+// Units: h003 (Protection Tower), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 551
+// Units: h004 (Tower of advanced protection), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 552
+// Units: h005 (Magic Tower), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 553
+// Units: h006 (Ancient Tower), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 554
+// Units: u009 (House 3), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 555
+// Units: u00G (Ultra wall 1), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 556
+// Units: u00K (Ultra wall 2), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 557
+// Units: u00L (Ultra wall 3), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 558
+// Units: u00M (Ultra wall 4), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 559
+// Units: u00N (Ultra wall 5), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 560
+// Units: u00O (Castle), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 561
+// Units: u00P (Fortress), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 562
+// Units: u00Q (House 4), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 563
+// Units: u00S (House 5), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 564
+// Units: u00T (House 6), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 565
+// Units: h007 (Destructive Tower), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 566
+// Units: u00W (House 7), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 567
+// Units: e000 (Basic collector), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 568
+// Units: u00Y (Demonic wall 1), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 569
+// Units: u00Z (Demonic wall 2), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 570
+// Units: u010 (Demonic wall 3), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 571
+// Units: u011 (Demonic wall 4), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 572
+// Units: u012 (Demonic wall 5), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 573
+// Units: u013 (Ionic wall), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 574
+// Units: h009 (Ultra destructive Tower), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 575
+// Units: h00A (Omega Tower), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 576
+// Units: h00B (Ionic nuclear Tower), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 577
+// Units: h00C (Defense Tank), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 578
+// Units: u017 (House 8), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 579
+// Units: u018 (Village House), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 580
+// Units: h008 (Multidimensional Tower), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 581
+// Units: h00E (Multidimensional Ultimate Tower), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 692
+// Abilities: A00X (Défense), Name (Name)
+{
+Défense
+}
+
+STRING 693
+// Abilities: A013 (Défense), Name (Name)
+{
+Défense
+}
+
+STRING 694
+// Abilities: A014 (Défense), Name (Name)
+{
+Défense
+}
+
+STRING 695
+// Abilities: A015 (Défense), Name (Name)
+{
+Défense
+}
+
+STRING 696
+// Abilities: A016 (Défense), Name (Name)
+{
+Défense
+}
+
+STRING 697
+// Abilities: A021 (Défense), Name (Name)
+{
+Défense
+}
+
+STRING 698
+// Abilities: A022 (Défense), Name (Name)
+{
+Défense
+}
+
+STRING 699
+// Abilities: A023 (Défense), Name (Name)
+{
+Défense
+}
+
+STRING 742
+// Units: u014 (Secret Laboratory), Hotkey (Hotkey)
+{
+D
+}
+
+STRING 743
+// Units: e00L (Ultra Gold Mine), Hotkey (Hotkey)
+{
+D
+}
+
+STRING 855
+// Units: e002 (Simple collector), Hotkey (Hotkey)
+{
+Z
+}
+
+STRING 857
+// Units: u00H (Hall), Hotkey (Hotkey)
+{
+R
+}
+
+STRING 884
+// Abilities: A00U (Dégats), Name (Name)
+{
+Dégats
+}
+
+STRING 897
+// Abilities: A00V (Dégats), Name (Name)
+{
+Dégats
+}
+
+STRING 960
+// Abilities: A00Y (Dégats), Name (Name)
+{
+Dégats
+}
+
+STRING 967
+// Abilities: A00Z (Vitesse attaque), Name (Name)
+{
+Vitesse attaque
+}
+
+STRING 969
+// Abilities: A010 (Vitesse attaque), Name (Name)
+{
+Vitesse attaque
+}
+
+STRING 971
+// Abilities: A011 (Vitesse attaque), Name (Name)
+{
+Vitesse attaque
+}
+
+STRING 1003
+// Abilities: A012 (Dégats), Name (Name)
+{
+Dégats
+}
+
+STRING 1040
+// Abilities: A019 (Stats), Name (Name)
+{
+Stats
+}
+
+STRING 1042
+// Abilities: A01A (Stats), Name (Name)
+{
+Stats
+}
+
+STRING 1095
+// Units: e005 (Old Gold Mine), Hotkey (Hotkey)
+{
+Z
+}
+
+STRING 1126
+// Abilities: A00Z (Vitesse attaque), EditorSuffix (Editor Suffix)
+{
+20%
+}
+
+STRING 1127
+// Abilities: A010 (Vitesse attaque), EditorSuffix (Editor Suffix)
+{
+40%
+}
+
+STRING 1128
+// Abilities: A011 (Vitesse attaque), EditorSuffix (Editor Suffix)
+{
+80%
+}
+
+STRING 1148
+// Units: u00X (Ancient Tree), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 1159
+// Abilities: A014 (Défense), EditorSuffix (Editor Suffix)
+{
++32
+}
+
+STRING 1191
+// Abilities: A01I (Vie), Name (Name)
+{
+Vie
+}
+
+STRING 1193
+// Abilities: A01J (Vie), Name (Name)
+{
+Vie
+}
+
+STRING 1206
+// Abilities: A01K (Regeneration), Name (Name)
+{
+Regeneration
+}
+
+STRING 1208
+// Abilities: A01L (Regeneration), Name (Name)
+{
+Regeneration
+}
+
+STRING 1210
+// Abilities: A01M (Regeneration), Name (Name)
+{
+Regeneration
+}
+
+STRING 1245
+// Abilities: A01N (Vitesse attaque), Name (Name)
+{
+Vitesse attaque
+}
+
+STRING 1246
+// Abilities: A01N (Vitesse attaque), EditorSuffix (Editor Suffix)
+{
+100%
+}
+
+STRING 1247
+// Abilities: A01O (Vitesse attaque), Name (Name)
+{
+Vitesse attaque
+}
+
+STRING 1248
+// Abilities: A01O (Vitesse attaque), EditorSuffix (Editor Suffix)
+{
+120%
+}
+
+STRING 1249
+// Abilities: A01P (Vitesse attaque), Name (Name)
+{
+Vitesse attaque
+}
+
+STRING 1251
+// Abilities: A01Q (Vitesse attaque), Name (Name)
+{
+Vitesse attaque
+}
+
+STRING 1267
+// Abilities: A01Q (Vitesse attaque), EditorSuffix (Editor Suffix)
+{
+400%
+}
+
+STRING 1268
+// Abilities: A01P (Vitesse attaque), EditorSuffix (Editor Suffix)
+{
+200%
+}
+
+STRING 1364
+// Abilities: A004 (Dégats), EditorSuffix (Editor Suffix)
+{
+2
+}
+
+STRING 1365
+// Abilities: A00C (Dégats), EditorSuffix (Editor Suffix)
+{
+8
+}
+
+STRING 1366
+// Abilities: A00F (Regeneration), EditorSuffix (Editor Suffix)
+{
+4
+}
+
+STRING 1369
+// Abilities: A00D (Dégats), EditorSuffix (Editor Suffix)
+{
+16
+}
+
+STRING 1370
+// Abilities: A002 (Regeneration), EditorSuffix (Editor Suffix)
+{
+64
+}
+
+STRING 1371
+// Abilities: A00H (Regeneration), EditorSuffix (Editor Suffix)
+{
+128
+}
+
+STRING 1372
+// Abilities: A00U (Dégats), EditorSuffix (Editor Suffix)
+{
+256
+}
+
+STRING 1373
+// Abilities: A01V (Regeneration), EditorSuffix (Editor Suffix)
+{
+512
+}
+
+STRING 1374
+// Abilities: A012 (Dégats), EditorSuffix (Editor Suffix)
+{
+32
+}
+
+STRING 1396
+// Abilities: A00W (Gather), EditorSuffix (Editor Suffix)
+{
+Base
+}
+
+STRING 1397
+// Abilities: A00B (Gather), EditorSuffix (Editor Suffix)
+{
+Simple
+}
+
+STRING 1399
+// Abilities: A01S (Gather), EditorSuffix (Editor Suffix)
+{
+Complex
+}
+
+STRING 1419
+// Abilities: A019 (Stats), EditorSuffix (Editor Suffix)
+{
+8 Agi
+}
+
+STRING 1421
+// Abilities: A001 (Stats), EditorSuffix (Editor Suffix)
+{
+5 Force/ 1 Agi
+}
+
+STRING 1422
+// Abilities: A009 (Stats), EditorSuffix (Editor Suffix)
+{
+1 Agi
+}
+
+STRING 1423
+// Abilities: A00A (Stats), EditorSuffix (Editor Suffix)
+{
+5 Force
+}
+
+STRING 1424
+// Abilities: A018 (Stats), EditorSuffix (Editor Suffix)
+{
+2 Agi
+}
+
+STRING 1425
+// Abilities: A01A (Stats), EditorSuffix (Editor Suffix)
+{
+4 Agi
+}
+
+STRING 1430
+// Abilities: A003 (Défense), EditorSuffix (Editor Suffix)
+{
++1
+}
+
+STRING 1431
+// Abilities: A00L (Défense), EditorSuffix (Editor Suffix)
+{
++4
+}
+
+STRING 1432
+// Abilities: A00M (Défense), EditorSuffix (Editor Suffix)
+{
++2
+}
+
+STRING 1433
+// Abilities: A00X (Défense), EditorSuffix (Editor Suffix)
+{
++8
+}
+
+STRING 1434
+// Abilities: A013 (Défense), EditorSuffix (Editor Suffix)
+{
++16
+}
+
+STRING 1436
+// Abilities: A015 (Défense), EditorSuffix (Editor Suffix)
+{
++64
+}
+
+STRING 1437
+// Abilities: A016 (Défense), EditorSuffix (Editor Suffix)
+{
++128
+}
+
+STRING 1461
+// Abilities: A01T (Vie), Name (Name)
+{
+Vie
+}
+
+STRING 1462
+// Abilities: A01U (Vie), Name (Name)
+{
+Vie
+}
+
+STRING 1466
+// Abilities: A01K (Regeneration), EditorSuffix (Editor Suffix)
+{
+8
+}
+
+STRING 1467
+// Abilities: A00E (Dégats), EditorSuffix (Editor Suffix)
+{
+64
+}
+
+STRING 1468
+// Abilities: A01L (Regeneration), EditorSuffix (Editor Suffix)
+{
+32
+}
+
+STRING 1469
+// Abilities: A00Y (Dégats), EditorSuffix (Editor Suffix)
+{
+4
+}
+
+STRING 1470
+// Abilities: A00G (Regeneration), EditorSuffix (Editor Suffix)
+{
+16
+}
+
+STRING 1471
+// Abilities: A00N (Dégats), EditorSuffix (Editor Suffix)
+{
+128
+}
+
+STRING 1477
+// Abilities: A01V (Regeneration), Name (Name)
+{
+Regeneration
+}
+
+STRING 1478
+// Abilities: A01M (Regeneration), EditorSuffix (Editor Suffix)
+{
+256
+}
+
+STRING 1487
+// Units: h001 (Basic Tower), Hotkey (Hotkey)
+{
+E
+}
+
+STRING 1490
+// Units: e004 (Complex collector), Hotkey (Hotkey)
+{
+R
+}
+
+STRING 1492
+// Units: e00B (Ionic collector), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 1494
+// Units: e009 (Hyper Gold Mine), Hotkey (Hotkey)
+{
+Q
+}
+
+STRING 1519
+// Units: h004 (Tower of advanced protection), Tip (Tooltip - Basic)
+{
+Tour de protection avancée - |cffffcc00A|r
+}
+
+STRING 1523
+// Units: u00K (Ultra wall 2), Tip (Tooltip - Basic)
+{
+Ultra Mur 2 - |cffffcc00A|r
+}
+
+STRING 1568
+// Units: e003 (Professional Collector), Hotkey (Hotkey)
+{
+E
+}
+
+STRING 1570
+// Units: e008 (Super Gold Mine), Hotkey (Hotkey)
+{
+R
+}
+
+STRING 1571
+// Units: e00F (Older worker), Hotkey (Hotkey)
+{
+Z
+}
+
+STRING 1582
+// Abilities: A01W (Vie), Name (Name)
+{
+Vie
+}
+
+STRING 1591
+// Abilities: A01X (), EditorSuffix (Editor Suffix)
+{
++1
+}
+
+STRING 1615
+// Abilities: A01Y (Regeneration), Name (Name)
+{
+Regeneration
+}
+
+STRING 1616
+// Abilities: A01Y (Regeneration), EditorSuffix (Editor Suffix)
+{
+2560
+}
+
+STRING 1617
+// Abilities: A01Z (Regeneration), Name (Name)
+{
+Regeneration
+}
+
+STRING 1618
+// Abilities: A01Z (Regeneration), EditorSuffix (Editor Suffix)
+{
+5120
+}
+
+STRING 1619
+// Abilities: A020 (Regeneration), Name (Name)
+{
+Regeneration
+}
+
+STRING 1620
+// Abilities: A020 (Regeneration), EditorSuffix (Editor Suffix)
+{
+20480
+}
+
+STRING 1640
+// Abilities: A021 (Défense), EditorSuffix (Editor Suffix)
+{
++640
+}
+
+STRING 1641
+// Abilities: A022 (Défense), EditorSuffix (Editor Suffix)
+{
++1280
+}
+
+STRING 1644
+// Abilities: A023 (Défense), EditorSuffix (Editor Suffix)
+{
++5120
+}
+
+STRING 1663
+// Abilities: A00V (Dégats), EditorSuffix (Editor Suffix)
+{
+1280
+}
+
+STRING 1664
+// Abilities: A024 (Dégats), Name (Name)
+{
+Dégats
+}
+
+STRING 1665
+// Abilities: A024 (Dégats), EditorSuffix (Editor Suffix)
+{
+2560
+}
+
+STRING 1666
+// Abilities: A025 (Dégats), Name (Name)
+{
+Dégats
+}
+
+STRING 1667
+// Abilities: A025 (Dégats), EditorSuffix (Editor Suffix)
+{
+10240
+}
+
+STRING 1698
+// Abilities: A026 (Vie), Name (Name)
+{
+Vie
+}
+
+STRING 1702
+// Abilities: A026 (Vie), EditorSuffix (Editor Suffix)
+{
++99999
+}
+
+STRING 1713
+// Units: h00F (End-Game Tower), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 1717
+// Units: u00E (UltraIonic wall), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 1724
+// Units: u00F (End-Game wall), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 1728
+// Abilities: A028 (Gold Mine), EditorSuffix (Editor Suffix)
+{
+Super
+}
+
+STRING 1730
+// Abilities: A02Q (Gold Mine), EditorSuffix (Editor Suffix)
+{
+Ultra
+}
+
+STRING 1736
+// Abilities: A00O (Blink), Hotkey (Hotkey - Normal)
+{
+Z
+}
+
+STRING 1757
+// Units: e001 (Gold mine), Hotkey (Hotkey)
+{
+E
+}
+
+STRING 1758
+// Units: e00H (Mechanical Worker), Hotkey (Hotkey)
+{
+R
+}
+
+STRING 1759
+// Abilities: A02A (Gather), EditorSuffix (Editor Suffix)
+{
+Secret
+}
+
+STRING 1767
+// Units: e00A (Secret collector), Hotkey (Hotkey)
+{
+Q
+}
+
+STRING 1776
+// Units: e00K (Mega Gold Mine), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 1795
+// Units: e00E (Basic worker), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 1797
+// Abilities: A02D (Slow Poison), Ubertip (Tooltip - Normal - Extended)
+{
+Une attaque empoisonnée qui inflige <A02D:Aspo,DataA1> points de dégats par seconde, ralentit les déplacements de la cible de <A02D:Aspo,DataB1,%>% et ses attaques de <A02D:Aspo,DataC1,%>% pendant <A02D:Aspo,Dur1> secondes.
+}
+
+STRING 1803
+// Units: e00J (Prehistoric Gold Mine), Hotkey (Hotkey)
+{
+A
+}
+
+STRING 1804
+// Abilities: A02E (One Shot), Tip (Tooltip - Normal)
+{
+One Shot
+}
+
+STRING 1806
+// Abilities: A02E (One Shot), Name (Name)
+{
+One Shot
+}
+
+STRING 1837
+// Abilities: A02G (Déplacement), Name (Name)
+{
+Déplacement
+}
+
+STRING 1838
+// Abilities: A02G (Déplacement), EditorSuffix (Editor Suffix)
+{
+60
+}
+
+STRING 1847
+// Units: e006 (Gold collector), Hotkey (Hotkey)
+{
+X
+}
+
+STRING 1861
+// Abilities: A02H (), EditorSuffix (Editor Suffix)
+{
++8
+}
+
+STRING 1872
+// Abilities: A007 (Vie), EditorSuffix (Editor Suffix)
+{
++250
+}
+
+STRING 1873
+// Abilities: A00I (Vie), EditorSuffix (Editor Suffix)
+{
++500
+}
+
+STRING 1874
+// Abilities: A00J (Vie), EditorSuffix (Editor Suffix)
+{
++1000
+}
+
+STRING 1875
+// Abilities: A00K (Vie), EditorSuffix (Editor Suffix)
+{
++2000
+}
+
+STRING 1876
+// Abilities: A01I (Vie), EditorSuffix (Editor Suffix)
+{
++8000
+}
+
+STRING 1877
+// Abilities: A01J (Vie), EditorSuffix (Editor Suffix)
+{
++4000
+}
+
+STRING 1878
+// Abilities: A01T (Vie), EditorSuffix (Editor Suffix)
+{
++16000
+}
+
+STRING 1879
+// Abilities: A01U (Vie), EditorSuffix (Editor Suffix)
+{
++32000
+}
+
+STRING 1880
+// Abilities: A01W (Vie), EditorSuffix (Editor Suffix)
+{
++80000
+}
+
+STRING 1905
+// Units: e007 (Gold collector), Hotkey (Hotkey)
+{
+C
+}
+
+STRING 1920
+// Units: u00V (Workers guild), Hotkey (Hotkey)
+{
+Q
+}
+
+STRING 1944
+// Abilities: A01F (Stun), Hotkey (Hotkey - Normal)
+{
+A
+}
+
+STRING 1950
+// Units: e00G (Young Mechanical Worker), Hotkey (Hotkey)
+{
+E
+}
+
+STRING 1965
+// Abilities: A02J (Repair), EditorSuffix (Editor Suffix)
+{
+6
+}
+
+STRING 1966
+// Abilities: A02K (Repair), EditorSuffix (Editor Suffix)
+{
+3
+}
+
+STRING 1967
+// Abilities: A02L (Repair), EditorSuffix (Editor Suffix)
+{
+1.50
+}
+
+STRING 1968
+// Abilities: A02M (Repair), EditorSuffix (Editor Suffix)
+{
+0.75
+}
+
+STRING 1969
+// Abilities: A02N (Repair), EditorSuffix (Editor Suffix)
+{
+0.38
+}
+
+STRING 1985
+// Units: e00I (Proffesional Mechanical Worker), Hotkey (Hotkey)
+{
+Q
+}
+
+STRING 1986
+// Abilities: A029 (Gold Mine), EditorSuffix (Editor Suffix)
+{
+Hyper
+}
+
+STRING 1990
+// Abilities: A02P (Gold Mine), EditorSuffix (Editor Suffix)
+{
+Mega
+}
+
+STRING 1993
+// Abilities: A02R (Gold Mine), EditorSuffix (Editor Suffix)
+{
+Omega
+}
+
+STRING 2012
+// Units: e00L (Ultra Gold Mine), Tip (Tooltip - Basic)
+{
+Ultra mine d'or - |cffffcc00D|r
+}
+
+STRING 2014
+// Units: e00M (Omega Gold Mine), Hotkey (Hotkey)
+{
+F
+}
+
+STRING 2016
+// Abilities: A00R (Destroy), Hotkey (Hotkey - Normal)
+{
+D
+}
+
+STRING 2034
+// Abilities: A02S (Gather), EditorSuffix (Editor Suffix)
+{
+Final
+}
+
+STRING 2040
+// Units: e00N (Final collector), Hotkey (Hotkey)
+{
+X
+}
+
+STRING 2056
+// Abilities: A01G (Steal gold), Hotkey (Hotkey - Normal)
+{
+D
+}
+
+STRING 2058
+// Abilities: A00P (Reveal), Hotkey (Hotkey - Normal)
+{
+R
+}
+
+STRING 2079
+// Units: H00D (Troll's Dog), Propernames (Proper Names)
+{
+Rufus,Gnon,Bastor,Morphale,Grrr,Goinfre,KiPuDuCul,Medor
+}
+
+STRING 2117
+// Abilities: A031 (Buy Wood), EditorSuffix (Editor Suffix)
+{
+10
+}
+
+STRING 2121
+// Abilities: A032 (Sell wood), EditorSuffix (Editor Suffix)
+{
+10
+}
+
+STRING 2139
+// Abilities: A02X (The beautiful stars), Hotkey (Hotkey - Normal)
+{
+A
+}
+
+STRING 2140
+// Abilities: A032 (Sell wood), Hotkey (Hotkey - Normal)
+{
+V
+}
+
+STRING 2146
+// Abilities: A02Z (Buy Wood), EditorSuffix (Editor Suffix)
+{
+200
+}
+
+STRING 2147
+// Abilities: A031 (Buy Wood), Hotkey (Hotkey - Normal)
+{
+A
+}
+
+STRING 2151
+// Abilities: A030 (Sell wood), EditorSuffix (Editor Suffix)
+{
+200
+}
+
+STRING 2152
+// Abilities: A030 (Sell wood), Hotkey (Hotkey - Normal)
+{
+V
+}
+
+STRING 2166
+// Units: u000 (Elf), Name (Name)
+{
+Elf
+}
+
+STRING 2168
+// Units: h00C (Defense Tank), Tip (Tooltip - Basic)
+{
+Defense Tank - |cffffcc00A|r
+}
+
+STRING 2169
+// Units: h00C (Defense Tank), Name (Name)
+{
+Defense Tank
+}
+
+STRING 2170
+// Units: h00C (Defense Tank), Ubertip (Tooltip - Extended)
+{
+Weak to fight in short distance, but makes well damage.
+}
+
+STRING 2171
+// Units: e00E (Basic worker), Tip (Tooltip - Basic)
+{
+Basic worker - |cffffcc00A|r
+}
+
+STRING 2173
+// Units: e00E (Basic worker), Name (Name)
+{
+Basic worker
+}
+
+STRING 2180
+// Units: e00N (Final collector), Tip (Tooltip - Basic)
+{
+Final collector - |cffffcc00X|r
+}
+
+STRING 2182
+// Units: e00N (Final collector), Name (Name)
+{
+Final collector
+}
+
+STRING 2183
+// Units: h00G (Observating Helicopter), Tip (Tooltip - Basic)
+{
+Observating Helicopter - |cffffcc00Z|r
+}
+
+STRING 2184
+// Units: h00G (Observating Helicopter), Name (Name)
+{
+Observating Helicopter
+}
+
+STRING 2185
+// Units: h00G (Observating Helicopter), Ubertip (Tooltip - Extended)
+{
+The flying helicopter can navigate around the map. Does not attack. Beware, it is still vulnerable to the Troll!
+}
+
+STRING 2186
+// Items: I000 (Boots of Agility), Tip (Tooltip - Basic)
+{
+Boots of Agility
+}
+
+STRING 2187
+// Items: I000 (Boots of Agility), Description (Description)
+{
+Increases agility
+}
+
+STRING 2188
+// Items: I000 (Boots of Agility), Name (Name)
+{
+Boots of Agility
+}
+
+STRING 2190
+// Items: I001 (Gloves of Force), Tip (Tooltip - Basic)
+{
+Gloves of Force
+}
+
+STRING 2191
+// Items: I001 (Gloves of Force), Description (Description)
+{
+Increases Strenght.
+}
+
+STRING 2192
+// Items: I001 (Gloves of Force), Name (Name)
+{
+Gloves of Force
+}
+
+STRING 2194
+// Items: I003 (Ring of Power), Tip (Tooltip - Basic)
+{
+Ring of Power
+}
+
+STRING 2195
+// Items: I003 (Ring of Power), Description (Description)
+{
+Increases stats.
+}
+
+STRING 2196
+// Items: I003 (Ring of Power), Name (Name)
+{
+Ring of Power
+}
+
+STRING 2198
+// Items: I004 (Iron Blade), Tip (Tooltip - Basic)
+{
+Iron Blade
+}
+
+STRING 2199
+// Items: I004 (Iron Blade), Description (Description)
+{
+Increases damage.
+}
+
+STRING 2200
+// Items: I004 (Iron Blade), Name (Name)
+{
+Iron Blade
+}
+
+STRING 2202
+// Items: I005 (Steel Blade), Tip (Tooltip - Basic)
+{
+Steel Blade
+}
+
+STRING 2203
+// Items: I005 (Steel Blade), Description (Description)
+{
+Increases damage.
+}
+
+STRING 2204
+// Items: I005 (Steel Blade), Name (Name)
+{
+Steel Blade
+}
+
+STRING 2206
+// Items: I006 (Bronze Blade), Tip (Tooltip - Basic)
+{
+Bronze Blade
+}
+
+STRING 2207
+// Items: I006 (Bronze Blade), Description (Description)
+{
+Increases damage.
+}
+
+STRING 2208
+// Items: I006 (Bronze Blade), Name (Name)
+{
+Bronze Blade
+}
+
+STRING 2209
+// Items: I006 (Bronze Blade), Ubertip (Tooltip - Extended)
+{
+Increases damage by 8.
+}
+
+STRING 2210
+// Items: I007 (Diamond Blade), Tip (Tooltip - Basic)
+{
+Diamond Blade
+}
+
+STRING 2211
+// Items: I007 (Diamond Blade), Description (Description)
+{
+Increases damage.
+}
+
+STRING 2212
+// Items: I007 (Diamond Blade), Name (Name)
+{
+Diamond Blade
+}
+
+STRING 2213
+// Items: I007 (Diamond Blade), Ubertip (Tooltip - Extended)
+{
+Increases damage by 16.
+}
+
+STRING 2214
+// Items: I008 (Badge of Life), Tip (Tooltip - Basic)
+{
+Badge of Life
+}
+
+STRING 2215
+// Items: I008 (Badge of Life), Description (Description)
+{
+Increases regeneration
+}
+
+STRING 2216
+// Items: I008 (Badge of Life), Name (Name)
+{
+Badge of Life
+}
+
+STRING 2218
+// Items: I009 (Badge of the Moon), Tip (Tooltip - Basic)
+{
+Badge of the Moon
+}
+
+STRING 2219
+// Items: I009 (Badge of the Moon), Description (Description)
+{
+Increases regeneration
+}
+
+STRING 2220
+// Items: I009 (Badge of the Moon), Name (Name)
+{
+Badge of the Moon
+}
+
+STRING 2222
+// Items: I00A (Badge of the Night), Tip (Tooltip - Basic)
+{
+Badge of the Night
+}
+
+STRING 2223
+// Items: I00A (Badge of the Night), Description (Description)
+{
+Increases regeneration
+}
+
+STRING 2224
+// Items: I00A (Badge of the Night), Name (Name)
+{
+Badge of the Night
+}
+
+STRING 2227
+// Items: I00B (Twilight Badge), Description (Description)
+{
+Increases regeneration
+}
+
+STRING 2230
+// Items: I00C (Amulet of Life), Tip (Tooltip - Basic)
+{
+Amulet of Life
+}
+
+STRING 2231
+// Items: I00C (Amulet of Life), Description (Description)
+{
+Increases the life
+}
+
+STRING 2232
+// Items: I00C (Amulet of Life), Name (Name)
+{
+Amulet of Life
+}
+
+STRING 2234
+// Items: I00D (Amulet of the Sun), Tip (Tooltip - Basic)
+{
+Amulet of the Sun
+}
+
+STRING 2235
+// Items: I00D (Amulet of the Sun), Description (Description)
+{
+Increases the life
+}
+
+STRING 2236
+// Items: I00D (Amulet of the Sun), Name (Name)
+{
+Amulet of the Sun
+}
+
+STRING 2238
+// Items: I00E (Amulet of the Day), Tip (Tooltip - Basic)
+{
+Amulet of the Day
+}
+
+STRING 2239
+// Items: I00E (Amulet of the Day), Description (Description)
+{
+Increases the life
+}
+
+STRING 2240
+// Items: I00E (Amulet of the Day), Name (Name)
+{
+Amulet of the Day
+}
+
+STRING 2242
+// Items: I00F (Amulet of the Dawn), Tip (Tooltip - Basic)
+{
+Amulet of the Dawn
+}
+
+STRING 2243
+// Items: I00F (Amulet of the Dawn), Description (Description)
+{
+Increases the life
+}
+
+STRING 2244
+// Items: I00F (Amulet of the Dawn), Name (Name)
+{
+Amulet of the Dawn
+}
+
+STRING 2246
+// Items: I00G (Wooden Shield), Tip (Tooltip - Basic)
+{
+Wooden Shield
+}
+
+STRING 2247
+// Items: I00G (Wooden Shield), Description (Description)
+{
+Increases defense
+}
+
+STRING 2248
+// Items: I00G (Wooden Shield), Name (Name)
+{
+Wooden Shield
+}
+
+STRING 2249
+// Items: I00G (Wooden Shield), Ubertip (Tooltip - Extended)
+{
+Increases defense by 1.
+}
+
+STRING 2250
+// Items: I00H (Iron Shild), Tip (Tooltip - Basic)
+{
+Iron Shild
+}
+
+STRING 2251
+// Items: I00H (Iron Shild), Description (Description)
+{
+Increases defense.
+}
+
+STRING 2252
+// Items: I00H (Iron Shild), Name (Name)
+{
+Iron Shild
+}
+
+STRING 2253
+// Items: I00H (Iron Shild), Ubertip (Tooltip - Extended)
+{
+Increases defense by 2.
+}
+
+STRING 2254
+// Items: I00I (Diamond Shield), Tip (Tooltip - Basic)
+{
+Diamond Shield
+}
+
+STRING 2255
+// Items: I00I (Diamond Shield), Description (Description)
+{
+Increases defense
+}
+
+STRING 2256
+// Items: I00I (Diamond Shield), Name (Name)
+{
+Diamond Shield
+}
+
+STRING 2257
+// Items: I00I (Diamond Shield), Ubertip (Tooltip - Extended)
+{
+Increases defense by 8.
+}
+
+STRING 2258
+// Items: I00M (Platinum Blade), Tip (Tooltip - Basic)
+{
+Platinum Blade
+}
+
+STRING 2259
+// Items: I00M (Platinum Blade), Description (Description)
+{
+Increases damage.
+}
+
+STRING 2260
+// Items: I00M (Platinum Blade), Name (Name)
+{
+Platinum Blade
+}
+
+STRING 2261
+// Items: I00M (Platinum Blade), Ubertip (Tooltip - Extended)
+{
+Increases damage by 32.
+}
+
+STRING 2262
+// Items: I00N (Silver Blade), Tip (Tooltip - Basic)
+{
+Silver Blade
+}
+
+STRING 2263
+// Items: I00N (Silver Blade), Description (Description)
+{
+Increases damage.
+}
+
+STRING 2264
+// Items: I00N (Silver Blade), Name (Name)
+{
+Silver Blade
+}
+
+STRING 2265
+// Items: I00N (Silver Blade), Ubertip (Tooltip - Extended)
+{
+Increases damage by 64.
+}
+
+STRING 2266
+// Items: I00O (Gold Blade), Description (Description)
+{
+Increases damage.
+}
+
+STRING 2267
+// Items: I002 (Steel Shield), Tip (Tooltip - Basic)
+{
+Steel Shield
+}
+
+STRING 2268
+// Items: I002 (Steel Shield), Description (Description)
+{
+Increases defense
+}
+
+STRING 2269
+// Items: I002 (Steel Shield), Name (Name)
+{
+Steel Shield
+}
+
+STRING 2270
+// Items: I002 (Steel Shield), Ubertip (Tooltip - Extended)
+{
+Increases Defense by 4
+}
+
+STRING 2271
+// Items: I00J (Gloves of Speed), Tip (Tooltip - Basic)
+{
+Gloves of Speed
+}
+
+STRING 2272
+// Items: I00J (Gloves of Speed), Description (Description)
+{
+Increases attack speed.
+}
+
+STRING 2273
+// Items: I00J (Gloves of Speed), Name (Name)
+{
+Gloves of Speed
+}
+
+STRING 2274
+// Items: I00J (Gloves of Speed), Ubertip (Tooltip - Extended)
+{
+Increases attack speed by 20%.
+}
+
+STRING 2275
+// Items: I00K (Gloves fo higher Speed), Tip (Tooltip - Basic)
+{
+Gloves of higher Speed
+}
+
+STRING 2276
+// Items: I00K (Gloves fo higher Speed), Description (Description)
+{
+Increases attack speed.
+}
+
+STRING 2277
+// Items: I00K (Gloves fo higher Speed), Name (Name)
+{
+Gloves fo higher Speed
+}
+
+STRING 2278
+// Items: I00K (Gloves fo higher Speed), Ubertip (Tooltip - Extended)
+{
+Increases attack speed by 40%.
+}
+
+STRING 2279
+// Items: I00L (Sonic Gloves), Tip (Tooltip - Basic)
+{
+Sonic Gloves
+}
+
+STRING 2280
+// Items: I00L (Sonic Gloves), Description (Description)
+{
+Increases attack speed.
+}
+
+STRING 2281
+// Items: I00L (Sonic Gloves), Name (Name)
+{
+Sonic Gloves
+}
+
+STRING 2282
+// Items: I00L (Sonic Gloves), Ubertip (Tooltip - Extended)
+{
+Increases attack speed by 80%.
+}
+
+STRING 2284
+// Items: I00P (Ionizer Blade ), Description (Description)
+{
+Increases damage.
+}
+
+STRING 2287
+// Items: I00Q (Platinum Shield), Tip (Tooltip - Basic)
+{
+Platinum Shield
+}
+
+STRING 2288
+// Items: I00Q (Platinum Shield), Description (Description)
+{
+Increases defense
+}
+
+STRING 2289
+// Items: I00Q (Platinum Shield), Name (Name)
+{
+Platinum Shield
+}
+
+STRING 2290
+// Items: I00Q (Platinum Shield), Ubertip (Tooltip - Extended)
+{
+Increases defense by 16.
+}
+
+STRING 2291
+// Items: I00R (Silver Shield), Tip (Tooltip - Basic)
+{
+Silver Shield
+}
+
+STRING 2292
+// Items: I00R (Silver Shield), Description (Description)
+{
+Increases defense
+}
+
+STRING 2293
+// Items: I00R (Silver Shield), Name (Name)
+{
+Silver Shield
+}
+
+STRING 2294
+// Items: I00R (Silver Shield), Ubertip (Tooltip - Extended)
+{
+Increases defense by 32.
+}
+
+STRING 2295
+// Items: I00S (Golden Shield), Tip (Tooltip - Basic)
+{
+Golden Shield
+}
+
+STRING 2296
+// Items: I00S (Golden Shield), Description (Description)
+{
+Increases defense
+}
+
+STRING 2297
+// Items: I00S (Golden Shield), Name (Name)
+{
+Golden Shield
+}
+
+STRING 2298
+// Items: I00S (Golden Shield), Ubertip (Tooltip - Extended)
+{
+Increases defense by 64
+}
+
+STRING 2299
+// Items: I00T (Ionic Shield), Tip (Tooltip - Basic)
+{
+Ionic Shield
+}
+
+STRING 2300
+// Items: I00T (Ionic Shield), Description (Description)
+{
+Increases defense
+}
+
+STRING 2301
+// Items: I00T (Ionic Shield), Name (Name)
+{
+Ionic Shield
+}
+
+STRING 2302
+// Items: I00T (Ionic Shield), Ubertip (Tooltip - Extended)
+{
+Increases defense by 128.
+}
+
+STRING 2303
+// Items: I00U (Phase boots), Tip (Tooltip - Basic)
+{
+Phase boots
+}
+
+STRING 2304
+// Items: I00U (Phase boots), Description (Description)
+{
+Increases agility
+}
+
+STRING 2305
+// Items: I00U (Phase boots), Name (Name)
+{
+Phase boots
+}
+
+STRING 2307
+// Items: I00V (Sonic Boots), Tip (Tooltip - Basic)
+{
+Sonic Boots
+}
+
+STRING 2308
+// Items: I00V (Sonic Boots), Description (Description)
+{
+Increases agility
+}
+
+STRING 2309
+// Items: I00V (Sonic Boots), Name (Name)
+{
+Sonic Boots
+}
+
+STRING 2311
+// Items: I00W (Ionic Boots), Tip (Tooltip - Basic)
+{
+Ionic Boots
+}
+
+STRING 2312
+// Items: I00W (Ionic Boots), Description (Description)
+{
+Increases agility.
+}
+
+STRING 2313
+// Items: I00W (Ionic Boots), Name (Name)
+{
+Ionic Boots
+}
+
+STRING 2315
+// Items: I00X (Blood Parchment), Tip (Tooltip - Basic)
+{
+Blood Parchment
+}
+
+STRING 2316
+// Items: I00X (Blood Parchment), Description (Description)
+{
+Increases the life.
+}
+
+STRING 2317
+// Items: I00X (Blood Parchment), Name (Name)
+{
+Blood Parchment
+}
+
+STRING 2319
+// Items: I00Y (Scroll of major blood), Tip (Tooltip - Basic)
+{
+Scroll of major blood
+}
+
+STRING 2320
+// Items: I00Y (Scroll of major blood), Description (Description)
+{
+Increases the life.
+}
+
+STRING 2321
+// Items: I00Y (Scroll of major blood), Name (Name)
+{
+Scroll of major blood
+}
+
+STRING 2323
+// Items: I00Z (Scroll of life), Tip (Tooltip - Basic)
+{
+Scroll of life
+}
+
+STRING 2324
+// Items: I00Z (Scroll of life), Description (Description)
+{
+Increases the life.
+}
+
+STRING 2325
+// Items: I00Z (Scroll of life), Name (Name)
+{
+Scroll of life
+}
+
+STRING 2327
+// Items: I010 (Scroll of eternal life), Tip (Tooltip - Basic)
+{
+Scroll of eternal life
+}
+
+STRING 2328
+// Items: I010 (Scroll of eternal life), Description (Description)
+{
+Increases the life.
+}
+
+STRING 2329
+// Items: I010 (Scroll of eternal life), Name (Name)
+{
+Scroll of eternal life
+}
+
+STRING 2331
+// Items: I011 (Sleep Parchment ), Tip (Tooltip - Basic)
+{
+Sleep Parchment 
+}
+
+STRING 2332
+// Items: I011 (Sleep Parchment ), Description (Description)
+{
+Increases regeneration.
+}
+
+STRING 2333
+// Items: I011 (Sleep Parchment ), Name (Name)
+{
+Sleep Parchment 
+}
+
+STRING 2335
+// Items: I012 (Scroll of sweet nights), Tip (Tooltip - Basic)
+{
+Scroll of sweet nights
+}
+
+STRING 2336
+// Items: I012 (Scroll of sweet nights), Description (Description)
+{
+Increases regeneration.
+}
+
+STRING 2337
+// Items: I012 (Scroll of sweet nights), Name (Name)
+{
+Scroll of sweet nights
+}
+
+STRING 2339
+// Items: I013 (Sleepless nights Parchment ), Tip (Tooltip - Basic)
+{
+Sleepless nights Parchment 
+}
+
+STRING 2340
+// Items: I013 (Sleepless nights Parchment ), Description (Description)
+{
+Increases regeneration.
+}
+
+STRING 2341
+// Items: I013 (Sleepless nights Parchment ), Name (Name)
+{
+Sleepless nights Parchment 
+}
+
+STRING 2343
+// Items: I014 (Nightmares Parchment), Tip (Tooltip - Basic)
+{
+Nightmares Parchment
+}
+
+STRING 2344
+// Items: I014 (Nightmares Parchment), Description (Description)
+{
+Increases regeneration.
+}
+
+STRING 2345
+// Items: I014 (Nightmares Parchment), Name (Name)
+{
+Nightmares Parchment
+}
+
+STRING 2347
+// Items: I015 (Gloves of Haste), Tip (Tooltip - Basic)
+{
+Gloves of Haste
+}
+
+STRING 2348
+// Items: I015 (Gloves of Haste), Description (Description)
+{
+Increases attack speed.
+}
+
+STRING 2349
+// Items: I015 (Gloves of Haste), Name (Name)
+{
+Gloves of Haste
+}
+
+STRING 2350
+// Items: I015 (Gloves of Haste), Ubertip (Tooltip - Extended)
+{
+Increases attack speed by 100%.
+}
+
+STRING 2351
+// Items: I016 (Electronic Gloves), Tip (Tooltip - Basic)
+{
+Electronic Gloves
+}
+
+STRING 2352
+// Items: I016 (Electronic Gloves), Description (Description)
+{
+Increases attack speed.
+}
+
+STRING 2353
+// Items: I016 (Electronic Gloves), Name (Name)
+{
+Electronic Gloves
+}
+
+STRING 2354
+// Items: I016 (Electronic Gloves), Ubertip (Tooltip - Extended)
+{
+Increases attack speed by 200%.
+}
+
+STRING 2355
+// Items: I017 (Ionic Gloves), Tip (Tooltip - Basic)
+{
+Ionic Gloves
+}
+
+STRING 2356
+// Items: I017 (Ionic Gloves), Description (Description)
+{
+Increases attack speed.
+}
+
+STRING 2357
+// Items: I017 (Ionic Gloves), Name (Name)
+{
+Ionic Gloves
+}
+
+STRING 2358
+// Items: I017 (Ionic Gloves), Ubertip (Tooltip - Extended)
+{
+Increases attack speed by 400%.|n|cffff0000Caution! You can not have more than 400% bonus at the same time!|r
+}
+
+STRING 2359
+// Items: I01C (Potion of Eternity), Tip (Tooltip - Basic)
+{
+Potion of Eternity
+}
+
+STRING 2360
+// Items: I01C (Potion of Eternity), Description (Description)
+{
+Increases the life.
+}
+
+STRING 2361
+// Items: I01C (Potion of Eternity), Name (Name)
+{
+Potion of Eternity
+}
+
+STRING 2363
+// Items: I01D (Potion of Eternity |cffffcc00Ultra|r), Tip (Tooltip - Basic)
+{
+Potion of Eternity |cffffcc00Ultra|r
+}
+
+STRING 2364
+// Items: I01D (Potion of Eternity |cffffcc00Ultra|r), Description (Description)
+{
+Increases the life.
+}
+
+STRING 2365
+// Items: I01D (Potion of Eternity |cffffcc00Ultra|r), Name (Name)
+{
+Potion of Eternity |cffffcc00Ultra|r
+}
+
+STRING 2367
+// Items: I01E (Lumber), Ubertip (Tooltip - Extended)
+{
+Includes 1 lumber.
+}
+
+STRING 2368
+// Items: I01E (Lumber), Tip (Tooltip - Basic)
+{
+Lumber
+}
+
+STRING 2369
+// Items: I01E (Lumber), Name (Name)
+{
+Lumber
+}
+
+STRING 2370
+// Items: I01E (Lumber), Description (Description)
+{
+Wood
+}
+
+STRING 2371
+// Items: I01F (Potion of Eternity |cffff0000Ultimate|r), Tip (Tooltip - Basic)
+{
+Potion of Eternity |cffff0000Ultimate|r
+}
+
+STRING 2372
+// Items: I01F (Potion of Eternity |cffff0000Ultimate|r), Name (Name)
+{
+Potion of Eternity |cffff0000Ultimate|r
+}
+
+STRING 2373
+// Items: I018 (Calamitous Potion), Tip (Tooltip - Basic)
+{
+Calamitous Potion
+}
+
+STRING 2374
+// Items: I018 (Calamitous Potion), Description (Description)
+{
+Increases regeneration.
+}
+
+STRING 2375
+// Items: I018 (Calamitous Potion), Name (Name)
+{
+Calamitous Potion
+}
+
+STRING 2377
+// Items: I019 (Calamitous Potion |cffffcc00Ultra|r), Description (Description)
+{
+Increases regeneration.
+}
+
+STRING 2378
+// Items: I019 (Calamitous Potion |cffffcc00Ultra|r), Tip (Tooltip - Basic)
+{
+Calamitous Potion |cffffcc00Ultra|r
+}
+
+STRING 2380
+// Items: I01A (Calamitous Potion |cffff0000Ultimate|r), Tip (Tooltip - Basic)
+{
+Calamitous Potion |cffff0000Ultimate|r
+}
+
+STRING 2381
+// Items: I01A (Calamitous Potion |cffff0000Ultimate|r), Description (Description)
+{
+Increases regeneration.
+}
+
+STRING 2382
+// Items: I01A (Calamitous Potion |cffff0000Ultimate|r), Name (Name)
+{
+Calamitous Potion |cffff0000Ultimate|r
+}
+
+STRING 2383
+// Items: I01B (Shield UltraIonic), Tip (Tooltip - Basic)
+{
+Shield UltraIonic
+}
+
+STRING 2384
+// Items: I01B (Shield UltraIonic), Description (Description)
+{
+Increases defense.
+}
+
+STRING 2385
+// Items: I01B (Shield UltraIonic), Name (Name)
+{
+Shield UltraIonic
+}
+
+STRING 2387
+// Items: I01G (Shield UltraIonic |cffffcc00Ulta|r), Tip (Tooltip - Basic)
+{
+Shield UltraIonic |cffffcc00Ulta|r
+}
+
+STRING 2388
+// Items: I01G (Shield UltraIonic |cffffcc00Ulta|r), Description (Description)
+{
+Increases defense
+}
+
+STRING 2389
+// Items: I01G (Shield UltraIonic |cffffcc00Ulta|r), Name (Name)
+{
+Shield UltraIonic |cffffcc00Ulta|r
+}
+
+STRING 2391
+// Items: I01H (Shield UltraIonic |cffff0000Ultra|r), Tip (Tooltip - Basic)
+{
+Shield UltraIonic |cffff0000Ultra|r
+}
+
+STRING 2392
+// Items: I01H (Shield UltraIonic |cffff0000Ultra|r), Description (Description)
+{
+Increases defense
+}
+
+STRING 2393
+// Items: I01H (Shield UltraIonic |cffff0000Ultra|r), Name (Name)
+{
+Shield UltraIonic |cffff0000Ultra|r
+}
+
+STRING 2396
+// Items: I01I (UltraIonic Blade), Description (Description)
+{
+Increases damage.
+}
+
+STRING 2403
+// Items: I01K (UltraIonic Blade |cffff0000Ultimate|r), Description (Description)
+{
+Increases damage.
+}
+
+STRING 2405
+// Items: I01L (Blade |cffff0000End Game|r), Tip (Tooltip - Basic)
+{
+Blade |cffff0000End Game|r
+}
+
+STRING 2406
+// Items: I01L (Blade |cffff0000End Game|r), Description (Description)
+{
+Increases damage.
+}
+
+STRING 2407
+// Items: I01L (Blade |cffff0000End Game|r), Name (Name)
+{
+Blade |cffff0000End Game|r
+}
+
+STRING 2409
+// Items: I01M (Shield |cffff0000End Game|r), Tip (Tooltip - Basic)
+{
+Shield |cffff0000End Game|r
+}
+
+STRING 2410
+// Items: I01M (Shield |cffff0000End Game|r), Description (Description)
+{
+Increases defense.
+}
+
+STRING 2411
+// Items: I01M (Shield |cffff0000End Game|r), Name (Name)
+{
+Shield |cffff0000End Game|r
+}
+
+STRING 2413
+// Items: I01N (Boots of Speed), Tip (Tooltip - Basic)
+{
+Boots of Speed
+}
+
+STRING 2414
+// Items: I01N (Boots of Speed), Name (Name)
+{
+Boots of Speed
+}
+
+STRING 2415
+// Items: I01N (Boots of Speed), Ubertip (Tooltip - Extended)
+{
+Increases movement speed.
+Not combinable.
+}
+
+STRING 2416
+// Items: I01O (Lumber x8), Ubertip (Tooltip - Extended)
+{
+Includes 8 Lumber.
+}
+
+STRING 2417
+// Items: I01O (Lumber x8), Tip (Tooltip - Basic)
+{
+Lumber x8
+}
+
+STRING 2418
+// Items: I01O (Lumber x8), Name (Name)
+{
+Lumber x8
+}
+
+STRING 2419
+// Items: I01O (Lumber x8), Description (Description)
+{
+Wood
+}
+
+STRING 2420
+// Items: I00O (Gold Blade), Tip (Tooltip - Basic)
+{
+Gold Blade
+}
+
+STRING 2421
+// Items: I00O (Gold Blade), Name (Name)
+{
+Gold Blade
+}
+
+STRING 2422
+// Items: I00O (Gold Blade), Ubertip (Tooltip - Extended)
+{
+Increases damage by 128.
+}
+
+STRING 2423
+// Items: I01F (Potion of Eternity |cffff0000Ultimate|r), Description (Description)
+{
+Increases the life.
+}
+
+STRING 2424
+// Items: I01F (Potion of Eternity |cffff0000Ultimate|r), Ubertip (Tooltip - Extended)
+{
+Increases the life by 399 996 (MAX).
+}
+
+STRING 2425
+// Items: I019 (Calamitous Potion |cffffcc00Ultra|r), Name (Name)
+{
+Calamitous Potion |cffffcc00Ultra|r
+}
+
+STRING 2426
+// Items: I01A (Calamitous Potion |cffff0000Ultimate|r), Ubertip (Tooltip - Extended)
+{
+Increases the regeneration by 20,480 hp/s.
+}
+
+STRING 2427
+// Items: I01K (UltraIonic Blade |cffff0000Ultimate|r), Ubertip (Tooltip - Extended)
+{
+Increases damage by 10240.
+}
+
+STRING 2428
+// Units: e000 (Basic collector), Tip (Tooltip - Basic)
+{
+Basic collector - |cffffcc00A|r
+}
+
+STRING 2430
+// Units: e000 (Basic collector), Name (Name)
+{
+Basic collector
+}
+
+STRING 2431
+// Units: e002 (Simple collector), Tip (Tooltip - Basic)
+{
+Simple collector - |cffffcc00Z|r
+}
+
+STRING 2433
+// Units: e002 (Simple collector), Name (Name)
+{
+Simple collector
+}
+
+STRING 2434
+// Units: e003 (Professional Collector), Tip (Tooltip - Basic)
+{
+Professional Collector - |cffffcc00E|r
+}
+
+STRING 2436
+// Units: e003 (Professional Collector), Name (Name)
+{
+Professional Collector
+}
+
+STRING 2437
+// Units: e004 (Complex collector), Tip (Tooltip - Basic)
+{
+Complex collector - |cffffcc00R|r
+}
+
+STRING 2439
+// Units: e004 (Complex collector), Name (Name)
+{
+Complex collector
+}
+
+STRING 2440
+// Units: e006 (Gold collector), Tip (Tooltip - Basic)
+{
+Gold collector - |cffffcc00X|r
+}
+
+STRING 2441
+// Units: e006 (Gold collector), Ubertip (Tooltip - Extended)
+{
+Collector of gold. Must enter a gold mine to harvest gold.
+}
+
+STRING 2442
+// Units: e006 (Gold collector), Name (Name)
+{
+Gold collector
+}
+
+STRING 2443
+// Units: e00A (Secret collector), Tip (Tooltip - Basic)
+{
+Secret collector - |cffffcc00Q|r
+}
+
+STRING 2445
+// Units: e00A (Secret collector), Name (Name)
+{
+Secret collector
+}
+
+STRING 2446
+// Units: e00B (Ionic collector), Tip (Tooltip - Basic)
+{
+Ionic collector- |cffffcc00S|r
+}
+
+STRING 2448
+// Units: e00B (Ionic collector), Name (Name)
+{
+Ionic collector
+}
+
+STRING 2449
+// Units: e00C (UltraIonic collector), Tip (Tooltip - Basic)
+{
+UltraIonic collector - |cffffcc00F|r
+}
+
+STRING 2451
+// Units: e00C (UltraIonic collector), Name (Name)
+{
+UltraIonic collector
+}
+
+STRING 2452
+// Units: e00F (Older worker), Tip (Tooltip - Basic)
+{
+Older worker - |cffffcc00Z|r
+}
+
+STRING 2454
+// Units: e00F (Older worker), Name (Name)
+{
+Older worker
+}
+
+STRING 2455
+// Units: e00G (Young Mechanical Worker), Tip (Tooltip - Basic)
+{
+Young Mechanical Worker - |cffffcc00E|r
+}
+
+STRING 2457
+// Units: e00G (Young Mechanical Worker), Name (Name)
+{
+Young Mechanical Worker
+}
+
+STRING 2458
+// Units: e00H (Mechanical Worker), Tip (Tooltip - Basic)
+{
+Mechanical Worker - |cffffcc00R|r
+}
+
+STRING 2460
+// Units: e00H (Mechanical Worker), Name (Name)
+{
+Mechanical Worker
+}
+
+STRING 2463
+// Units: e00I (Proffesional Mechanical Worker), Name (Name)
+{
+Proffesional Mechanical Worker
+}
+
+STRING 2464
+// Units: H000 (Forest Troll), Name (Name)
+{
+Forest Troll
+}
+
+STRING 2465
+// Units: n000 (Forest Troll), Description (Description)
+{
+Isn't it a beautiful beast eh? I'd even warn that you'll need to kill yourself!
+}
+
+STRING 2466
+// Abilities: A00O (Blink), Tip (Tooltip - Normal)
+{
+Blink - |cffffcc00Z|r
+}
+
+STRING 2467
+// Abilities: A00O (Blink), Name (Name)
+{
+Blink
+}
+
+STRING 2468
+// Abilities: A00O (Blink), Ubertip (Tooltip - Normal - Extended)
+{
+Allows you to teleport in a small range.
+}
+
+STRING 2469
+// Abilities: A00P (Reveal), Tip (Tooltip - Normal)
+{
+Reveal - |cffffcc00R|r
+}
+
+STRING 2470
+// Abilities: A00P (Reveal), Name (Name)
+{
+Reveal
+}
+
+STRING 2471
+// Abilities: A00P (Reveal), Ubertip (Tooltip - Normal - Extended)
+{
+Reveals an area for a few seconds.
+}
+
+STRING 2472
+// Abilities: A00Q (Destructive), Name (Name)
+{
+Destructive
+}
+
+STRING 2473
+// Abilities: A00R (Destroy), Tip (Tooltip - Normal)
+{
+Destroy - |cffffcc00D|r
+}
+
+STRING 2474
+// Abilities: A00R (Destroy), Ubertip (Tooltip - Normal - Extended)
+{
+Kills selected unit.|n|cffff0000You do not regain the resources used.|n|nOnly works if the building has all his life.|n|nDo not work also if the Troll is near (otherwise, it's anti-gambling destroy everything)
+}
+
+STRING 2475
+// Abilities: A00R (Destroy), Name (Name)
+{
+Destroy
+}
+
+STRING 2477
+// Abilities: A00T (Teleportation), Name (Name)
+{
+Teleportation
+}
+
+STRING 2480
+// Abilities: A00T (Teleportation), Ubertip (Tooltip - Normal - Extended)
+{
+Allows you to teleport to the base of the Troll. Has a long casting time.
+}
+
+STRING 2481
+// Abilities: A01C (Invisibility), Name (Name)
+{
+Invisibility
+}
+
+STRING 2483
+// Abilities: A01C (Invisibility), Ubertip (Tooltip - Normal - Extended)
+{
+Allows the Troll to move 50% faster and be invisible for 15 seconds. The effect has dissipated the next attack.
+}
+
+STRING 2485
+// Abilities: A01D (Pillage), EditorSuffix (Editor Suffix)
+{
+Dog
+}
+
+STRING 2487
+// Abilities: A01E (Care), Name (Name)
+{
+Care
+}
+
+STRING 2489
+// Abilities: A01F (Stun), Tip (Tooltip - Normal)
+{
+Stun- |cffffcc00A|r
+}
+
+STRING 2490
+// Abilities: A01F (Stun), Name (Name)
+{
+Stun
+}
+
+STRING 2491
+// Abilities: A01F (Stun), Ubertip (Tooltip - Normal - Extended)
+{
+Stuns Troll or his dogs for 2 sec.
+}
+
+STRING 2492
+// Abilities: A01G (Steal gold), Name (Name)
+{
+Steal gold
+}
+
+STRING 2493
+// Abilities: A01G (Steal gold), Ubertip (Tooltip - Normal - Extended)
+{
+Used to steal the gold in the trunk of the Troll. The amount of gold stolen doubles every two minutes
+}
+
+STRING 2494
+// Abilities: A01G (Steal gold), Tip (Tooltip - Normal)
+{
+Steal gold- |cffffcc00D|r
+}
+
+STRING 2495
+// Abilities: A01H (Divine Shield), Tip (Tooltip - Normal)
+{
+Divine Shield - D
+}
+
+STRING 2496
+// Abilities: A01H (Divine Shield), Ubertip (Tooltip - Normal - Extended)
+{
+Troll makes him invulnerable for 5 seconds.
+}
+
+STRING 2497
+// Abilities: A01H (Divine Shield), Untip (Tooltip - Turn Off)
+{
+Disable divine shield
+}
+
+STRING 2498
+// Abilities: A01R (Gather), EditorSuffix (Editor Suffix)
+{
+Professional
+}
+
+STRING 2499
+// Abilities: A000 (Gold Mine), Name (Name)
+{
+Gold Mine
+}
+
+STRING 2500
+// Abilities: A000 (Gold Mine), EditorSuffix (Editor Suffix)
+{
+Old
+}
+
+STRING 2501
+// Abilities: A027 (Gold Mine), Name (Name)
+{
+Gold Mine
+}
+
+STRING 2502
+// Abilities: A028 (Gold Mine), Name (Name)
+{
+Gold Mine
+}
+
+STRING 2503
+// Abilities: A029 (Gold Mine), Name (Name)
+{
+Gold Mine
+}
+
+STRING 2504
+// Abilities: A02B (Gather), EditorSuffix (Editor Suffix)
+{
+Ionic
+}
+
+STRING 2505
+// Abilities: A02C (Gather), EditorSuffix (Editor Suffix)
+{
+UltraIonic
+}
+
+STRING 2506
+// Abilities: A02E (One Shot), Ubertip (Tooltip - Normal - Extended)
+{
+The tower has 10% chance to x5 critical hit.
+}
+
+STRING 2507
+// Abilities: A02F (Poor Troll), Tip (Tooltip - Normal)
+{
+Poor Troll
+}
+
+STRING 2508
+// Abilities: A02F (Poor Troll), Name (Name)
+{
+Poor Troll
+}
+
+STRING 2509
+// Abilities: A02F (Poor Troll), Ubertip (Tooltip - Normal - Extended)
+{
+The Troll has only 10% chance to touch the wall.
+}
+
+STRING 2510
+// Abilities: A02I (Repair), EditorSuffix (Editor Suffix)
+{
+Survivor
+}
+
+STRING 2511
+// Abilities: A02O (Gold Mine), Name (Name)
+{
+Gold Mine
+}
+
+STRING 2512
+// Abilities: A02O (Gold Mine), EditorSuffix (Editor Suffix)
+{
+Prehistoric
+}
+
+STRING 2513
+// Abilities: A02P (Gold Mine), Name (Name)
+{
+Gold Mine
+}
+
+STRING 2514
+// Abilities: A02Q (Gold Mine), Name (Name)
+{
+Gold Mine
+}
+
+STRING 2515
+// Abilities: A02R (Gold Mine), Name (Name)
+{
+Gold Mine
+}
+
+STRING 2516
+// Abilities: A01B (Silence), Ubertip (Tooltip - Normal - Extended)
+{
+Prevents the unit from casting spells for 5 seconds.
+}
+
+STRING 2517
+// Abilities: A02T (Illusion), Name (Name)
+{
+Illusion
+}
+
+STRING 2518
+// Abilities: A02T (Illusion), Ubertip (Tooltip - Normal - Extended)
+{
+Creates an Illusion to cofuse the Troll or his dogs.
+}
+
+STRING 2519
+// Abilities: A02T (Illusion), Tip (Tooltip - Normal)
+{
+Illusion - |cffffcc00R|r
+}
+
+STRING 2520
+// Abilities: A02U (Ruuun !!!), Name (Name)
+{
+Ruuun !!!
+}
+
+STRING 2525
+// Abilities: A02V (Magic for Dummies ), Ubertip (Tooltip - Normal - Extended)
+{
+That's it, you: the last of the series "for dummies"! You'll finally be able to play sorcerer's apprentice with the spells that are in this book!
+}
+
+STRING 2526
+// Abilities: A02W (Root), Name (Name)
+{
+Root
+}
+
+STRING 2527
+// Buffs/Effects: B001 (Root), EditorName (Name (Editor Only))
+{
+Root
+}
+
+STRING 2528
+// Abilities: A02W (Root), Ubertip (Tooltip - Normal - Extended)
+{
+You have a green thumb? You are green? Then learn this spell created by the mages of Greenpeace for all nature lovers.
+}
+
+STRING 2529
+// Abilities: A02X (The beautiful stars), Name (Name)
+{
+The beautiful stars
+}
+
+STRING 2531
+// Abilities: A02X (The beautiful stars), Ubertip (Tooltip - Normal - Extended)
+{
+This sort sought by the astrologer, now allows them to contemplate the starry vault anytime!|n|nPS: This spell is not useless!
+}
+
+STRING 2532
+// Abilities: A02Y (Summon your lunch!), Name (Name)
+{
+Summon your lunch!
+}
+
+STRING 2533
+// Abilities: A02Y (Summon your lunch!), Tip (Tooltip - Normal)
+{
+Summon your lunch!
+}
+
+STRING 2534
+// Abilities: A02Y (Summon your lunch!), Ubertip (Tooltip - Normal - Extended)
+{
+Allows you to invoke your lunch. Beware, the beast is alive, you'll need to kill yourself. This spell is especially used in texas ranches.
+}
+
+STRING 2535
+// Abilities: A031 (Buy Wood), Name (Name)
+{
+Buy Wood
+}
+
+STRING 2536
+// Abilities: A031 (Buy Wood), Tip (Tooltip - Normal)
+{
+|cff00ff00Buy 10 wood
+}
+
+STRING 2537
+// Abilities: A031 (Buy Wood), Ubertip (Tooltip - Normal - Extended)
+{
+|cffff0000Take care of the price!
+}
+
+STRING 2538
+// Abilities: A032 (Sell wood), Name (Name)
+{
+Sell wood
+}
+
+STRING 2539
+// Abilities: A032 (Sell wood), Tip (Tooltip - Normal)
+{
+|cffffff00Sell 10 wood
+}
+
+STRING 2540
+// Abilities: A032 (Sell wood), Ubertip (Tooltip - Normal - Extended)
+{
+|cffff0000Take care of the price!
+}
+
+STRING 2541
+// Abilities: A02Z (Buy Wood), Name (Name)
+{
+Buy Wood
+}
+
+STRING 2542
+// Abilities: A02Z (Buy Wood), Tip (Tooltip - Normal)
+{
+|cff00ff00Buy 200 wood
+}
+
+STRING 2543
+// Abilities: A02Z (Buy Wood), Ubertip (Tooltip - Normal - Extended)
+{
+|cffff0000Take care of the price! | 20 * current purchase price + 950!
+}
+
+STRING 2544
+// Abilities: A030 (Sell wood), Name (Name)
+{
+Sell wood
+}
+
+STRING 2545
+// Abilities: A030 (Sell wood), Tip (Tooltip - Normal)
+{
+|cffffff00Sell 200 wood
+}
+
+STRING 2546
+// Abilities: A030 (Sell wood), Ubertip (Tooltip - Normal - Extended)
+{
+|cffff0000Take care of the price!|n 20 * current sell price - 950!
+}
+
+STRING 2547
+// Buffs/Effects: B000 (Ruuun!!!), EditorName (Name (Editor Only))
+{
+Ruuun!!!
+}
+
+STRING 2548
+// Abilities: A02U (Ruuun !!!), Ubertip (Tooltip - Normal - Extended)
+{
+This unit has hot ass, it's amazing how a simple stimulation can exceed its limits!
+}
+
+STRING 2549
+// Buffs/Effects: B000 (Ruuun!!!), Bufftip (Tooltip)
+{
+Ruuun!!!
+}
+
+STRING 2550
+// Buffs/Effects: B001 (Root), Bufftip (Tooltip)
+{
+Root
+}
+
+STRING 2551
+// Buffs/Effects: B001 (Root), Buffubertip (Tooltip - Extended)
+{
+You suffered the wrath of Greenpeace!
+}
+
+STRING 2553
+// Units: H000 (Forest Troll), Propernames (Proper Names)
+{
+Chaos Troll
+}
+
+STRING 2554
+// Units: n000 (Forest Troll), Name (Name)
+{
+Forest Troll
+}
+
+STRING 2555
+// Abilities: A00T (Teleportation), Tip (Tooltip - Normal)
+{
+Teleportation - |cffffcc00T|r
+}
+
+STRING 2556
+// Abilities: A00T (Teleportation), Hotkey (Hotkey - Normal)
+{
+T
+}
+
+STRING 2557
+// Abilities: A01C (Invisibility), Tip (Tooltip - Normal)
+{
+Invisibility - |cffffcc00W|r
+}
+
+STRING 2571
+// Units: u001 (Tent), Name (Name)
+{
+Tent
+}
+
+STRING 2572
+// Units: u001 (Tent), Tip (Tooltip - Basic)
+{
+Tent - |cffffcc00A|r
+}
+
+STRING 2576
+// Units: u002 (Rock), Ubertip (Tooltip - Extended)
+{
+Basic rock which protects you from Troll.|n|cffff0000Caution! Use it to block entry to your base|r
+}
+
+STRING 2577
+// Units: u003 (Rock 2), Name (Name)
+{
+Rock 2
+}
+
+STRING 2578
+// Units: u003 (Rock 2), Tip (Tooltip - Basic)
+{
+Rock 2 - |cffffcc00A|r
+}
+
+STRING 2579
+// Units: u003 (Rock 2), Ubertip (Tooltip - Extended)
+{
+Stronger wall
+}
+
+STRING 2580
+// Units: u004 (Rock 3), Name (Name)
+{
+Rock 3
+}
+
+STRING 2581
+// Units: u004 (Rock 3), Ubertip (Tooltip - Extended)
+{
+Stronger wall
+}
+
+STRING 2582
+// Units: u005 (Rock 4), Name (Name)
+{
+Rock 4
+}
+
+STRING 2583
+// Units: u005 (Rock 4), Tip (Tooltip - Basic)
+{
+Rock 4 - |cffffcc00A|r
+}
+
+STRING 2584
+// Units: u005 (Rock 4), Ubertip (Tooltip - Extended)
+{
+Stronger wall
+}
+
+STRING 2585
+// Units: u006 (Rock 5), Name (Name)
+{
+Rock 5
+}
+
+STRING 2586
+// Units: u006 (Rock 5), Tip (Tooltip - Basic)
+{
+Rock 5 - |cffffcc00A|r
+}
+
+STRING 2587
+// Units: u006 (Rock 5), Ubertip (Tooltip - Extended)
+{
+Stronger wall
+}
+
+STRING 2588
+// Units: u007 (House), Name (Name)
+{
+House
+}
+
+STRING 2589
+// Units: u007 (House), Tip (Tooltip - Basic)
+{
+House - |cffffcc00A|r
+}
+
+STRING 2591
+// Units: h001 (Basic Tower), Tip (Tooltip - Basic)
+{
+Basic Tower - |cffffcc00E|r
+}
+
+STRING 2592
+// Units: h001 (Basic Tower), Name (Name)
+{
+Basic Tower
+}
+
+STRING 2594
+// Units: u008 (House 2), Name (Name)
+{
+House 2
+}
+
+STRING 2595
+// Units: u001 (Tent), Ubertip (Tooltip - Extended)
+{
+Allows you to earn 4 gold per second.
+}
+
+STRING 2596
+// Units: h002 (Heavy defensive tower), Tip (Tooltip - Basic)
+{
+Heavy defensive tower - |cffffcc00A|r
+}
+
+STRING 2597
+// Units: h002 (Heavy defensive tower), Name (Name)
+{
+Heavy defensive tower
+}
+
+STRING 2598
+// Units: h002 (Heavy defensive tower), Ubertip (Tooltip - Extended)
+{
+A more powerful tower.
+}
+
+STRING 2600
+// Units: h003 (Protection Tower), Name (Name)
+{
+Protection Tower
+}
+
+STRING 2601
+// Units: h003 (Protection Tower), Ubertip (Tooltip - Extended)
+{
+A more powerful tower.
+}
+
+STRING 2602
+// Units: h004 (Tower of advanced protection), Name (Name)
+{
+Tower of advanced protection
+}
+
+STRING 2603
+// Units: h005 (Magic Tower), Tip (Tooltip - Basic)
+{
+Magic Tower - |cffffcc00A|r
+}
+
+STRING 2604
+// Units: h005 (Magic Tower), Name (Name)
+{
+Magic Tower
+}
+
+STRING 2605
+// Units: h005 (Magic Tower), Ubertip (Tooltip - Extended)
+{
+A more powerful tower.
+}
+
+STRING 2606
+// Units: h006 (Ancient Tower), Tip (Tooltip - Basic)
+{
+Ancient Tower - |cffffcc00A|r
+}
+
+STRING 2607
+// Units: h006 (Ancient Tower), Name (Name)
+{
+Ancient Tower
+}
+
+STRING 2608
+// Units: h006 (Ancient Tower), Ubertip (Tooltip - Extended)
+{
+A more powerful tower.
+}
+
+STRING 2609
+// Units: u009 (House 3), Name (Name)
+{
+House 3
+}
+
+STRING 2610
+// Units: u009 (House 3), Tip (Tooltip - Basic)
+{
+House 3 - |cffffcc00A|r
+}
+
+STRING 2611
+// Units: u007 (House), Ubertip (Tooltip - Extended)
+{
+Allows you to earn 8 gold per second.
+}
+
+STRING 2612
+// Units: u00A (Troll's Hut), Name (Name)
+{
+Troll's Hut
+}
+
+STRING 2613
+// Units: u00B (Small Troll's Hut), Name (Name)
+{
+Small Troll's Hut
+}
+
+STRING 2614
+// Units: u00G (Ultra wall 1), Name (Name)
+{
+Ultra wall 1
+}
+
+STRING 2615
+// Units: u00G (Ultra wall 1), Tip (Tooltip - Basic)
+{
+Ultra wall 1 - |cffffcc00A|r
+}
+
+STRING 2616
+// Units: u00G (Ultra wall 1), Ubertip (Tooltip - Extended)
+{
+Stronger wall
+}
+
+STRING 2617
+// Units: u00I (Useful Troll box 1), Name (Name)
+{
+Useful Troll box 1
+}
+
+STRING 2618
+// Units: u00J (Box of Troll - Special 1), Name (Name)
+{
+Box of Troll - Special 1
+}
+
+STRING 2619
+// Units: u00K (Ultra wall 2), Name (Name)
+{
+Ultra wall 2
+}
+
+STRING 2620
+// Units: u00K (Ultra wall 2), Ubertip (Tooltip - Extended)
+{
+Stronger wall
+}
+
+STRING 2621
+// Units: u00L (Ultra wall 3), Name (Name)
+{
+Ultra wall 3
+}
+
+STRING 2622
+// Units: u00L (Ultra wall 3), Tip (Tooltip - Basic)
+{
+Ultra wall 3 - |cffffcc00A|r
+}
+
+STRING 2623
+// Units: u00L (Ultra wall 3), Ubertip (Tooltip - Extended)
+{
+Stronger wall
+}
+
+STRING 2624
+// Units: u00M (Ultra wall 4), Name (Name)
+{
+Ultra wall 4
+}
+
+STRING 2625
+// Units: u00M (Ultra wall 4), Ubertip (Tooltip - Extended)
+{
+Stronger wall
+}
+
+STRING 2626
+// Units: u00N (Ultra wall 5), Name (Name)
+{
+Ultra wall 5
+}
+
+STRING 2627
+// Units: u00N (Ultra wall 5), Tip (Tooltip - Basic)
+{
+Ultra wall 5 - |cffffcc00A|r
+}
+
+STRING 2628
+// Units: u00N (Ultra wall 5), Ubertip (Tooltip - Extended)
+{
+Stronger wall
+}
+
+STRING 2629
+// Units: u00Q (House 4), Name (Name)
+{
+House 4
+}
+
+STRING 2630
+// Units: u00Q (House 4), Tip (Tooltip - Basic)
+{
+House 4 - |cffffcc00A|r
+}
+
+STRING 2631
+// Units: u008 (House 2), Ubertip (Tooltip - Extended)
+{
+Allows you to earn 16 gold per second.
+}
+
+STRING 2632
+// Units: u00S (House 5), Name (Name)
+{
+House 5
+}
+
+STRING 2633
+// Units: u00S (House 5), Tip (Tooltip - Basic)
+{
+House 5- |cffffcc00A|r
+}
+
+STRING 2634
+// Units: u009 (House 3), Ubertip (Tooltip - Extended)
+{
+Allows you to earn 32 gold per second.
+}
+
+STRING 2635
+// Units: u00T (House 6), Name (Name)
+{
+House 6
+}
+
+STRING 2636
+// Units: u00T (House 6), Tip (Tooltip - Basic)
+{
+House 6 - |cffffcc00A|r
+}
+
+STRING 2637
+// Units: u00Q (House 4), Ubertip (Tooltip - Extended)
+{
+Allows you to earn 64 gold per second.
+}
+
+STRING 2638
+// Units: h007 (Destructive Tower), Name (Name)
+{
+Destructive Tower
+}
+
+STRING 2639
+// Units: u00U (Useful Troll box 2), Name (Name)
+{
+Useful Troll box 2
+}
+
+STRING 2640
+// Units: u00W (House 7), Name (Name)
+{
+House 7
+}
+
+STRING 2641
+// Units: u00W (House 7), Tip (Tooltip - Basic)
+{
+House 7 - |cffffcc00A|r
+}
+
+STRING 2642
+// Units: u00S (House 5), Ubertip (Tooltip - Extended)
+{
+Allows you to earn 128 gold per second.
+}
+
+STRING 2643
+// Units: u00X (Ancient Tree), Name (Name)
+{
+Ancient Tree
+}
+
+STRING 2644
+// Units: u00X (Ancient Tree), Tip (Tooltip - Basic)
+{
+Ancient Tree - |cffffcc00S|r
+}
+
+STRING 2645
+// Units: u00X (Ancient Tree), Ubertip (Tooltip - Extended)
+{
+Used to train harvesters to harvest lumber and gold.
+}
+
+STRING 2646
+// Units: u00Y (Demonic wall 1), Name (Name)
+{
+Demonic wall 1
+}
+
+STRING 2647
+// Units: u00Y (Demonic wall 1), Tip (Tooltip - Basic)
+{
+Demonic wall 1 - |cffffcc00A|r
+}
+
+STRING 2648
+// Units: u00Y (Demonic wall 1), Ubertip (Tooltip - Extended)
+{
+Demonic defense become stronger.
+}
+
+STRING 2649
+// Units: u00Z (Demonic wall 2), Name (Name)
+{
+Demonic wall 2
+}
+
+STRING 2650
+// Units: u00Z (Demonic wall 2), Tip (Tooltip - Basic)
+{
+Demonic wall 2 - |cffffcc00A|r
+}
+
+STRING 2651
+// Units: u00Z (Demonic wall 2), Ubertip (Tooltip - Extended)
+{
+Demonic defense become stronger.
+}
+
+STRING 2652
+// Units: u010 (Demonic wall 3), Name (Name)
+{
+Demonic wall 3
+}
+
+STRING 2653
+// Units: u010 (Demonic wall 3), Tip (Tooltip - Basic)
+{
+Demonic wall 3 - |cffffcc00A|r
+}
+
+STRING 2654
+// Units: u010 (Demonic wall 3), Ubertip (Tooltip - Extended)
+{
+Demonic defense become stronger.
+}
+
+STRING 2655
+// Units: u011 (Demonic wall 4), Name (Name)
+{
+Demonic wall 4
+}
+
+STRING 2656
+// Units: u011 (Demonic wall 4), Tip (Tooltip - Basic)
+{
+Demonic wall 4 - |cffffcc00A|r
+}
+
+STRING 2657
+// Units: u011 (Demonic wall 4), Ubertip (Tooltip - Extended)
+{
+Demonic defense become stronger.
+}
+
+STRING 2658
+// Units: u012 (Demonic wall 5), Name (Name)
+{
+Demonic wall 5
+}
+
+STRING 2659
+// Units: u012 (Demonic wall 5), Tip (Tooltip - Basic)
+{
+Demonic wall 5 - |cffffcc00A|r
+}
+
+STRING 2660
+// Units: u012 (Demonic wall 5), Ubertip (Tooltip - Extended)
+{
+Demonic defense become stronger.
+}
+
+STRING 2661
+// Units: u013 (Ionic wall), Name (Name)
+{
+Ionic wall
+}
+
+STRING 2662
+// Units: u013 (Ionic wall), Tip (Tooltip - Basic)
+{
+Ionic wall - |cffffcc00A|r
+}
+
+STRING 2663
+// Units: u013 (Ionic wall), Ubertip (Tooltip - Extended)
+{
+There's no stronger.
+}
+
+STRING 2664
+// Units: h009 (Ultra destructive Tower), Tip (Tooltip - Basic)
+{
+Ultra destructive Tower - |cffffcc00A|r
+}
+
+STRING 2665
+// Units: h009 (Ultra destructive Tower), Name (Name)
+{
+Ultra destructive Tower
+}
+
+STRING 2666
+// Units: h009 (Ultra destructive Tower), Ubertip (Tooltip - Extended)
+{
+A more powerful tower.
+}
+
+STRING 2667
+// Units: h00A (Omega Tower), Tip (Tooltip - Basic)
+{
+Omega Tower- |cffffcc00A|r
+}
+
+STRING 2668
+// Units: h00A (Omega Tower), Name (Name)
+{
+Omega Tower
+}
+
+STRING 2669
+// Units: h00A (Omega Tower), Ubertip (Tooltip - Extended)
+{
+A more powerful Tower
+}
+
+STRING 2670
+// Units: h00B (Ionic nuclear Tower), Tip (Tooltip - Basic)
+{
+Ionic nuclear Tower - |cffffcc00A|r
+}
+
+STRING 2671
+// Units: h00B (Ionic nuclear Tower), Name (Name)
+{
+Ionic nuclear Tower
+}
+
+STRING 2672
+// Units: h00B (Ionic nuclear Tower), Ubertip (Tooltip - Extended)
+{
+The most powerful tower.
+}
+
+STRING 2673
+// Units: u014 (Secret Laboratory), Name (Name)
+{
+Secret Laboratory
+}
+
+STRING 2674
+// Units: u014 (Secret Laboratory), Tip (Tooltip - Basic)
+{
+Secret Laboratory - |cffffcc00D|r
+}
+
+STRING 2675
+// Units: u014 (Secret Laboratory), Ubertip (Tooltip - Extended)
+{
+Allows you to construct  more powerful buildings and can construct defense tanks and helicopters.
+}
+
+STRING 2676
+// Units: H00D (Troll's Dog), Name (Name)
+{
+Troll's Dog
+}
+
+STRING 2677
+// Units: u015 (Box of Troll - Special 2), Name (Name)
+{
+Box of Troll - Special 2
+}
+
+STRING 2678
+// Units: u016 (Box of Troll Combines), Name (Name)
+{
+Box of Troll Combines
+}
+
+STRING 2679
+// Units: u017 (House 8), Name (Name)
+{
+House 8
+}
+
+STRING 2680
+// Units: u017 (House 8), Tip (Tooltip - Basic)
+{
+House 8 - |cffffcc00A|r
+}
+
+STRING 2681
+// Units: u00T (House 6), Ubertip (Tooltip - Extended)
+{
+Allows you to earn 256 gold per second.
+}
+
+STRING 2682
+// Units: u018 (Village House), Name (Name)
+{
+Village House
+}
+
+STRING 2683
+// Units: u018 (Village House), Tip (Tooltip - Basic)
+{
+Village House - |cffffcc00A|r
+}
+
+STRING 2684
+// Units: u00W (House 7), Ubertip (Tooltip - Extended)
+{
+Allows you to earn 512 gold per second.
+}
+
+STRING 2685
+// Units: u00C (Box of Troll - Special 3), Name (Name)
+{
+Box of Troll - Special 3
+}
+
+STRING 2686
+// Units: u00D (Useful Troll box 3), Name (Name)
+{
+Useful Troll box 3
+}
+
+STRING 2687
+// Units: h008 (Multidimensional Tower), Tip (Tooltip - Basic)
+{
+Multidimensional Tower - |cffffcc00A|r
+}
+
+STRING 2688
+// Units: h008 (Multidimensional Tower), Name (Name)
+{
+Multidimensional Tower
+}
+
+STRING 2689
+// Units: h008 (Multidimensional Tower), Ubertip (Tooltip - Extended)
+{
+WTF?! I havent killed the troll ... yet
+}
+
+STRING 2690
+// Units: e005 (Old Gold Mine), Tip (Tooltip - Basic)
+{
+Old Gold Mine - |cffffcc00Z|r
+}
+
+STRING 2692
+// Units: e005 (Old Gold Mine), Name (Name)
+{
+Old Gold Mine
+}
+
+STRING 2693
+// Units: e007 (Gold collector), Tip (Tooltip - Basic)
+{
+Gold collector - |cffffcc00C|r
+}
+
+STRING 2694
+// Units: e007 (Gold collector), Ubertip (Tooltip - Extended)
+{
+This worker is able to build gold mines. The cheapest gold mine costs 32 wood.|n|n|cffff0000Careful, it can be used only once.|r
+}
+
+STRING 2695
+// Units: e007 (Gold collector), Name (Name)
+{
+Gold collector
+}
+
+STRING 2696
+// Units: e001 (Gold mine), Tip (Tooltip - Basic)
+{
+Gold mine - |cffffcc00E|r
+}
+
+STRING 2697
+// Units: e005 (Old Gold Mine), Ubertip (Tooltip - Extended)
+{
+Extracts 32 gold per second until gold in mine is out.
+}
+
+STRING 2698
+// Units: e001 (Gold mine), Name (Name)
+{
+Gold mine
+}
+
+STRING 2699
+// Units: e008 (Super Gold Mine), Tip (Tooltip - Basic)
+{
+Super Gold Mine - |cffffcc00R|r
+}
+
+STRING 2700
+// Units: e001 (Gold mine), Ubertip (Tooltip - Extended)
+{
+Extracts 128 gold per second until gold in mine is out.
+}
+
+STRING 2701
+// Units: e008 (Super Gold Mine), Name (Name)
+{
+Super Gold Mine
+}
+
+STRING 2702
+// Units: e009 (Hyper Gold Mine), Tip (Tooltip - Basic)
+{
+Hyper  Gold Mine - |cffffcc00Q|r
+}
+
+STRING 2703
+// Units: e008 (Super Gold Mine), Ubertip (Tooltip - Extended)
+{
+Extracts 512 gold per second until gold in mine is out.
+}
+
+STRING 2704
+// Units: e009 (Hyper Gold Mine), Name (Name)
+{
+Hyper Gold Mine
+}
+
+STRING 2705
+// Units: h00E (Multidimensional Ultimate Tower), Tip (Tooltip - Basic)
+{
+Multidimensional Ultimate Tower- |cffffcc00A|r
+}
+
+STRING 2706
+// Units: h00E (Multidimensional Ultimate Tower), Name (Name)
+{
+Multidimensional Ultimate Tower
+}
+
+STRING 2707
+// Units: h00E (Multidimensional Ultimate Tower), Ubertip (Tooltip - Extended)
+{
+Anti-Game Tower!
+}
+
+STRING 2708
+// Units: h00F (End-Game Tower), Tip (Tooltip - Basic)
+{
+End-Game Tower - |cffffcc00A|r
+}
+
+STRING 2709
+// Units: h00F (End-Game Tower), Name (Name)
+{
+End-Game Tower
+}
+
+STRING 2710
+// Units: h00F (End-Game Tower), Ubertip (Tooltip - Extended)
+{
+You have finished the game? Then do it ...
+}
+
+STRING 2711
+// Units: u00E (UltraIonic wall), Name (Name)
+{
+UltraIonic wall
+}
+
+STRING 2712
+// Units: u00E (UltraIonic wall), Tip (Tooltip - Basic)
+{
+UltraIonic wall - |cffffcc00A|r
+}
+
+STRING 2713
+// Units: u00E (UltraIonic wall), Ubertip (Tooltip - Extended)
+{
+Ah, I knew that you want be safety ...
+}
+
+STRING 2714
+// Units: u00F (End-Game wall), Name (Name)
+{
+End-Game wall
+}
+
+STRING 2715
+// Units: u00F (End-Game wall), Tip (Tooltip - Basic)
+{
+End-Game wall - |cffffcc00A|r
+}
+
+STRING 2716
+// Units: u00F (End-Game wall), Ubertip (Tooltip - Extended)
+{
+Final wall will hopefuly protect you for ever !
+}
+
+STRING 2717
+// Units: u00V (Workers guild), Name (Name)
+{
+Workers guild
+}
+
+STRING 2718
+// Units: u00V (Workers guild), Tip (Tooltip - Basic)
+{
+Workers guild - |cffffcc00Q|r
+}
+
+STRING 2719
+// Units: u00V (Workers guild), Ubertip (Tooltip - Extended)
+{
+Allows you to recruit workers which will help u repair buildings
+}
+
+STRING 2720
+// Units: e00J (Prehistoric Gold Mine), Tip (Tooltip - Basic)
+{
+Prehistoric Gold Mine - |cffffcc00A|r
+}
+
+STRING 2722
+// Units: e00J (Prehistoric Gold Mine), Name (Name)
+{
+Prehistoric Gold Mine
+}
+
+STRING 2723
+// Units: e00K (Mega Gold Mine), Tip (Tooltip - Basic)
+{
+Mega Gold Mine - |cffffcc00S|r
+}
+
+STRING 2724
+// Units: e009 (Hyper Gold Mine), Ubertip (Tooltip - Extended)
+{
+Extracts 2048 gold per second until gold in mine is out.
+}
+
+STRING 2725
+// Units: e00K (Mega Gold Mine), Name (Name)
+{
+Mega Gold Mine
+}
+
+STRING 2726
+// Units: e00K (Mega Gold Mine), Ubertip (Tooltip - Extended)
+{
+Extracts 8192 gold per second until gold in mine is out.
+}
+
+STRING 2727
+// Units: e00L (Ultra Gold Mine), Name (Name)
+{
+Ultra Gold Mine
+}
+
+STRING 2728
+// Units: e00M (Omega Gold Mine), Tip (Tooltip - Basic)
+{
+Omega Gold Mine - |cffffcc00F|r
+}
+
+STRING 2729
+// Units: e00L (Ultra Gold Mine), Ubertip (Tooltip - Extended)
+{
+Extracts 32768 gold per second until gold in mine is out.
+}
+
+STRING 2730
+// Units: e00M (Omega Gold Mine), Name (Name)
+{
+Omega Gold Mine
+}
+
+STRING 2731
+// Units: u019 (Bigger Troll's Hut), Name (Name)
+{
+Bigger Troll's Hut
+}
+
+STRING 2732
+// Units: u019 (Bigger Troll's Hut), Tip (Tooltip - Basic)
+{
+Enlarge Troll's Hut
+}
+
+STRING 2733
+// Units: u019 (Bigger Troll's Hut), Ubertip (Tooltip - Extended)
+{
+Increases quantity of gold per second received by troll and his dogs
+}
+
+STRING 2734
+// Units: u01A (Troll's Hut), Name (Name)
+{
+Troll's Hut
+}
+
+STRING 2735
+// Units: u01A (Troll's Hut), Tip (Tooltip - Basic)
+{
+Bigger Troll's Hut
+}
+
+STRING 2736
+// Units: u01A (Troll's Hut), Ubertip (Tooltip - Extended)
+{
+Increases quantity of gold per second received by troll and his dogs
+}
+
+STRING 2737
+// Units: u01B (Special Troll's Hut), Name (Name)
+{
+Special Troll's Hut
+}
+
+STRING 2738
+// Units: u01B (Special Troll's Hut), Tip (Tooltip - Basic)
+{
+Bigger Troll's Hut
+}
+
+STRING 2739
+// Units: u01B (Special Troll's Hut), Ubertip (Tooltip - Extended)
+{
+Increases quantity of gold per second received by troll and his dogs
+}
+
+STRING 2740
+// Units: h003 (Protection Tower), Tip (Tooltip - Basic)
+{
+Protection Tower - |cffffcc00A|r
+}
+
+STRING 2741
+// Units: h007 (Destructive Tower), Tip (Tooltip - Basic)
+{
+Destructive Tower - |cffffcc00A|r
+}
+
+STRING 2742
+// Units: u002 (Rock), Name (Name)
+{
+Rock
+}
+
+STRING 2743
+// Units: u002 (Rock), Tip (Tooltip - Basic)
+{
+Rock - |cffffcc00Z|r
+}
+
+STRING 2744
+// Units: u004 (Rock 3), Tip (Tooltip - Basic)
+{
+Rock 3 - |cffffcc00A|r
+}
+
+STRING 2745
+// Units: h001 (Basic Tower), Ubertip (Tooltip - Extended)
+{
+Basic Tower with low initial damage.|n|cffff0000Caution! Do not use Towers to block entry to your base!|r
+}
+
+STRING 2746
+// Units: u008 (House 2), Tip (Tooltip - Basic)
+{
+House 2 - |cffffcc00A|r
+}
+
+STRING 2747
+// Units: h004 (Tower of advanced protection), Ubertip (Tooltip - Extended)
+{
+A more powerful tower
+}
+
+STRING 2748
+// Units: u00H (Hall), Name (Name)
+{
+Hall
+}
+
+STRING 2749
+// Units: u00H (Hall), Tip (Tooltip - Basic)
+{
+Hall - |cffffcc00R|r
+}
+
+STRING 2750
+// Units: u00H (Hall), Ubertip (Tooltip - Extended)
+{
+Allows you to construct other important buildings.
+}
+
+STRING 2751
+// Units: u00M (Ultra wall 4), Tip (Tooltip - Basic)
+{
+Ultra wall 4 - |cffffcc00A|r
+}
+
+STRING 2752
+// Units: u00O (Castle), Name (Name)
+{
+Castle
+}
+
+STRING 2753
+// Units: u00O (Castle), Tip (Tooltip - Basic)
+{
+Castle - |cffffcc00A|r
+}
+
+STRING 2754
+// Units: u00O (Castle), Ubertip (Tooltip - Extended)
+{
+Provides access to superior technologies.
+}
+
+STRING 2755
+// Units: u00P (Fortress), Name (Name)
+{
+Fortress
+}
+
+STRING 2756
+// Units: u00P (Fortress), Tip (Tooltip - Basic)
+{
+Fortress - |cffffcc00A|r
+}
+
+STRING 2757
+// Units: u00P (Fortress), Ubertip (Tooltip - Extended)
+{
+Provides access to superior technologies.
+}
+
+STRING 2758
+// Units: u00R (Guardian Angel), Name (Name)
+{
+Guardian Angel
+}
+
+STRING 2759
+// Units: h007 (Destructive Tower), Ubertip (Tooltip - Extended)
+{
+More powerfull tower
+}
+
+STRING 2761
+// Items: I00B (Twilight Badge), Tip (Tooltip - Basic)
+{
+Twilight Badge
+}
+
+STRING 2762
+// Items: I00B (Twilight Badge), Name (Name)
+{
+Twilight Badge
+}
+
+STRING 2763
+// Items: I00P (Ionizer Blade ), Tip (Tooltip - Basic)
+{
+Ionizer Blade
+}
+
+STRING 2764
+// Items: I00P (Ionizer Blade ), Name (Name)
+{
+Ionizer Blade 
+}
+
+STRING 2765
+// Items: I01I (UltraIonic Blade), Tip (Tooltip - Basic)
+{
+UltraIonic Blade
+}
+
+STRING 2766
+// Items: I01I (UltraIonic Blade), Name (Name)
+{
+UltraIonic Blade
+}
+
+STRING 2767
+// Items: I01J (UltraIonic Blade |cffffcc00Ultra|r), Tip (Tooltip - Basic)
+{
+UltraIonic Blade |cffffcc00Ultra|r
+}
+
+STRING 2768
+// Items: I01J (UltraIonic Blade |cffffcc00Ultra|r), Description (Description)
+{
+Increases damage
+}
+
+STRING 2769
+// Items: I01J (UltraIonic Blade |cffffcc00Ultra|r), Name (Name)
+{
+UltraIonic Blade |cffffcc00Ultra|r
+}
+
+STRING 2770
+// Items: I01K (UltraIonic Blade |cffff0000Ultimate|r), Tip (Tooltip - Basic)
+{
+UltraIonic Blade |cffff0000Ultimate|r
+}
+
+STRING 2771
+// Items: I01K (UltraIonic Blade |cffff0000Ultimate|r), Name (Name)
+{
+UltraIonic Blade |cffff0000Ultimate|r
+}
+
+STRING 2772
+// Abilities: A01E (Care), Tip (Tooltip - Normal)
+{
+Care - |cffffcc00C|r
+}
+
+STRING 2773
+// Abilities: A01E (Care), Hotkey (Hotkey - Normal)
+{
+C
+}
+
+STRING 2774
+// Abilities: A02D (Slow Poison), EditorSuffix (Editor Suffix)
+{
+Ultimate
+}
+
+STRING 2776
+// Items: I000 (Boots of Agility), Ubertip (Tooltip - Extended)
+{
+Increases agility by 1
+}
+
+STRING 2777
+// Items: I001 (Gloves of Force), Ubertip (Tooltip - Extended)
+{
+Increases Strenght by 5.
+}
+
+STRING 2778
+// Items: I003 (Ring of Power), Ubertip (Tooltip - Extended)
+{
+Increases agility by 1 and strength by 5.
+}
+
+STRING 2779
+// Items: I004 (Iron Blade), Ubertip (Tooltip - Extended)
+{
+Increases the damage by 2.
+}
+
+STRING 2780
+// Items: I005 (Steel Blade), Ubertip (Tooltip - Extended)
+{
+Increases damage by 4.
+}
+
+STRING 2781
+// Items: I008 (Badge of Life), Ubertip (Tooltip - Extended)
+{
+Increases the regeneration by 4 hp/s.
+}
+
+STRING 2782
+// Items: I009 (Badge of the Moon), Ubertip (Tooltip - Extended)
+{
+Increases the regeneration by 8 hp/s
+}
+
+STRING 2783
+// Items: I00A (Badge of the Night), Ubertip (Tooltip - Extended)
+{
+Increases the regeneration by 16 hp/s.
+}
+
+STRING 2784
+// Items: I00B (Twilight Badge), Ubertip (Tooltip - Extended)
+{
+Increases the regeneration by 32 hp/s.
+}
+
+STRING 2785
+// Items: I00C (Amulet of Life), Ubertip (Tooltip - Extended)
+{
+Increases the life by 250.
+}
+
+STRING 2786
+// Items: I00D (Amulet of the Sun), Ubertip (Tooltip - Extended)
+{
+Increases the life by 500.
+}
+
+STRING 2787
+// Items: I00E (Amulet of the Day), Ubertip (Tooltip - Extended)
+{
+Increases the life by 1000.
+}
+
+STRING 2788
+// Items: I00F (Amulet of the Dawn), Ubertip (Tooltip - Extended)
+{
+Increases the life by 2000.
+}
+
+STRING 2789
+// Items: I00P (Ionizer Blade ), Ubertip (Tooltip - Extended)
+{
+Increases damage by 256.
+}
+
+STRING 2790
+// Items: I00U (Phase boots), Ubertip (Tooltip - Extended)
+{
+Increases aglity by 2
+}
+
+STRING 2791
+// Items: I00V (Sonic Boots), Ubertip (Tooltip - Extended)
+{
+Increases agility by 4
+}
+
+STRING 2792
+// Items: I00W (Ionic Boots), Ubertip (Tooltip - Extended)
+{
+Increases agility by 8
+}
+
+STRING 2793
+// Items: I00X (Blood Parchment), Ubertip (Tooltip - Extended)
+{
+Increases the life by 4 000.
+}
+
+STRING 2794
+// Items: I00Y (Scroll of major blood), Ubertip (Tooltip - Extended)
+{
+Increases the life by 16 000.
+}
+
+STRING 2795
+// Items: I00Z (Scroll of life), Ubertip (Tooltip - Extended)
+{
+Increases the life by 8 000.
+}
+
+STRING 2796
+// Items: I010 (Scroll of eternal life), Ubertip (Tooltip - Extended)
+{
+Increases the life by 32 000.
+}
+
+STRING 2797
+// Items: I011 (Sleep Parchment ), Ubertip (Tooltip - Extended)
+{
+Increases the regeneration by 64 hp/s.
+}
+
+STRING 2798
+// Items: I012 (Scroll of sweet nights), Ubertip (Tooltip - Extended)
+{
+Increases the regeneration by 128 hp/s.
+}
+
+STRING 2799
+// Items: I013 (Sleepless nights Parchment ), Ubertip (Tooltip - Extended)
+{
+Increases the regeneration by 256 hp/s.
+}
+
+STRING 2800
+// Items: I014 (Nightmares Parchment), Ubertip (Tooltip - Extended)
+{
+Increases the regeneration by 512 hp/s.
+}
+
+STRING 2801
+// Items: I01C (Potion of Eternity), Ubertip (Tooltip - Extended)
+{
+Increases the life by 160 000.
+}
+
+STRING 2802
+// Items: I01D (Potion of Eternity |cffffcc00Ultra|r), Ubertip (Tooltip - Extended)
+{
+Increases the life by 320 000.
+}
+
+STRING 2803
+// Items: I018 (Calamitous Potion), Ubertip (Tooltip - Extended)
+{
+Increases the regeneration by 2560 hp/s.
+}
+
+STRING 2804
+// Items: I019 (Calamitous Potion |cffffcc00Ultra|r), Ubertip (Tooltip - Extended)
+{
+Increases the regeneration by 5120 hp/s.
+}
+
+STRING 2805
+// Items: I01B (Shield UltraIonic), Ubertip (Tooltip - Extended)
+{
+Increases the defense by 640
+}
+
+STRING 2806
+// Items: I01G (Shield UltraIonic |cffffcc00Ulta|r), Ubertip (Tooltip - Extended)
+{
+Increases the defense by 1280
+}
+
+STRING 2807
+// Items: I01H (Shield UltraIonic |cffff0000Ultra|r), Ubertip (Tooltip - Extended)
+{
+Increases the defense by 5120.
+}
+
+STRING 2808
+// Items: I01I (UltraIonic Blade), Ubertip (Tooltip - Extended)
+{
+Increases the damage by 1280.
+}
+
+STRING 2809
+// Items: I01J (UltraIonic Blade |cffffcc00Ultra|r), Ubertip (Tooltip - Extended)
+{
+Increases the damage by 2560.
+}
+
+STRING 2810
+// Items: I01L (Blade |cffff0000End Game|r), Ubertip (Tooltip - Extended)
+{
+Increases damage by 40,960.
+}
+
+STRING 2811
+// Items: I01M (Shield |cffff0000End Game|r), Ubertip (Tooltip - Extended)
+{
+Increases the defense by 20,480
+}
+
+STRING 2813
+// Abilities: A02V (Magic for Dummies ), Hotkey (Hotkey - Normal)
+{
+E
+}
+
+STRING 2818
+// Units: n001 (True Sight Tower), Name (Name)
+{
+True Sight Tower
+}
+
+STRING 2819
+// Units: e00E (Basic worker), Ubertip (Tooltip - Extended)
+{
+Repairs buildings.|nRepair: 6.00|n
+}
+
+STRING 2821
+// Units: e00G (Young Mechanical Worker), Ubertip (Tooltip - Extended)
+{
+Repairs buildings.|nRepair : 1.50|n
+}
+
+STRING 2822
+// Units: e00H (Mechanical Worker), Ubertip (Tooltip - Extended)
+{
+Repairs buildings.|nRepair : 0.75|n
+}
+
+STRING 2823
+// Units: e00I (Proffesional Mechanical Worker), Tip (Tooltip - Basic)
+{
+Proffesional Mechanical Worker - |cffffcc00Q|r
+}
+
+STRING 2824
+// Units: e00I (Proffesional Mechanical Worker), Ubertip (Tooltip - Extended)
+{
+Repairs buildings.|nRepair : 0.38|n
+}
+
+STRING 2825
+// Abilities: A01E (Care), Ubertip (Tooltip - Normal - Extended)
+{
+Heals the building or friendly units by 300 points.
+}
+
+STRING 2829
+// Buffs/Effects: BUfa (), Bufftip (Tooltip)
+{
+Gods Shild
+}
+
+STRING 2830
+// Buffs/Effects: BUfa (), Buffubertip (Tooltip - Extended)
+{
+This unit is using Shild of Gods and has inreased  defence.
+}
+
+STRING 2831
+// Abilities: A017 (Critical Hit x1.5), Tip (Tooltip - Normal)
+{
+One Shot
+}
+
+STRING 2832
+// Abilities: A017 (Critical Hit x1.5), Ubertip (Tooltip - Normal - Extended)
+{
+Troll has 10% chance to x1.5 critical hit.
+}
+
+STRING 2833
+// Abilities: A017 (Critical Hit x1.5), Name (Name)
+{
+Critical Hit x1.5
+}
+
+STRING 2834
+// Units: n001 (True Sight Tower), Ubertip (Tooltip - Extended)
+{
+Allows you to reveal all invisible units. This tower does not atack!
+}
+
+STRING 2835
+// Units: n001 (True Sight Tower), Tip (Tooltip - Basic)
+{
+True Sight Tower
+}
+
+STRING 2837
+// Abilities: A033 (Shield of Gods), Name (Name)
+{
+Shield of Gods
+}
+
+STRING 2838
+// Abilities: A033 (Shield of Gods), Tip (Tooltip - Normal)
+{
+Shield of Gods - |cffffcc00Z
+}
+
+STRING 2839
+// Units: e00F (Older worker), Ubertip (Tooltip - Extended)
+{
+Repairs buildings.|nRepair: 3.00|n
+}
+
+STRING 2840
+// Items: I01P (Gem of True Sight), Name (Name)
+{
+Gem of True Sight
+}
+
+STRING 2841
+// Abilities: A033 (Shield of Gods), Ubertip (Tooltip - Normal - Extended)
+{
+Makes target invulnerable for 10 seconds.
+}
+
+STRING 2858
+// Abilities: A02U (Ruuun !!!), Tip (Tooltip - Normal)
+{
+Ruuun !!! - |cffffcc00B|r
+}
+
+STRING 2859
+// Abilities: A02V (Magic for Dummies ), Name (Name)
+{
+Magic for Dummies 
+}
+
+STRING 2860
+// Abilities: A02V (Magic for Dummies ), Tip (Tooltip - Normal)
+{
+Magic for Dummies - |cffffcc00E|r
+}
+
+STRING 2861
+// Abilities: A02W (Root), Tip (Tooltip - Normal)
+{
+Root - |cffffcc00E|r
+}
+
+STRING 2862
+// Abilities: A02X (The beautiful stars), Tip (Tooltip - Normal)
+{
+The beautiful stars -  |cffffcc00A|r
+}
+
+STRING 2863
+// Abilities: A02Z (Buy Wood), Hotkey (Hotkey - Normal)
+{
+A
+}
+
+STRING 2864
+// Buffs/Effects: B000 (Ruuun!!!), Buffubertip (Tooltip - Extended)
+{
+This unit has hot ass, it's amazing how a simple stimulation can exceed its limits!
+}
+
+STRING 2866
+// Units: u017 (House 8), Ubertip (Tooltip - Extended)
+{
+Allows you to earn 1024 gold per second.
+}
+
+STRING 2884
+// Units: e000 (Basic collector), Ubertip (Tooltip - Extended)
+{
+1st collector. 4 lumber every 8 seconds.
+}
+
+STRING 2885
+// Units: u018 (Village House), Ubertip (Tooltip - Extended)
+{
+Allows you to earn 2048 gold per second.
+}
+
+STRING 2886
+// Units: e002 (Simple collector), Ubertip (Tooltip - Extended)
+{
+2nd collector. 4 lumber every 4 seconds.
+}
+
+STRING 2887
+// Units: e003 (Professional Collector), Ubertip (Tooltip - Extended)
+{
+3rd collector. 4 lumber every 2 seconds.
+}
+
+STRING 2888
+// Units: e004 (Complex collector), Ubertip (Tooltip - Extended)
+{
+4th collector. 4 wood every second.
+}
+
+STRING 2889
+// Units: e00A (Secret collector), Ubertip (Tooltip - Extended)
+{
+5th collector. 24 wood every second.
+}
+
+STRING 2890
+// Units: e00B (Ionic collector), Ubertip (Tooltip - Extended)
+{
+6th collector. 144 wood every second.
+}
+
+STRING 2891
+// Units: e00C (UltraIonic collector), Ubertip (Tooltip - Extended)
+{
+7th collector. 864 wood every second.
+}
+
+STRING 2892
+// Units: e00J (Prehistoric Gold Mine), Ubertip (Tooltip - Extended)
+{
+Extracts 4 gold per second until gold in mine is out.
+}
+
+STRING 2893
+// Units: e00M (Omega Gold Mine), Ubertip (Tooltip - Extended)
+{
+Extracts 131072 gold per second until gold in mine is out.
+}
+
+STRING 2894
+// Units: e00N (Final collector), Ubertip (Tooltip - Extended)
+{
+Last collector. 5184 wood every second.
+}
+
+STRING 2895
+// Abilities: A00S (Pillage), Ubertip (Tooltip - Normal - Extended)
+{
+You earn the number of damage you deal x4 in gold.
+}
+
+STRING 2896
+// Abilities: A01D (Pillage), Ubertip (Tooltip - Normal - Extended)
+{
+You earn the number of damage you deal x4 in gold.
+}
+

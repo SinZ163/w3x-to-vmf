@@ -57,7 +57,7 @@ class TranslationHandle():
         fileSplit = fileInfo.filename.split(".")
         self.extention = fileSplit[len(fileSplit)-1]
         
-        self.itemTable = {
+        self.infoTable = {
             "icla" : "Classification",
             "unam" : "Name",
             "ides" : "Description",
@@ -77,15 +77,28 @@ class TranslationHandle():
             "ilev" : "Level",       #No idea
             "idro" : "Droppable",   
             "idrp" : "Drop",        #maybe IsDropped
-            "ihtp" : "HP"
+            "ihtp" : "HP",
+            "unsf" : "EditorSuffix", #should this even be in?
+            "utyp" : "Type",
+            "uhpm" : "HP",
+            "usca" : "ModelScale",
+            "ussc" : "Scale",
+            "uabi" : "AbilityList",
+            "ulum" : "LumberCost",
+            "uclb" : "blue IDKIDKIDK",
+            "uclg" : "green IDKIDKIDK",
+            "uclr" : "red IDKIDKIDK"
+
+            
         }
         self.extentions = {
             "w3u" : {
-                "name" : "Units"
+                "name" : "Units",
+                "function" : self.dataTranslation
             },
             "w3t" : {
                 "name" : "Items",
-                "function" : self.itemTranslation
+                "function" : self.dataTranslation
             },
             "w3b" : {
                 "name" : "Destructables"
@@ -109,16 +122,16 @@ class TranslationHandle():
             #"bad SinZ, bad!" - SinZ 2014
             print(traceback.format_exc())
             
-    def itemTranslation(self):
-        itemTranslatedInfo = {}
+    def dataTranslation(self):
+        dataTranslatedInfo = {}
         #THIS IS SO MESSY!!!! - SinZ 2014
         for i in xrange(len(self.originalInfo.customInfo)):
             tmpInfo = {}
             for j in xrange(len(self.originalInfo.customInfo[i]["mods"])):
-                if self.originalInfo.customInfo[i]["mods"][j]["ID"] in self.itemTable:
-                    tmpInfo[self.itemTable[self.originalInfo.customInfo[i]["mods"][j]["ID"]]] = self.originalInfo.customInfo[i]["mods"][j]["value"]
-            itemTranslatedInfo[tmpInfo["Name"]] = tmpInfo
-        return itemTranslatedInfo
+                if self.originalInfo.customInfo[i]["mods"][j]["ID"] in self.infoTable:
+                    tmpInfo[self.infoTable[self.originalInfo.customInfo[i]["mods"][j]["ID"]]] = self.originalInfo.customInfo[i]["mods"][j]["value"]
+            dataTranslatedInfo[tmpInfo["Name"]] = tmpInfo
+        return dataTranslatedInfo
 if __name__ == "__main__":
     import simplejson
     import os
