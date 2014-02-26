@@ -150,11 +150,21 @@ class WarvmfMap():
         #self.vmfGenerators[method].save_vmf()
         self.m.write_vmf(self.vmf_filename)
         
-        
-        
-wc3map = WarvmfMap("input/war3map.w3e", "output/war3map.vmf")
-wc3map.generateVmf("brush")
-wc3map.saveVmf()
+if __name__ == "__main__":
+    start = time.time()
+    wc3map = WarvmfMap("input/war3map.w3e", "output/war3map.vmf")
+    
+    print "WarvmfMap object initialized in {0} seconds".format(time.time() - start)
+    midtime = time.time()
+    
+    wc3map.generateVmf("displacement")
+    
+    print "VMF generated in {0} seconds".format(time.time() - midtime)
+    endtime = time.time()
+    
+    wc3map.saveVmf()
+    
+    print "VMF file saved in {0} seconds".format(time.time() - endtime)
         
         
         

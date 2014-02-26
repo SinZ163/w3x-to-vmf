@@ -1,4 +1,10 @@
+import time
 
+import lib.vmflib as vmflib
+import lib.vmflib.tools as tools
+
+from lib.dataTypes import QuadBlobs, Bytemap
+from lib.helperFunctions import make_number_divisible_by_n, map_list_with_vertex
 
 class VmfGen():
     def __init__(self, base):
@@ -9,7 +15,11 @@ class VmfGen():
         print "{0} initialized".format(self.name)
     
     def create_vmf(self):
-        Blockgroups = QuadBlobs(xSize//4, ySize//4, 4, 4)
+        adjusted_WC3xSize = make_number_divisible_by_n(self.base.WC3map_xSize, 4)
+        adjusted_WC3ySize = make_number_divisible_by_n(self.base.WC3map_ySize, 4)
+        
+        
+        Blockgroups = QuadBlobs(adjusted_WC3xSize//4, adjusted_WC3ySize//4, 4, 4)
         
         ## For the moment, we will not do anything interesting with normals.
         ## We will set it to 0,0,1 i.e. the normal vector will point straight upwards.
@@ -19,32 +29,32 @@ class VmfGen():
         #choice = ("nature/dirt_grass_00", "nature/blendrockground002")
         choice = ("brick/brick_ext_07", "brick/brick_ext_06")
         
-        print "Time taken for initialization: {0}".format(time.clock()-initTime)
-        
         creationTime = time.clock()
         
-        for ix in xrange(xSize//4):
-            for iy in xrange(ySize//4):
-                
+        for ix in xrange(adjusted_WC3xSize//4):
+            for iy in xrange(adjusted_WC3ySize//4):
                 
                 blob = Blockgroups.addBlob(ix, iy)
                 
                 for iix in xrange(4):
                     newX = (ix*4)+iix
+                    
                     for iiy in xrange(4):
+                        
                         newY = (iy*4)+iiy
                         
-                        if newX >= data.mapInfo["width"] or newY >= data.mapInfo["height"]:
+                        if newX >= self.base.WC3map_xSize or newY >= self.base.WC3map_xSize:
                             break
                         else:
-                            currentHeight = heightmap.getVal(newX, newY)
+                            currentHeight = self.base.WC3map_heightmap.getVal(newX, newY)
                             
                             # Is the ramp flag set? If so, we will try to draw a transition between two layers
-                            if rampMap.getVal(newX, newY) == 1 and False: # for the moment disabled because of issues
-                                upperTile = heightmap.getVal(newX, newY+1)
-                                lowerTile = heightmap.getVal(newX, newY-1)
-                                leftTile = heightmap.getVal(newX-1, newY)
-                                rightTile = heightmap.getVal(newX+1, newY)
+                            if self.base.WC3map_rampmap.getVal(newX, newY) == 1 and False: # for the moment disabled because of issues
+                                pass
+                                """upperTile = self.base.WC3map_heightmap.getVal(newX, newY+1)
+                                lowerTile = self.base.WC3map_heightmap.getVal(newX, newY-1)
+                                leftTile = self.base.WC3map_heightmap.getVal(newX-1, newY)
+                                rightTile = self.base.WC3map_heightmap.getVal(newX+1, newY)
                                 
                                 # The startX and startY variables are coordinates for the points
                                 # that are closest to the highest tile
@@ -87,7 +97,7 @@ class VmfGen():
                                         distance = 3 - local_x 
                                         average = (((local_x+1)/4.0) * leftTile + ((distance+1)/4.0) * rightTile) / 2.0
                                         for local_y in xrange(4):
-                                            blob.setVal(iix*4+local_x+xoffset, iiy*4+local_y+yoffset, average*64)
+                                            blob.setVal(iix*4+local_x+xoffset, iiy*4+local_y+yoffset, average*64)"""
                                 """for pointX in xrange(4):
                                     for pointY in xrange(4):
                                         local_x = 
@@ -114,22 +124,24 @@ class VmfGen():
                                     local_x, local_y, height = point
                                     
                                     blob.setVal(local_x, local_y, currentHeight*64)
-            
+                
+                # A single displacement map will a row and a column of missing data,
+                # going exactly through the middle of the map. We will fill these spots with
+                # data from the neighbouring tiles.
                 Blockgroups.sewTilesTogether(ix, iy)
-            
-                #blob = Blockgroups.getBlob(ix, iy)
-          
-            
-            
-        for ix in xrange(xSize//4):
-            for iy in xrange(ySize//4):
+        
+        vmf_xoffset = self.base.vmfmap_xMidOffset
+        vmf_yoffset = self.base.vmfmap_yMidOffset
+        
+        for ix in xrange(adjusted_WC3xSize//4):
+            for iy in xrange(adjusted_WC3xSize//4):
                 height = 64
-                vert = vmflib.types.Vertex((ix*4*64)-xOffset_real+2*64, (iy*4*64)-yOffset_real+2*64, 0+(height//2))
+                vert = vmflib.types.Vertex((ix*4*64)-vmf_xoffset+2*64, (iy*4*64)-vmf_yoffset+2*64, 0+(height//2))
                 block = tools.Block(origin = vert, dimensions=(4*64, 4*64, height))
                 
                 ## We alternate between two types of textures. This results in a checkered pattern, 
                 ## similar to chess. It is very easy to see where a block starts and ends.
-                block.set_material(choice[(iy+ix*(xSize//4))%2])
+                block.set_material(choice[(iy+ix*(adjusted_WC3xSize//4))%2])
                 #block.set_material("brick/brick_ext_07")
                 
                 # Mark blocks which have a single ramp or more with a different texture
@@ -138,9 +150,9 @@ class VmfGen():
                     newx = ix*4+iix
                     for iiy in xrange(4):
                         newy = iy*4+iiy
-                        if newx >= data.mapInfo["width"] or newy >= data.mapInfo["height"]:
+                        if newx >= self.base.WC3map_xSize or newy >= self.base.WC3map_ySize:
                             break
-                        if rampMap.getVal(newx, newy) == 1:
+                        if self.base.WC3map_rampmap.getVal(newx, newy) == 1:
                             block.set_material("brick/brick_ext_08")
                             breakOut = True
                             break
@@ -155,29 +167,9 @@ class VmfGen():
                 for rowNumber in xrange(17):
                     row = blob.getRow(rowNumber)
                     row = row.tolist()
-                    #row.reverse()
                     distances_list.append(row)
                     #row = map(map_list_with_vertex, row)
-                    #print row
-                
-                """distances_list = [[64 for i in xrange(17)]]
-                for columnNumber in xrange(16):
-                    #column = blob.getColumn(columnNumber)
-                    ##column = column.tolist()
-                    ##colum.reverse()
-                    #distances_list.append(column)
-                    column = [64]
-                    for i in range(4):
-                        column.extend([i*32, i*32, i*32, i*32])
-                    distances_list.append(column)"""
-                   
-                
-               #dispInfo = vmflib.brush.DispInfo(4, normals_list, distances_list)
-                
-                
-                #dispInfo.set_startPosition((ix*4*64)-xOffset_real+0*64, (iy*4*64)-yOffset_real+0*64, 0+(height))
-                
-                #block.top().children.append(dispInfo)
+                    
                 block.top().set_dispInfo(4, normals_list, distances_list)
                 
-                m.world.children.append(block)
+                self.base.m.world.children.append(block)
