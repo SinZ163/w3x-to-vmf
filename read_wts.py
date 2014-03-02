@@ -3,7 +3,6 @@ import simplejson
 import os
 class ReadWTS:
     currentString = None
-    readData = None
     def __init__(self, filename):
         self.filename = filename
         self.triggers = {}
@@ -19,16 +18,14 @@ class ReadWTS:
                         continue
                     elif "}" in lineSplit[0]:
                         self.currentString = None
-                        self.readData = None
                         continue
                     else:
-                        lineSplit = line.split()
                         newLine = ""
                         for word in lineSplit:
                             if word == "//":
                                 break
                             else:
-                                newLine = newLine + word
+                                newLine = newLine + " " + word
                         if newLine != "":
                             self.triggers[self.currentString].append(newLine)
                 else:              
