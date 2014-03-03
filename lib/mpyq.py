@@ -228,16 +228,27 @@ class MPQArchive(object):
             
             ## A little check to give the program more room for exceptions.
             ## Can be useful for debugging, might be removed later.
+            ## Flags: 
+            ## IMA ADPCM stereo:  0b10000000 
+            ## IMA ADPCM mono:    0b01000000
+            ## Unused:            0b00100000
+            ## bzip:              0b00010000 
+            ## Imploded:          0b00001000 
+            ## Unused:            0b00000100
+            ## zlib:              0b00000010 
+            ## Huffman:           0b00000001 
+            ## If any of those bits are set, something is not entirely correct
+             
             if compression_type & ~otherTypes != 0:
                 raise RuntimeError("Unhandled compression types: {0},"
-                                   "can only handle the following flags: ".format(bin(compression_type), bin(otherTypes)))
+                                   "can only handle the following flags: {1}".format(bin(compression_type), bin(otherTypes)))
             
-            if compression_type & 0x10:
+            if compression_type & 0x10: # 
                 data = bz2.decompress(data)
             
             ## The Implode check might not belong here. According to documentation,
             ## compressed data cannot be imploded, and vice versa.
-            if compression_type & 0x8 != 0:
+            if compression_type & 0x8: # 0b00001000
                 raise RuntimeError("Imploded data not supported yet: {0}".format(compression_type))
             
             if compression_type & 0x2:
@@ -281,22 +292,22 @@ class MPQArchive(object):
             # File consist of many sectors. They all need to be
             # decompressed separately and united.
             
-            ## Some WC3 maps like to set the sector size_shift_value high, might
-            ## be an attempt to confuse MPQ readers. Generally it should be 3, 
-            ## hopefully that is always the case 
-            ## sector_size = 512 << self.header['sector_size_shift']
-            sector_size = 512 << 3
+            ## I used to think that the sector size shift always needs to be 3,
+            ## but that is wrong. The sector size shift is very important, otherwise
+            ## you will have more sectors than there are actually in the archive.
+            ## A correct sector size shift is also required for correctly decrypting 
+            ## encrypted MPQ data.
+            sector_size = 512 << self.header['sector_size_shift']
+            
             sectors = block_entry.size // sector_size + 1
             
             ## We calculate a sectorIndex value to be used in the
             ## decryption of the sector data. Basically, it should be the starting index
             ## of this particular sector.
             ## Is this the correct way to calculate it?
-            sectorIndex = (offset - self.header['offset']) // (sector_size-1) + 1
+            sectorIndex = (offset - self.header['offset']) // (sector_size)
+            
             print(sector_size, sectors, sectorIndex, offset, sector_size, self.header['sector_size_shift'])
-            #sectorIndex = block_entry.offset & (~sector_size)
-            #print(sectorIndex)
-            #print(sectorIndex, self.header['sector_size_shift'])
             
             print("{0} Filedata length: {1}".format(filename, len(file_data)))
             
@@ -334,15 +345,18 @@ class MPQArchive(object):
             if not block_entry.flags & MPQ_FILE_SINGLE_UNIT:
                 
                 if block_entry.flags & MPQ_FILE_SECTOR_CRC:
+                    print("yes crc")
                     crc = True
                     sectors += 1
                 else:
+                    print("no crc")
                     crc = False
                 
                 ## If the file is encrypted, the sector offset table is encrypted, too.
                 ## We need to decrypt it before being able to use it. Without the positions,
                 ## we do not know where each sector of a compressed file starts.
                 if block_entry.flags & MPQ_FILE_ENCRYPTED:
+                    
                     sectoroffset_table = file_data[0:(sectors+1)*4]
                     sectoroffset_table = self._decrypt(sectoroffset_table, key-1)
                     
@@ -361,13 +375,13 @@ class MPQArchive(object):
                     ## Each sector is decrypted using the key + the 0-based index of the sector.
                     ## Is the following code correct?
                     if block_entry.flags & MPQ_FILE_ENCRYPTED:
-                        sectorkey = key + sectorIndex + i
+                        sectorModifier = sectorIndex + i
                         
                     sector = file_data[positions[i]:positions[i+1]]
                     
                     ## We try to decrypt the sector data
                     if block_entry.flags & MPQ_FILE_ENCRYPTED:
-                            sector = self._decrypt(sector, sectorkey)
+                            sector = self._decrypt(sector, key + sectorModifier)
                             
                     if (block_entry.flags & MPQ_FILE_COMPRESS and
                         (force_decompress or sector_bytes_left > len(sector))):
@@ -642,7 +656,7 @@ class WC3Map_MPQ(MPQArchive):
             f = open(path+filename, 'wb')
             f.write(data or "")
             f.close()
-
+    
 def main():
     import argparse
     description = "mpyq reads and extracts MPQ archives."
