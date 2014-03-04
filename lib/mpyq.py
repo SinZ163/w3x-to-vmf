@@ -240,28 +240,39 @@ class MPQArchive(object):
             ## If any of those bits are set, something is not entirely correct
              
             if compression_type & ~otherTypes != 0:
-                raise RuntimeError("Unhandled compression types: {0},"
+                raise RuntimeError("Compression Type has flags set which should not be set: {0},"
                                    "can only handle the following flags: {1}".format(bin(compression_type), bin(otherTypes)))
             
-            if compression_type & 0x10: # 
+            if compression_type & 0x10: 
+                print("Bz2 decompression...")
                 data = bz2.decompress(data)
             
             ## The Implode check might not belong here. According to documentation,
             ## compressed data cannot be imploded, and vice versa.
             if compression_type & 0x8: # 0b00001000
-                raise RuntimeError("Imploded data not supported yet: {0}".format(compression_type))
+                raise UnsupportedCompressionAlgorithm("Implode")
             
             if compression_type & 0x2:
-                data = zlib.decompress(data, 15)
+                print("zlib decompression...")
+                try:
+                    data = zlib.decompress(data, 15)
+                except zlib.error:
+                    ## Sometimes, the regular zlib decompress method fails due to invalid
+                    ## or truncated data. When that happens, it is very likely that decompressobj
+                    ## is able to decompress the data.
+                    print("Regular zlib decompress method failed. Using decompressObj.")
+                    
+                    zlib_decompressObj = zlib.decompressobj()
+                    data = zlib_decompressObj.decompress(data)
             
             if compression_type & 0x1:
-                raise RuntimeError("Huffman algorithm not supported yet: {0}".format(compression_type))
+                raise UnsupportedCompressionAlgorithm("Huffman")
             
             if compression_type & 0x80:
-                raise RuntimeError("IMA ADPCM stereo compression not supported yet: {0}".format(compression_type))
+                raise UnsupportedCompressionAlgorithm("IMA ADPCM stereo")
             
             if compression_type & 0x40:
-                raise RuntimeError("IMA ADPCM mono compression not supported yet: {0}".format(compression_type))
+                raise UnsupportedCompressionAlgorithm("IMA ADPCM mono")
             
             return data
                 
@@ -283,9 +294,6 @@ class MPQArchive(object):
             
             self.file.seek(offset)
             file_data = self.file.read(block_entry.archived_size)
-            
-            if raw == True:
-                return file_data
             
             
             ## Moved sector calculation to the top. It is more useful here.
@@ -369,6 +377,9 @@ class MPQArchive(object):
                 result = BytesIO()
                 sector_bytes_left = block_entry.size
                 
+                if raw == True:
+                    rawData = BytesIO()
+                
                 print(positions)
                 for i in range(len(positions) - (2 if crc else 1)):
                     
@@ -383,15 +394,21 @@ class MPQArchive(object):
                     if block_entry.flags & MPQ_FILE_ENCRYPTED:
                             sector = self._decrypt(sector, key + sectorModifier)
                             
-                    if (block_entry.flags & MPQ_FILE_COMPRESS and
-                        (force_decompress or sector_bytes_left > len(sector))):
+                    if raw == True:
+                        rawData.write(sector)
+                    else:
+                        if (block_entry.flags & MPQ_FILE_COMPRESS and
+                            (force_decompress or sector_bytes_left > len(sector))):
+                            
+                            sector = decompress(sector)
+                            
+                        sector_bytes_left -= len(sector)
+                        result.write(sector)
                         
-                        sector = decompress(sector)
-                        
-                    sector_bytes_left -= len(sector)
-                    result.write(sector)
-                    
-                file_data = result.getvalue()
+                if raw == True:
+                    file_data = rawData.getvalue()
+                else:
+                    file_data = result.getvalue()
             else:
                 ## A single unit file should only contain a single sector, so we calculate
                 ## the key simply as key + sectorIndex
@@ -399,12 +416,15 @@ class MPQArchive(object):
                     print("SingleUnit data length:", len(file_data))
                     sectorkey = key + sectorIndex
                     file_data = self._decrypt(file_data, sectorkey)
-                    
-                # Single unit files only need to be decompressed, but
-                # compression only happens when at least one byte is gained.
-                if (block_entry.flags & MPQ_FILE_COMPRESS and
-                    (force_decompress or block_entry.size > block_entry.archived_size)):
-                    file_data = decompress(file_data)
+                
+                if raw == True:
+                    pass
+                else:
+                    # Single unit files only need to be decompressed, but
+                    # compression only happens when at least one byte is gained.
+                    if (block_entry.flags & MPQ_FILE_COMPRESS and
+                        (force_decompress or block_entry.size > block_entry.archived_size)):
+                        file_data = decompress(file_data)
 
             return file_data
 
@@ -656,7 +676,13 @@ class WC3Map_MPQ(MPQArchive):
             f = open(path+filename, 'wb')
             f.write(data or "")
             f.close()
-    
+
+class UnsupportedCompressionAlgorithm(Exception):
+    def __init__(self, algorithmName):
+        self.name = algorithmName
+    def __str__(self):
+        return "The following algorithm is not yet supported: {0}".format(self.name)
+
 def main():
     import argparse
     description = "mpyq reads and extracts MPQ archives."
