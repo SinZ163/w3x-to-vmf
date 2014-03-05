@@ -163,13 +163,33 @@ class VmfGen():
                 Blockgroups.sew_brush_neighbours(ix, iy)
                 blob = Blockgroups.getBlob(ix, iy)
                 
+                isFlat = True
+                origValue = None
+                
                 distances_list = []
                 for rowNumber in xrange(17):
                     row = blob.getRow(rowNumber)
                     row = row.tolist()
                     distances_list.append(row)
-                    #row = map(map_list_with_vertex, row)
                     
-                block.top().set_dispInfo(4, normals_list, distances_list)
+                    if isFlat == True:
+                        if origValue == None:
+                            origValue = row[0]
+                            
+                        for val in row:
+                            if val != origValue: 
+                                isFlat = False
+                                break
+                        
+                    #row = map(map_list_with_vertex, row)
+                if isFlat:
+                    height = origValue
+                    vert = vmflib.types.Vertex((ix*4*64)-vmf_xoffset+2*64, (iy*4*64)-vmf_yoffset+2*64, 64+(height//2))
+                    block.origin = vert
+                    block.dimensions = (4*64, 4*64, height)
+                    
+                    block.update_sides()
+                else:
+                    block.top().set_dispInfo(4, normals_list, distances_list)
                 
                 self.base.m.world.children.append(block)
