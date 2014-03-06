@@ -31,7 +31,9 @@ class VmfGen():
                 # We check if the tile already belongs to a group.
                 # -1 means no. If not equal to -1, we skip it.
                 if blobAffinity.getVal(x, y) == -1:
-                    endX, endY = self.rectangularCheck(x, y, localHeight, blobAffinity)
+                    endX, endY = self.rectangularCheck(x, y,
+                                                       wc3map_xSize, wc3map_ySize,
+                                                       localHeight, blobAffinity)
                     
                     for ix in xrange(x, endX):
                         for iy in xrange(y, endY):
@@ -67,14 +69,17 @@ class VmfGen():
                                            0+(height//2))
                 block = tools.Block(origin = vert, dimensions=(boxWidth*wc3_tileSize, boxLength*wc3_tileSize, height))
                 
-                block.set_material("nature/dirt_grass_00")
+                #block.set_material("nature/dirt_grass_00")
+                block.set_material("brick/brick_ext_08")
                 
                 self.base.m.world.children.append(block)
     
 
         print "Building map finished."
     
-    def rectangularCheck(self, startX, startY, neededHeight, blobAffinity):
+    def rectangularCheck(self, startX, startY,
+                         wc3map_xSize, wc3map_ySize,
+                         neededHeight, blobAffinity):
         do_break = False
         
         x_limit = wc3map_xSize
