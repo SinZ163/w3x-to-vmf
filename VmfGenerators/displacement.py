@@ -136,7 +136,7 @@ class VmfGen():
         for ix in xrange(adjusted_WC3xSize//4):
             for iy in xrange(adjusted_WC3xSize//4):
                 height = 64
-                vert = vmflib.types.Vertex((ix*4*64)-vmf_xoffset+2*64, (iy*4*64)-vmf_yoffset+2*64, 0+(height//2))
+                vert = vmflib.types.Vertex((ix*4*64)-vmf_xoffset+2*64, (iy*4*64)-vmf_yoffset+2*64, (height//2))
                 block = tools.Block(origin = vert, dimensions=(4*64, 4*64, height))
                 
                 ## We alternate between two types of textures. This results in a checkered pattern, 
@@ -184,9 +184,10 @@ class VmfGen():
                     #row = map(map_list_with_vertex, row)
                 if isFlat:
                     height = origValue
-                    vert = vmflib.types.Vertex((ix*4*64)-vmf_xoffset+2*64, (iy*4*64)-vmf_yoffset+2*64, 64+(height//2))
+                    vert = vmflib.types.Vertex((ix*4*64)-vmf_xoffset+2*64, (iy*4*64)-vmf_yoffset+2*64, 32+(height//2))
                     block.origin = vert
-                    block.dimensions = (4*64, 4*64, height)
+                    
+                    block.dimensions = (4*64, 4*64, 64+height)
                     
                     block.update_sides()
                 else:
