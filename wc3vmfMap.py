@@ -31,12 +31,15 @@ class WarvmfMap():
         
         self.debug_timetaken = {}
         
-        self.__readWar3map__()
-        self.__setup_vmf__()
+        self.wc3_tileSize = 64
+        self.wc3_tileHeight = 64
         
         self.vmfGenerators = {"brush" : brushBlocks.VmfGen(self),
                               "displacement" : displacement.VmfGen(self)}
         
+    def setup(self):
+        self.__readWar3map__()
+        self.__setup_vmf__()
     
     def __readWar3map__(self):
         start = timer()
@@ -80,7 +83,6 @@ class WarvmfMap():
         
         return heightmap, rampMap, maxHeight
         
-        
     
     def __setup_vmf__(self):
         self.m = vmflib.vmf.ValveMap()
@@ -91,8 +93,8 @@ class WarvmfMap():
         # use in the source SDK of your choice. 
         self.m.world.skyname = "sky_dotasky_01"
         
-        self.tileSize = 64
-        self.tileHeight = 64
+        self.tileSize = self.wc3_tileSize
+        self.tileHeight = self.wc3_tileHeight
         
         # The resulting vmf map has to be much bigger than the WC3 map.
         self.vmfmap_xSize = self.WC3map_xSize * self.tileSize
@@ -153,6 +155,10 @@ class WarvmfMap():
 if __name__ == "__main__":
     start = time.time()
     wc3map = WarvmfMap("input/war3map.w3e", "output/war3map.vmf")
+    wc3map.wc3_tileSize = 64
+    wc3map.wc3_tileHeight = 64
+    
+    wc3map.setup()
     
     print "WarvmfMap object initialized in {0} seconds".format(time.time() - start)
     midtime = time.time()

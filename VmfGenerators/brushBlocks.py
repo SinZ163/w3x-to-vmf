@@ -13,13 +13,18 @@ class VmfGen():
         print "{0} initialized".format(self.name)
     
     def create_vmf(self):
-        blobAffinity = Bytemap(self.base.data.mapInfo["width"], self.base.data.mapInfo["height"])
+        wc3map_xSize = self.base.WC3map_xSize
+        wc3map_ySize = self.base.WC3map_ySize
+        
+        wc3_tileSize = self.base.wc3_tileSize
+        wc3_tileHeight = self.base.wc3_tileHeight
+        blobAffinity = Bytemap(wc3map_xSize, wc3map_xSize)
         bloblist = []
         
         # We iterate a second time to group tiles of similar height together.
         # rectangularCheck uses a brute force approach.
-        for x in xrange(self.base.data.mapInfo["width"]):
-            for y in xrange(self.base.data.mapInfo["height"]):
+        for x in xrange(wc3map_xSize):
+            for y in xrange(wc3map_ySize):
                 
                 localHeight = self.base.WC3map_heightmap.getVal(x,y)
                 
@@ -48,7 +53,7 @@ class VmfGen():
             boxWidth = endX-startX
             boxLength = endY-startY
             
-            height = (height)*64 # Each layer of the map has a height of 64 units
+            height = (height)*wc3_tileHeight # Each layer of the map has a height of 64 units
             
             # midX and midY: middle of box that spans from startX;startY to endX;endY
             midX = startX + boxWidth/2.0 # Very important, DO NOT ROUND: causes issues with random overlapping
@@ -57,10 +62,10 @@ class VmfGen():
             # A little bit of optimization, only draw the block if it has a non-zero height
             # (Hammer only likes blocks with non-zero dimensions, for good reason)
             if height > 0:
-                vert = vmflib.types.Vertex((midX*64)-self.base.vmfmap_xMidOffset, 
-                                           (midY*64)-self.base.vmfmap_yMidOffset, 
+                vert = vmflib.types.Vertex((midX*wc3_tileSize)-self.base.vmfmap_xMidOffset, 
+                                           (midY*wc3_tileSize)-self.base.vmfmap_yMidOffset, 
                                            0+(height//2))
-                block = tools.Block(origin = vert, dimensions=(boxWidth*64, boxLength*64, height))
+                block = tools.Block(origin = vert, dimensions=(boxWidth*wc3_tileSize, boxLength*wc3_tileSize, height))
                 
                 block.set_material("nature/dirt_grass_00")
                 
@@ -72,8 +77,8 @@ class VmfGen():
     def rectangularCheck(self, startX, startY, neededHeight, blobAffinity):
         do_break = False
         
-        x_limit = self.base.data.mapInfo["width"]
-        y_limit = self.base.data.mapInfo["height"]
+        x_limit = wc3map_xSize
+        y_limit = wc3map_ySize
         
         for x in xrange(startX, x_limit):
             for y in xrange(startY, y_limit):

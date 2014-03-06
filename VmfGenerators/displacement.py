@@ -18,6 +18,8 @@ class VmfGen():
         adjusted_WC3xSize = make_number_divisible_by_n(self.base.WC3map_xSize, 4)
         adjusted_WC3ySize = make_number_divisible_by_n(self.base.WC3map_ySize, 4)
         
+        wc3_tileSize = self.base.wc3_tileSize
+        wc3_tileHeight = self.base.wc3_tileHeight
         
         Blockgroups = QuadBlobs(adjusted_WC3xSize//4, adjusted_WC3ySize//4, 4, 4)
         
@@ -123,7 +125,7 @@ class VmfGen():
                                                                    ((iix+1)*4+xoffset, (iiy+1)*4+yoffset)):
                                     local_x, local_y, height = point
                                     
-                                    blob.setVal(local_x, local_y, currentHeight*64)
+                                    blob.setVal(local_x, local_y, currentHeight*wc3_tileHeight)
                 
                 # A single displacement map will a row and a column of missing data,
                 # going exactly through the middle of the map. We will fill these spots with
@@ -135,9 +137,12 @@ class VmfGen():
         
         for ix in xrange(adjusted_WC3xSize//4):
             for iy in xrange(adjusted_WC3xSize//4):
-                height = 64
-                vert = vmflib.types.Vertex((ix*4*64)-vmf_xoffset+2*64, (iy*4*64)-vmf_yoffset+2*64, (height//2))
-                block = tools.Block(origin = vert, dimensions=(4*64, 4*64, height))
+                height = wc3_tileHeight
+                vert = vmflib.types.Vertex((ix*4*wc3_tileSize)-vmf_xoffset+2*wc3_tileSize, 
+                                           (iy*4*wc3_tileSize)-vmf_yoffset+2*wc3_tileSize, 
+                                           (height//2))
+                
+                block = tools.Block(origin = vert, dimensions=(4*wc3_tileSize, 4*wc3_tileSize, height))
                 
                 ## We alternate between two types of textures. This results in a checkered pattern, 
                 ## similar to chess. It is very easy to see where a block starts and ends.
@@ -184,10 +189,12 @@ class VmfGen():
                     #row = map(map_list_with_vertex, row)
                 if isFlat:
                     height = origValue
-                    vert = vmflib.types.Vertex((ix*4*64)-vmf_xoffset+2*64, (iy*4*64)-vmf_yoffset+2*64, 32+(height//2))
+                    vert = vmflib.types.Vertex((ix*4*wc3_tileSize)-vmf_xoffset+2*wc3_tileSize, 
+                                               (iy*4*wc3_tileSize)-vmf_yoffset+2*wc3_tileSize, 
+                                               32+(height//2))
                     block.origin = vert
                     
-                    block.dimensions = (4*64, 4*64, 64+height)
+                    block.dimensions = (4*wc3_tileSize, 4*wc3_tileSize, 64+height)
                     
                     block.update_sides()
                 else:
