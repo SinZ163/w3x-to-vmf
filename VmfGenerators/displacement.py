@@ -191,10 +191,10 @@ class VmfGen():
                     height = origValue
                     vert = vmflib.types.Vertex((ix*4*wc3_tileSize)-vmf_xoffset+2*wc3_tileSize, 
                                                (iy*4*wc3_tileSize)-vmf_yoffset+2*wc3_tileSize, 
-                                               32+(height//2))
+                                               (wc3_tileHeight//2)+(height//2))
                     block.origin = vert
                     
-                    block.dimensions = (4*wc3_tileSize, 4*wc3_tileSize, 64+height)
+                    block.dimensions = (4*wc3_tileSize, 4*wc3_tileSize, wc3_tileHeight+height)
                     
                     block.update_sides()
                 else:
