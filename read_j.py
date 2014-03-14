@@ -46,77 +46,84 @@ import re
 class JassIntepreter:
     def __init__(self, filename):
         self.filename = filename
-        self.info = {
-            "globals" : [],
-            "functions" : {}
-        }
+        self.file = open(filename, "rU")
+        self.globals = None
+        self.functions = {}
+        
         self.loop()
+    def readLine(self):
+        line = self.file.readline()
+        print(line)
+        if not line:
+            raise RuntimeError("EOF")
+        DoubleSlash = line.find("//")
+        return line[0:DoubleSlash]
     
-    def endFind(self, line, text):
-        ENDpos = line.find(text)
-        if ENDpos != -1:
-            return True
+    def readIf(self,line):
+        match = re.match("^if(?P<predicate>.+?)then*", line)
+        if match != None:
+            ifInfo = {
+                "if" : {
+                    "predicate" : match.group("predicate"),
+                    "code" : []
+                }
+            }
+            line = self.readLine()
+            while line != "endif":
+                ifInfo["if"]["code"].append(self.parseLine(line))
+                line = self.readLine()
+            return ifInfo           
+        else:
+            raise RuntimeError("This aint an IF statement, wat u doin\r\n - "+line)
+    def parseLine(self, line):
+        #line is our parent
+        if line[0:2] == "if":
+            line = self.readIf(line)
+        return line
+    def readGlobals(self):
+        globalInfo = []
+        line = self.readLine()
+        while line != "endglobals":
+            print("Global info!")
+            print(line)
+            globalInfo.append(line)
+            line = self.readLine()
+        print("#end globals")
+        self.globals = globalInfo
+    def readFunction(self, line):
+        functionInfo = {"code" : []}
+        match = re.match("^function (?P<funcName>\w+) takes (?P<arguments>(\w+[, ]*?)+) returns (?P<returnArgument>\w+)\s*", line)
+        if match != None:
+            functionInfo["name"] = match.group("funcName")
+            functionInfo["args"] = match.group("arguments").split(','), #todo, parse better
+            functionInfo["return"] = match.group("returnArgument")
+            
+            line = self.readLine()
+            while line != "endfunction":
+                functionInfo["code"].append(self.parseLine(line))
+                line = self.readLine()
+            print("#end function")
+            self.functions[functionInfo["name"]] = functionInfo
+        else:
+            raise RuntimeError("OHNO THIS FUNCTION WAS A LIEEEE\r\n - "+line)
     def loop(self):
-        with open(self.filename, "rU") as f:
-            print("Starting the loop!")
-            status = 0
-            functionname = ""
-            for line in f:
-                #ok, this is where we do all of our work
-                # Two slashes appear to be used for comments, so we will
-                # only read a line until we hit a double slash.
-                DoubleSlash = line.find("//")
-                line = line[0:DoubleSlash]
-                if line == "":
-                    #the line was either empty, or only had a comment, nothing to see here
-                    continue
-                
-                #Ok, we are reading something, what scope are we in
-                if status == 1:
-                    print("Global: "+line)
-                    #this is where we read global
-                    if self.endFind(line, "endglobals"):
-                        print("End globals")
-                        status = 0
-                        continue
-                    self.info["globals"].append(line)
-                elif status == 2:
-                    #this is where we read function
-                    if self.endFind(line, "endfunction"):
-                        print("End function")
-                        status = 0
-                        continue
-                    #ok, the function isn't over, lets take it seriously
-                    self.info["functions"][functionname]["code"].append(line)
-                    pass
-                else:
-                    if line.find("globals") != -1:
-                        print("Start globals")
-                        print(line)
-                        print("End Globals?")
-                        status = 1
-                        continue
-                    if line.find("function") != -1:
-                        print("Start function")
-                        #function <NAME> takes <INPUT> returns <OUTPUT>
-                        match = re.match("^function (?P<funcName>\w+) takes (?P<arguments>(\w+[, ]*?)+) returns (?P<returnArgument>\w+)\s*", line)
-                        if match != None:
-                            functionname = match.group("funcName")
-                            self.info["functions"][functionname] = {
-                                "args" : match.group("arguments").split(','), #todo, parse better
-                                "return" : match.group("returnArgument"),
-                                #"startLine" : lineNumber,
-                                "code" : []
-                            }
-                            status = 2
-                            continue
-                        else:
-                            raise RuntimeError("OMGOMGOMGOMGOMGOMGOMGOMGOMGOMGOMGOMGOMG")
-                    print("What are we doing?!")
-                    print line
-                    raise RuntimeError("I'm lost, halp")
-                    #not in any state
-                    
+        while True:
+            try:
+                line = self.readLine()
+            except RuntimeError as e:
+                break
+            if line == "":
+                continue
+            if line.find("globals") != -1:
+                print("#Start globals")
+                self.readGlobals()
+                continue
+            if line.find("function") != -1:
+                print("#Start function")
+                self.readFunction(line)
+            else:
+                raise RuntimeError("WHAT ARE WE DOING?!\r\n - "+line)
+                  
 if __name__ == "__main__":
     import os
     import simplejson
@@ -127,6 +134,7 @@ if __name__ == "__main__":
     except OSError:
         pass
     
-    with open("output/jass.json", "w") as f:
-        f.write(simplejson.dumps(jass.info, sort_keys=True, indent=4 * ' '))
-    #this is where we actually use our program ^.^
+    with open("output/jass_f.json", "w") as f:
+        f.write(simplejson.dumps(jass.functions, sort_keys=True, indent=4 * ' '))
+    with open("output/jass_g.json", "w") as f:
+        f.write(simplejson.dumps(jass.globals, sort_keys=True, indent=4 * ' '))
