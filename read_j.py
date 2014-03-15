@@ -63,8 +63,6 @@ class JassIntepreter:
     def readLine(self):
         line = self.file.readline()
         
-        print(line)
-        
         if not line:
             raise EndOfFileException(self.line_number-1, self.last_line)
         
@@ -103,11 +101,28 @@ class JassIntepreter:
             return ifInfo           
         else:
             raise RuntimeError("This aint an IF statement, wat u doin\r\n - "+line)
+            
+    def readLoop(self):
+        loopInfo = {
+            "loop" : {
+                "code" : []
+            }
+        }
+        
+        line = self.readLine()
+        
+        while line != "endloop":
+            loopInfo["loop"]["code"].append(self.parseLine(line))
+            line = self.readLine()
+            
+        return loopInfo
         
     def parseLine(self, line):
         #line is our parent
         if line[0:2] == "if":
             line = self.readIf(line)
+        elif line[0:4] == "loop":
+            line = self.readLoop()
         return line
     
     def readGlobals(self):
@@ -115,7 +130,6 @@ class JassIntepreter:
         
         while line != "endglobals":
             print("Global info!")
-            print(line)
             
             self.globals.append(line)
             line = self.readLine()
