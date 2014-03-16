@@ -45,7 +45,7 @@ class VmfGen():
                         
                         newY = (iy*4)+iiy
                         
-                        if newX >= self.base.WC3map_xSize or newY >= self.base.WC3map_xSize:
+                        if newX >= self.base.WC3map_xSize or newY >= self.base.WC3map_ySize:
                             break
                         else:
                             currentHeight = self.base.WC3map_heightmap.getVal(newX, newY)
@@ -136,7 +136,7 @@ class VmfGen():
         vmf_yoffset = self.base.vmfmap_yMidOffset
         
         for ix in xrange(adjusted_WC3xSize//4):
-            for iy in xrange(adjusted_WC3xSize//4):
+            for iy in xrange(adjusted_WC3ySize//4):
                 height = wc3_tileHeight
                 vert = vmflib.types.Vertex((ix*4*wc3_tileSize)-vmf_xoffset+2*wc3_tileSize, 
                                            (iy*4*wc3_tileSize)-vmf_yoffset+2*wc3_tileSize, 
@@ -164,7 +164,6 @@ class VmfGen():
                     if breakOut:
                         break
                             
-                
                 Blockgroups.sew_brush_neighbours(ix, iy)
                 blob = Blockgroups.getBlob(ix, iy)
                 
