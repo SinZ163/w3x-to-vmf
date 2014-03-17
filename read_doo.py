@@ -1,81 +1,98 @@
+from lib.DataReader import DataReader
+
 class ReadDoodad:
     def __init__(self, filename):
         self.read = DataReader(filename)
         self.info = self.ReadDoodad()
         
     def ReadDoodad(self):
-        doodInfo = self.ReadHeader()
+        doodHeader = self.ReadHeader()
+        
+        doodInfo = {}
+        doodInfo["fileID"] = doodHeader[0]
+        doodInfo["version"] = doodHeader[1]
+        doodInfo["subversion"] = doodHeader[2]
+        doodInfo["count"] = doodHeader[3]
+        
+        print "File ID: {0}, Version: {1}, Subversion: {2}".format(doodInfo["fileID"],
+                                                                   doodInfo["version"],
+                                                                   doodInfo["subversion"])
+        print "Reading {0} trees".format(doodInfo["count"])
+        
         doodInfo["trees"] = []
+        
         for i in xrange(0, doodInfo["count"]):
             doodInfo["trees"].append(self.ReadTreeData())
+            
         doodInfo["special"] = self.ReadSpecialDoodads()
         
     def ReadHeader(self):
-        return {
-            "fileID" : read.charArray(4),
-            "version" : read.int(),
-            "subVersion" : read.int(),
-            "count" : read.int()
-        }
+        fileID = self.read.charArray(4)
+        version = self.read.int()
+        subversion = self.read.int()
+        count = self.read.int()
+        
+        return fileID, version, subversion, count
+        
     def ReadTreeData(self):
         treeInfo = {
-            "treeID" : read.charArray(4),
-            "variation" : read.int(),
+            "treeID" : self.read.charArray(4),
+            "variation" : self.read.int(),
             "coord" : {
-                "x" : read.float(),
-                "y" : read.float(),
-                "z" : read.float()
+                "x" : self.read.float(),
+                "y" : self.read.float(),
+                "z" : self.read.float()
             },
-            "angle" : read.float(),
+            "angle" : self.read.float(),
             "scale" : {
-                "x" : read.float(),
-                "y" : read.float(),
-                "z" : read.float()
+                "x" : self.read.float(),
+                "y" : self.read.float(),
+                "z" : self.read.float()
             },
-            "flags" : read.byte(),
-            "life" : read.byte(),
-            "itemPoint" : read.int()
+            "flags" : self.read.byte(),
+            "life" : self.read.byte()
         }
-        if treeInfo["itemPoint"] >= 0:
-            raise RuntimeError("What is items")
+        
+        treeInfo["itemPoint"] = self.read.int()
+        treeInfo["numberOfItemSets"] = self.read.int()
+        
+        if treeInfo["numberOfItemSets"] > 0:
+            treeInfo["itemSets"] = []
+        
+        ## Reading Item Set
+        for i in xrange(treeInfo["numberOfItemSets"]):
+            numberOfItems = self.read.int()
+            itemSet = []
             
-        treeInfo["doodID"] = read.int()
+            ## Each Item Set has a Number of Items
+            for j in xrange(numberOfItems):
+                itemID = self.read.charArray(4)
+                procentualChance = self.read.int()
+                
+                itemSet.append((itemID, procentualChance))
+            
+            treeInfo["itemSets"].append(itemSet)
+                
+        treeInfo["doodID"] = self.read.int()
+        
         return treeInfo
         
     def ReadSpecialDoodads(self):
         specialInfo = {}
-        specialInfo["version"] = read.int()
-        specialInfo["count"] = read.int()
+        specialInfo["version"] = self.read.int()
+        specialInfo["count"] = self.read.int()
         specialInfo["info"] = []
-        for i in xrange(0,count)
-            specialInfo["info"].append({
-                "ID" : read.charArray(4),
-                "z" : read.int(),
-                "x" : read.int(),
-                "y" : read.int()
-            })
+        
+        print "Reading special doodads. Version: {0}, Count: {1}".format(specialInfo["version"], specialInfo["count"])
+        
+        for i in xrange(specialInfo["count"]):
+            ID = self.read.charArray(4)
+            z, x, y = self.read.int(), self.read.int(), self.read.int()
+            
+            specialInfo["info"].append({"ID" : ID, 
+                                        "x" : x,"y" : y, "z" : z})
+            
         return specialInfo
-"""        
-for i in xrange(0,count):
-    treeID = read.charArray(4)
-    variation = read.int()
-    xCoord = read.float()
-    yCoord = read.float()
-    zCoord = read.float()
-    angle = read.float() #in radians
-    xScale = read.float()
-    yScale = read.float()
-    zScale = read.float()
-    flags = read.byte()
-    life = read.byte() #in percentage
-    itemPointer = read.int()
-    if itemPointer == -1:
-        #no item table
-        pass
-    elif itemPointer >=0:
-        itemCount = read.int()
-        for j in xrange(0,itemCount):
-            count = read.int() #really?
-            itemID = read.charArray(4)
-            itemChoice = read.int()
-"""
+
+if __name__ == "__main__":
+    dooRead = ReadDoodad("input/war3map.doo")
