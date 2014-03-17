@@ -4,7 +4,8 @@ from lib.dataTypes import Bytemap
 
 
 class VmfGen():
-    def __init__(self, base):
+    def __init__(self, base, texture):
+        self.texture = texture
         # base is an instance of the War
         self.base = base
         self.name = "Brush VMF"
@@ -69,8 +70,10 @@ class VmfGen():
                                            0+(height//2))
                 block = tools.Block(origin = vert, dimensions=(boxWidth*wc3_tileSize, boxLength*wc3_tileSize, height))
                 
-                #block.set_material("nature/dirt_grass_00")
-                block.set_material("brick/brick_ext_08")
+                if self.texture == "dota2":
+                    block.set_material("nature/dirt_grass_00")
+                else:
+                    block.set_material("brick/brick_ext_08")
                 
                 self.base.m.world.children.append(block)
     

@@ -7,7 +7,8 @@ from lib.dataTypes import QuadBlobs, Bytemap
 from lib.helperFunctions import make_number_divisible_by_n, map_list_with_vertex
 
 class VmfGen():
-    def __init__(self, base):
+    def __init__(self, base, texture):
+        self.texture = texture
         self.base = base
         self.name = "Displacement VMF"
         self.description = "Displacement-based VMF creation using fixed-size brushes and displacements."
@@ -28,8 +29,10 @@ class VmfGen():
         normals_row = [vmflib.types.Vertex(0,0,1) for i in xrange(17)]
         normals_list = [normals_row for i in xrange(17)]
         
-        #choice = ("nature/dirt_grass_00", "nature/blendrockground002")
-        choice = ("brick/brick_ext_07", "brick/brick_ext_06")
+        if self.texture == "dota2":
+            choice = ("nature/grass_04", "nature/grass_02")
+        else:
+            choice = ("brick/brick_ext_07", "brick/brick_ext_06")
         
         creationTime = time.clock()
         
@@ -158,7 +161,10 @@ class VmfGen():
                         if newx >= self.base.WC3map_xSize or newy >= self.base.WC3map_ySize:
                             break
                         if self.base.WC3map_rampmap.getVal(newx, newy) == 1:
-                            block.set_material("brick/brick_ext_08")
+                            if self.texture == "dota2":
+                                block.set_material("nature/grass_03")
+                            else:
+                                block.set_material("brick/brick_ext_08")
                             breakOut = True
                             break
                     if breakOut:

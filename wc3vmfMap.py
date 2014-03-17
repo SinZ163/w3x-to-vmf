@@ -25,7 +25,7 @@ from VmfGenerators import brushBlocks, displacement
 # A class that centralizes a lot of the functions used 
 # in writevmf and writevmf_displacementTest.
 class WarvmfMap():
-    def __init__(self, wc3_filename, vmf_filename):
+    def __init__(self, wc3_filename, vmf_filename, texture="dota2"):
         self.wc3_filename = wc3_filename
         self.vmf_filename = vmf_filename
         
@@ -34,8 +34,8 @@ class WarvmfMap():
         self.wc3_tileSize = 64
         self.wc3_tileHeight = 64
         
-        self.vmfGenerators = {"brush" : brushBlocks.VmfGen(self),
-                              "displacement" : displacement.VmfGen(self)}
+        self.vmfGenerators = {"brush" : brushBlocks.VmfGen(self, texture),
+                              "displacement" : displacement.VmfGen(self, texture)}
         
     def setup(self):
         self.__readWar3map__()
