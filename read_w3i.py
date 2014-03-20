@@ -2,6 +2,9 @@
 
 #Note, something is wrong atm, as readUpgradeData never gets called, as we run out of bytes =S (we run out reading how many upgradeData there is) I 
 
+#Note 2) The format appears to be very complicated. Doublechecking the code against the wc3 specs 
+#        and changing the code into something that is more friendly for debugging might be necessary
+
 from lib.DataReader import DataReader
 
 class WC3Info:
