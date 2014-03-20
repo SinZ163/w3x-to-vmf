@@ -1,22 +1,31 @@
 #the info file
 
-#Note, something is wrong atm, as readUpgradeData never gets called, as we run out of bytes =S (we run out reading how many upgradeData there is)
+#Note, something is wrong atm, as readUpgradeData never gets called, as we run out of bytes =S (we run out reading how many upgradeData there is) I 
+
 from lib.DataReader import DataReader
+
 class WC3Info:
     def __init__(self, filename):
         self.read = DataReader(filename)
         
         self.info = self.ReadInfo()
+        
     def ReadArray(self, func):
         print("Starting to read an array!")
+        
         arrayInfo = {
             "count" : self.read.int(),
             "data" : []
         }
+        
         print(str(arrayInfo["count"])+" elements in this array.")
+        
         for i in xrange(0, arrayInfo["count"]):
-            arrayInfo["data"].append(func())
+            data = func()
+            arrayInfo["data"].append(data)
+            
         return arrayInfo
+    
     def ReadInfo(self):
         return {
             "version"  : self.read.int(),
@@ -101,6 +110,7 @@ class WC3Info:
         #print("startPos "+str(playerData["startPos"]))
         
         return playerData
+    
     def readForceData(self):
         forceData = {
             "flags" : self.read.flags(),
@@ -109,6 +119,7 @@ class WC3Info:
         }
         #print(forceData)
         return forceData
+    
     def readUpgradeData(self):
         return {
             "flags" : self.read.flags(),
