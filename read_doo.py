@@ -26,6 +26,8 @@ class ReadDoodad:
             
         doodInfo["special"] = self.ReadSpecialDoodads()
         
+        return doodInfo
+        
     def ReadHeader(self):
         fileID = self.read.charArray(4)
         version = self.read.int()
@@ -95,4 +97,14 @@ class ReadDoodad:
         return specialInfo
 
 if __name__ == "__main__":
+    import os
+    import simplejson
+    
     dooRead = ReadDoodad("input/war3map.doo")
+    
+    try:
+        os.makedirs('./output')
+    except OSError:
+        pass
+    with open("output/treeInfo.json", "w") as f:
+        f.write(simplejson.dumps(dooRead.info, sort_keys=True, indent=4 * ' '))
