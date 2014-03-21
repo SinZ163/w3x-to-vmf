@@ -91,16 +91,15 @@ class DataReader():
         
         
         
-    def flags(self): #not used in w3e, ignoring <- disregard that, no reason not to add it <3
+    def flags(self):
         #Flags are booleans stored in 4 bytes
-        
         # Flags are read starting with the least significant byte first
         
         int = self.int()
         flags = []
         
-        for i in range(4*8):
-            flag = int & (1 << i)
+        for i in xrange(4*8):
+            flag = (int >> i) & 1
             
             flags.append(flag)
         
