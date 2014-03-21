@@ -4,41 +4,29 @@
 
 #Note 2) The format appears to be very complicated. Doublechecking the code against the wc3 specs 
 #        and changing the code into something that is more friendly for debugging might be necessary
+import struct
 
 from lib.DataReader import DataReader
 
 class WC3Info:
     def __init__(self, filename):
         self.read = DataReader(filename)
-        
+    
+    def ReadFile(self):
         self.info = self.ReadInfo()
-        
-    def ReadArray(self, func):
-        print("Starting to read an array!")
-        
-        arrayInfo = {
-            "count" : self.read.int(),
-            "data" : []
-        }
-        
-        print(str(arrayInfo["count"])+" elements in this array.")
-        
-        for i in xrange(0, arrayInfo["count"]):
-            data = func()
-            arrayInfo["data"].append(data)
-            
-        return arrayInfo
     
     def ReadInfo(self):
-        return {
-            "version"  : self.read.int(),
-            "saveCount" : self.read.int(),
-            "editVersion" : self.read.int(),
-            "name"  : self.read.string(),
-            "author" : self.read.string(),
-            "description" : self.read.string(),
-            "recPlayers" : self.read.string(),
-            "cameraBounds" : [
+        info = {}
+        
+        info["version"] = self.read.int()
+        info["saveCount"] = self.read.int()
+        info["editVersion"] = self.read.int()
+        info["name"] = self.read.string()
+        info["author"] = self.read.string()
+        info["description"] = self.read.string()
+        info["recommendedPlayers"] = self.read.string()
+        
+        info["cameraBounds"] = [
                 self.read.float(), #1
                 self.read.float(), #2
                 self.read.float(), #3
@@ -47,29 +35,32 @@ class WC3Info:
                 self.read.float(), #6
                 self.read.float(), #7
                 self.read.float()  #8
-            ],
-            "cameraComplements" : [
+            ]
+        info["cameraComplements"] = [
                 self.read.int(),
                 self.read.int(),
                 self.read.int(),
                 self.read.int()
-            ],
-            "playWidth" : self.read.int(),
-            "playHeight" : self.read.int(),
-            "flags" : self.read.flags(),
-            "groundType"  : self.read.char(),
-            "backgroundImageID" : self.read.int(), #-1 == none or custom,
-            "customLoadingScreen" : self.read.string(), #empty if none or not custom,
-            "loadingText" : self.read.string(),
-            "loadingTitle" : self.read.string(),
-            "loadingSubtitle" : self.read.string(),
-            "gameDataSet" : self.read.int(), #index in the preset list, 0=standard,
-            "prologuePath" : self.read.string(),
-            "prologueText" : self.read.string(),
-            "prologueTitle" : self.read.string(),
-            "prologueSubtitle" : self.read.string(),
-            "useTerrainFog" : self.read.int(), #0 == not used, >0 = index of terrain fog style dropdown
-            "fogInfo" : {
+            ]
+        
+        info["playWidth"] = self.read.int()
+        info["playHeight"] = self.read.int()
+        info["flags"] = self.read.flags()
+        info["groundType"] = self.read.char()
+        info["backgroundImageID"] = self.read.int() #-1 == none or custom,
+        info["customLoadingScreen"] = self.read.string() #empty if none or not custom,
+        info["loadingText"] = self.read.string()
+        info["loadingTitle"] = self.read.string()
+        info["loadingSubtitle"] = self.read.string()
+        info["gameDataSet"] = self.read.int() #index in the preset list, 0=standard,
+        info["prologuePath"] = self.read.string()
+        info["prologueText"] = self.read.string()
+        info["prologueTitle"] = self.read.string()
+        info["prologueSubtitle"] = self.read.string()
+        
+        
+        info["useTerrainFog"] = self.read.int() #0 == not used, >0 = index of terrain fog style dropdown
+        info["fogInfo"] = {
                 "startZ" : self.read.float(),
                 "endZ" : self.read.float(),
                 "density" : self.read.float(),
@@ -77,36 +68,52 @@ class WC3Info:
                 "green" : self.read.byte(),
                 "blue" : self.read.byte(),
                 "alpha" : self.read.byte()
-            },
-            "weatherID" : self.read.int(), #0=none, else is the id in TerrainArt\Weather.slk
-            "soundEnvironment" : self.read.string(),
-            "tilesetLightID" : self.read.char(),
-            "waterInfo" : {
+            }
+        
+        info["weatherID"] = self.read.int() #0=none, else is the id in TerrainArt\Weather.slk
+        info["soundEnvironment"] = self.read.string()
+        info["tilesetLightID"] = self.read.char()
+        info["waterInfo"] = {
                 "red" : self.read.byte(),
                 "green" : self.read.byte(),
                 "blue" : self.read.byte(),
                 "alpha" : self.read.byte()
-            },
-            "playerData" : self.ReadArray(self.readPlayerData),
-            "forceData" : self.ReadArray(self.readForceData),
-            "upgradeData" : self.ReadArray(self.readUpgradeData),
-            "techData" : self.ReadArray(self.readTechData),
-            "unitData" : self.ReadArray(self.readUnitData),
-            "itemData" : self.ReadArray(self.readItemData)
-        }
+            }
         
+        info["playerData"] = self.ReadArray(self.readPlayerData)
+        info["forceData"] = self.ReadArray(self.readForceData)
+        info["upgradeData"] = self.ReadArray(self.readUpgradeData)
+        info["techData"] = self.ReadArray(self.readTechData)
+        info["unitData"] = self.ReadArray(self.readUnitData)
+        info["itemData"] = self.ReadArray(self.readItemData)
+    
+    def ReadArray(self, func):
+        print "Starting to read an array!"
+        
+        arrayInfo = {}
+        arrayInfo["count"] = self.read.int()
+        arrayInfo["data"] = []
+        
+        print "{0} elements in this array. Using {1} for reading.".format(arrayInfo["count"], func.__name__)
+        
+        for i in xrange(arrayInfo["count"]):
+            data = func()
+            arrayInfo["data"].append(data)
+            
+        return arrayInfo
+    
     def readPlayerData(self):
-        playerData = {
-            "playerNumber" : self.read.int(),
-            "playerType" : self.read.int(),
-            "race" : self.read.int(),
-            "startPos" : self.read.int(),
-            "name" : self.read.string(),
-            "startX" : self.read.float(),
-            "startY" : self.read.float(),
-            "allyLowFlags" : self.read.int(),
-            "allyHighFlagS" : self.read.int()
-        }
+        playerData = {}
+        playerData["playerNumber"] = self.read.int()
+        playerData["playerType"] = self.read.int()
+        playerData["race"] = self.read.int()
+        playerData["startPos"] = self.read.int()
+        playerData["name"] = self.read.string()
+        playerData["startX"] = self.read.float()
+        playerData["startY"] = self.read.float()
+        playerData["allyLowFlags"] = self.read.int()
+        playerData["allyHighFlags"] = self.read.int()
+        
         #print("###PLAYER DATA###")
         #print("PlayerType: "+str(playerData["playerType"]))
         #print("Race: "+str(playerData["race"]))
@@ -115,69 +122,78 @@ class WC3Info:
         return playerData
     
     def readForceData(self):
-        forceData = {
-            "flags" : self.read.flags(),
-            "mask" : self.read.int(),
-            "name" : self.read.string()
-        }
-        #print(forceData)
+        forceData = {}
+        forceData["flags"] = self.read.flags()
+        forceData["mask"] = self.read.int()
+        forceData["name"] = self.read.string()
+        
+        print(forceData)
         return forceData
     
     def readUpgradeData(self):
-        return {
-            "flags" : self.read.flags(),
-            "id" : self.read.charArray(4),
-            "level" : self.read.int(),
-            "Availability" : self.read.int()
-        }
+        upgradeData = {}
+        upgradeData["flags"] = self.read.flags()
+        upgradeData["id"] = self.read.charArray(4)
+        upgradeData["level"] = self.read.int()
+        upgradeData["Availability"] = self.read.int()
+        
+        return upgradeData
         
     def readTechData(self):
-        return {
-            "flags" : self.read.flags(),
-            "id" : slf.read.charArray(4)
-        }
+        techData = {}
+        techData["flags"] = self.read.flags()
+        techData["id"] = self.read.charArray(4)
+        
+        return techData
         
     def readUnitData(self):
         groupCount = self.read.int()
-        for i in xrange(0,groupCount):
-            groupInfo = {
-                "number" : self.read.int(),
-                "name" : self.read.string(),
-                "posCount" : self.read.int(), #columns
-                "tableTypes" : [],
-                "entities" : []
-            }
-            for j in xrange(0,groupInfo["posCount"]):
-                groupInfo["tableTypes"].append(self.read.int())
+        
+        for i in xrange(groupCount):
+            groupInfo = {}
+            groupInfo["number"] = self.read.int()
+            groupInfo["name"] = self.read.string()
+            groupInfo["posCount"] = self.read.int() #columns
+            groupInfo["tableTypes"] = []
+            groupInfo["entities"] = []
+            
+            for j in xrange(groupInfo["posCount"]):
+                tableType = self.read.int()
+                groupInfo["tableTypes"].append(tableType)
+                
             groupInfo["unitCount"] = self.read.int() #rows
-            for j in xrange(0, groupInfo["unitCount"]):
-                groupInfo["entities"].append({
-                    "chance" : self.read.int(),
-                    "ids" : re.findall('....', self.read.charArray(groupInfo["posCount"]*4))
-                })
+            
+            for j in xrange(groupInfo["unitCount"]):
+                entity = {}
+                entity["chance"] = self.read.int()
+                entity["ids"] = [self.read.charArray(4) for k in xrange(groupInfo["posCount"])]
+                
+                groupInfo["entities"].append(entity)
     
     def readItemData(self):
-        itemInfo = {
-            "tableCount" : self.read.int(),
-            "table" : []
-        }
-        for i in xrange(0,itemInfo["tableCount"]):
-            tableInfo = {
-                "tableNumber" : self.read.int(),
-                "tableName" : self.read.string(),
-                "setCount" : self.read.int(),
-                "set" : []
-            }
-            for j in xrange(0,tableInfo["setCount"]):
-                setInfo = {
-                    "itemCount" : self.read.int(),
-                    "items" : []
-                }
-                for k in xrange(0,setInfo["itemCount"]):
-                    setInfo["item"].append({
-                        "percentualChance" : self.read.int(),
-                        "itemID" : self.read.charArray(4)
-                    })
+        itemInfo = {}
+        itemInfo["tableCount"] = self.read.int()
+        itemInfo["table"] = []
+        
+        for i in xrange(itemInfo["tableCount"]):
+            tableInfo = {}
+            
+            tableInfo["tableNumber"] = self.read.int()
+            tableInfo["tableName"] = self.read.string()
+            tableInfo["setCount"] = self.read.int()
+            tableInfo["set"] = []
+            
+            for j in xrange(tableInfo["setCount"]):
+                setInfo = {}
+                setInfo["itemCount"] = self.read.int()
+                setInfo["items"] = []
+                
+                for k in xrange(setInfo["itemCount"]):
+                    itemData = {}
+                    itemData["percentualChance"] = self.read.int()
+                    itemData["itemID"] = self.read.charArray(4)
+                    
+                    setInfo["item"].append(itemData)
                     
                 tableInfo["set"].append(setInfo)
                 
@@ -190,7 +206,13 @@ if __name__ == "__main__":
     import simplejson
     #this is where shit happens!
     filename = "input/war3map.w3i"
-    wc3Info = WC3Info(filename)
+    
+    try:
+        wc3Info = WC3Info(filename)
+        wc3Info.ReadFile()
+    finally:
+        print "Reading index is at {0}. Maximum possible index: {1}".format(wc3Info.read.index, wc3Info.read.maxSize)
+        
     
     try:
         os.makedirs('./output')
