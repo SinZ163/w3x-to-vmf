@@ -1,10 +1,15 @@
-#the info file
 
-#Note, something is wrong atm, as readUpgradeData never gets called, as we run out of bytes =S (we run out reading how many upgradeData there is) I 
+# Reading the war3map.w3i file. The file contains various useful information 
+# related to the map, e.g. description, number of recommended players, and more.
+# 
+# Note:  Sometimes w3i files appear to be incomplete. Is this because the file was
+#        extracted incorrectly from the map, or is WC3 tolerant to incomplete data?
+#        More specifically, the arrays at the end of the w3i file appear to be missing,
+#        possibly because the data is not needed and can be filled in by WC3?
 
-#Note 2) The format appears to be very complicated. Doublechecking the code against the wc3 specs 
-#        and changing the code into something that is more friendly for debugging might be necessary
+
 import struct
+import traceback
 
 from lib.DataReader import DataReader
 
@@ -13,12 +18,15 @@ class WC3Info:
         self.read = DataReader(filename)
     
     def ReadFile(self):
-        self.info = self.ReadInfo()
-    
+        self.info = {}
+        self.ReadInfo()
+        
     def ReadInfo(self):
-        info = {}
+        info = self.info
         
         info["version"] = self.read.int()
+        print info["version"]
+        
         info["saveCount"] = self.read.int()
         info["editVersion"] = self.read.int()
         info["name"] = self.read.string()
@@ -85,22 +93,38 @@ class WC3Info:
         info["upgradeData"] = self.ReadArray(self.readUpgradeData)
         info["techData"] = self.ReadArray(self.readTechData)
         info["unitData"] = self.ReadArray(self.readUnitData)
+        
+        print info["playerData"]
+        print info["forceData"]
+        print info["upgradeData"]
+        print info["techData"]
+        print info["unitData"]
+        
         info["itemData"] = self.ReadArray(self.readItemData)
     
     def ReadArray(self, func):
         print "Starting to read an array!"
         
         arrayInfo = {}
-        arrayInfo["count"] = self.read.int()
         arrayInfo["data"] = []
         
-        print "{0} elements in this array. Using {1} for reading.".format(arrayInfo["count"], func.__name__)
+        try:
+            arrayInfo["count"] = self.read.int()
         
-        for i in xrange(arrayInfo["count"]):
-            data = func()
-            arrayInfo["data"].append(data)
+        except struct.error:
+            arrayInfo["count"] = 0
+            print "Array does not exist. Function: {0}".format(func.__name__)
             
-        return arrayInfo
+            return arrayInfo
+        
+        else:
+            print "{0} elements in this array. Using {1} for reading.".format(arrayInfo["count"], func.__name__)
+            
+            for i in xrange(arrayInfo["count"]):
+                data = func()
+                arrayInfo["data"].append(data)
+                
+            return arrayInfo
     
     def readPlayerData(self):
         playerData = {}
@@ -169,6 +193,8 @@ class WC3Info:
                 entity["ids"] = [self.read.charArray(4) for k in xrange(groupInfo["posCount"])]
                 
                 groupInfo["entities"].append(entity)
+        
+        return groupInfo
     
     def readItemData(self):
         itemInfo = {}
@@ -193,7 +219,7 @@ class WC3Info:
                     itemData["percentualChance"] = self.read.int()
                     itemData["itemID"] = self.read.charArray(4)
                     
-                    setInfo["item"].append(itemData)
+                    setInfo["items"].append(itemData)
                     
                 tableInfo["set"].append(setInfo)
                 
@@ -210,13 +236,25 @@ if __name__ == "__main__":
     try:
         wc3Info = WC3Info(filename)
         wc3Info.ReadFile()
+    except struct.error:
+        print "Encountered struct error. Traceback:"
+        print traceback.format_exc()
+        print "Ignoring error. Please note that the data might be not entirely correct."
     finally:
-        print "Reading index is at {0}. Maximum possible index: {1}".format(wc3Info.read.index, wc3Info.read.maxSize)
+        print "Reading index is at {0}. Maximum possible index: {1}.".format(wc3Info.read.index, wc3Info.read.maxSize)
+        if wc3Info.read.index > wc3Info.read.maxSize:
+            print "Conclusion: Tried to read more data than exists in the file." 
         
     
     try:
         os.makedirs('./output')
     except OSError:
         pass
+    
+    print
+    print "Saving data to output/info.json..."
+    
     with open("output/info.json", "w") as f:
         f.write(simplejson.dumps(wc3Info.info, sort_keys=True, indent=4 * ' '))
+    
+    print "Done!"
