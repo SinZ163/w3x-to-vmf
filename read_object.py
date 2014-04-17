@@ -87,9 +87,18 @@ class TranslationHandle():
             "ulum" : "LumberCost",
             "uclb" : "blue IDKIDKIDK",
             "uclg" : "green IDKIDKIDK",
-            "uclr" : "red IDKIDKIDK"
-
+            "uclr" : "red IDKIDKIDK",
+            #this is stats
+            "ustr" : "Base Strength",
+            "uagi" : "Base Agility",
+            "uint" : "Base Intelligence",
+            "ustp" : "Base Strength Gain",
+            "uagp" : "Base Agility Gain",
+            "uinp" : "Base Intelligence Gain",
+            "umpi" : "Base Mana ?",
             
+            #Ability info
+            "anam" : "Name"
         }
         self.extentions = {
             "w3u" : {
@@ -107,7 +116,8 @@ class TranslationHandle():
                 "name" : "Doodads"
             },
             "w3a" : {
-                "name" : "Abilities"
+                "name" : "Abilities",
+                "function"  : self.dataTranslation
             },
             "w3h" : {
                 "name" : "Buffs"
@@ -135,7 +145,8 @@ class TranslationHandle():
 if __name__ == "__main__":
     import simplejson
     import os
-    filename = "input/war3map.w3t"
+    import sys
+    filename = sys.argv[1]
     fileInfo = ObjectReader(filename)
     transInfo = TranslationHandle(fileInfo)
     #Now to make a usable file
@@ -183,6 +194,6 @@ if __name__ == "__main__":
         os.makedirs('./output/translated')
     except OSError:
         pass
-    with open("output/translated/itemInfo.json","w") as f:
+    with open("output/translated/unitInfo.json","w") as f:
         f.write(simplejson.dumps(transInfo.info, sort_keys=True, indent=4 * ' '))
         #f.write(simplejson.dumps(itemTranslatedInfo, sort_keys=True, indent=4 * ' '))
