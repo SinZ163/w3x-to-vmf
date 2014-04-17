@@ -1,0 +1,14 @@
+entity
+{
+	"id" "{ID}"
+	"classname" "info_player_start{TYPE}"
+	"angles" "{A0} {A1} {A2}"
+	"origin" "{X} {Y} {Z}"
+	editor
+	{
+		"color" "0 255 0"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[{X} {Y}]"
+	}
+}
