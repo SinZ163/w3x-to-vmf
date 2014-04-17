@@ -146,6 +146,11 @@ class Entity(VmfClass):
         # Add ourself to the active map
         if ValveMap.instance:
             ValveMap.instance.children.append(self)
+    
+    def extend(self, property, value):
+        setattr(self, property, value)
+        self.auto_properties.append(property)
+        
 
 
 class Connections(VmfClass):
