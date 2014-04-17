@@ -158,3 +158,24 @@ class Output:
             self.parameter, self.delay, self.times_to_fire)
         #f.write('"%s" "%s,%s,%s,%s,%s"' % (self.event, self.target, self.input,
         #    self.parameter, self.delay, self.times_to_fire))
+        
+
+
+
+
+
+
+# After this point come data types which were not added by the
+# original author, but which are useful for Dota2 and
+# possibly other source games.
+
+class Vector:
+    # Three values that represent the direction and length of a single vector
+    
+    def __init__(self, x=0, y=0, z=0): 
+        self.x = int(x)
+        self.y = int(y)
+        self.z = int(z)
+    
+    def __repr__(self, *args):
+        return "{0} {1} {2}".format(self.x, self.y, self.z)
