@@ -51,8 +51,9 @@ class ReadW3E():
 if __name__ == "__main__":
     import os
     import simplejson
+    import sys
     
-    filename = "input/war3map.w3e"
+    filename = sys.argv[1]
     mapInfo = ReadW3E(filename)
     
     try:

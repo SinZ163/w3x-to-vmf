@@ -153,8 +153,9 @@ class WarvmfMap():
         self.m.write_vmf(self.vmf_filename)
         
 if __name__ == "__main__":
+    import sys
     start = time.time()
-    wc3map = WarvmfMap("input/war3map.w3e", "output/war3map.vmf")
+    wc3map = WarvmfMap(sys.argv[1], "output/war3map.vmf")
     wc3map.wc3_tileSize = 64
     wc3map.wc3_tileHeight = 64
     

@@ -98,9 +98,10 @@ class ReadDoodad:
 
 if __name__ == "__main__":
     import os
+    import sys
     import simplejson
     
-    dooRead = ReadDoodad("input/war3map.doo")
+    dooRead = ReadDoodad(sys.argv[1])
     
     try:
         os.makedirs('./output')
@@ -108,3 +109,11 @@ if __name__ == "__main__":
         pass
     with open("output/treeInfo.json", "w") as f:
         f.write(simplejson.dumps(dooRead.info, sort_keys=True, indent=4 * ' '))
+        
+    #Ok, lets just do an x,y dump of every tree (WTst id only)
+    #treeDB = []
+    #for tree in dooRead.info["trees"]:
+    #    if tree["treeID"] == "WTst":
+    #        treeDB.append({"x" : tree["coord"]["x"], "y" : tree["coord"]["y"]})
+    #with open("output/treeDump.json", "w") as f:
+    #    f.write(simplejson.dumps(treeDB, sort_keys=True, indent=4 * ' '))

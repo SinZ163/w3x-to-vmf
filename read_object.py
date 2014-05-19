@@ -135,12 +135,18 @@ class TranslationHandle():
     def dataTranslation(self):
         dataTranslatedInfo = {}
         #THIS IS SO MESSY!!!! - SinZ 2014
+        unknownName = "UnknownName"
+        unknownCount = 0
         for i in xrange(len(self.originalInfo.customInfo)):
             tmpInfo = {}
             for j in xrange(len(self.originalInfo.customInfo[i]["mods"])):
                 if self.originalInfo.customInfo[i]["mods"][j]["ID"] in self.infoTable:
                     tmpInfo[self.infoTable[self.originalInfo.customInfo[i]["mods"][j]["ID"]]] = self.originalInfo.customInfo[i]["mods"][j]["value"]
-            dataTranslatedInfo[tmpInfo["Name"]] = tmpInfo
+            if "Name" in tmpInfo:
+                dataTranslatedInfo[tmpInfo["Name"]] = tmpInfo
+            else:
+                dataTranslatedInfo[unknownName+str(unknownCount)] = tmpInfo
+                unknownCount = unknownCount + 1
         return dataTranslatedInfo
 if __name__ == "__main__":
     import simplejson
@@ -185,15 +191,23 @@ if __name__ == "__main__":
         os.makedirs('./output')
     except OSError:
         pass
-    with open("output/original.json", "w") as f:
+    outOriginal = "output/unknownOriginal.json"
+    outCustom = "output/unknownCustom.json"
+    outTrans = "output/unknownTranslated.json"
+    if filename[-3:] == "w3u":
+        outOriginal = "output/unitOriginal.json"
+        outCustom = "output/unitCustom.json"
+        outTrans = "output/unitTranslated.json"
+    elif filename[-3:] == "w3t":
+        outOriginal = "output/itemOriginal.json"
+        outCustom = "output/itemCustom.json"
+        outTrans = "output/itemTranslated.json"
+        
+    with open(outOriginal, "w") as f:
         f.write(simplejson.dumps(fileInfo.originalInfo, sort_keys=True, indent=4 * ' '))
-    with open("output/custom.json", "w") as f:
+    with open(outCustom, "w") as f:
         f.write(simplejson.dumps(fileInfo.customInfo, sort_keys=True, indent=4 * ' '))
     #Now for translated files
-    try:
-        os.makedirs('./output/translated')
-    except OSError:
-        pass
-    with open("output/translated/unitInfo.json","w") as f:
+    with open(outTrans,"w") as f:
         f.write(simplejson.dumps(transInfo.info, sort_keys=True, indent=4 * ' '))
         #f.write(simplejson.dumps(itemTranslatedInfo, sort_keys=True, indent=4 * ' '))

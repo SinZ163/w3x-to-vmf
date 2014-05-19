@@ -230,8 +230,9 @@ class WC3Info:
 if __name__ == "__main__":
     import os
     import simplejson
+    import sys
     #this is where shit happens!
-    filename = "input/war3map.w3i"
+    filename = sys.argv[1]
     
     try:
         wc3Info = WC3Info(filename)

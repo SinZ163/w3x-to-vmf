@@ -56,7 +56,8 @@ def integerSort(key):
 
                             
 if __name__ == "__main__":
-    filename = "input/war3map_troll.wts"
+    import sys
+    filename = sys.argv[1]
     
     info = ReadWTS(filename)
     info.readLoop()

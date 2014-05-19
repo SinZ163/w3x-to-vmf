@@ -1,4 +1,5 @@
 import os
+import sys
 
 from lib.DataReader import DataReader
 from lib.mpyq import MPQArchive, WC3Map_MPQ, UnsupportedCompressionAlgorithm
@@ -35,7 +36,7 @@ def generate_listfile(wc3files, mpq):
                                                     
     return listfile
 
-filename = "map.w3x"
+filename = sys.argv[1]
 #filename = "input/trollsnelves.w3x"
 
 archive = WC3Map_MPQ(filename, listfile=False)

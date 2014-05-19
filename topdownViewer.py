@@ -1,5 +1,5 @@
 from PIL import Image, ImageFont, ImageDraw
-
+import simplejson
 class TopDownViewer:
     textureLoc = "ui/WC3 Art/ground"
     textures = {
@@ -18,8 +18,11 @@ class TopDownViewer:
         "Qcbp" : "VillageFall_CobblePath.tga",
         "Vcrp" : "Village_Crops.tga",
         "Vgrs" : "Village_GrassShort.tga",
-        "Wrok" : "Lordw_Dirt.tga",
-        "Wgrs" : "Lordw_DirtRough.tga",
+        "Wdro" : "Lordw_DirtRough.tga",
+        "Wdrt" : "Lordw_Dirt.tga",
+        "Wgrs" : "Lordw_Grass.tga",
+        "Wrok" : "Lordw_Rock.tga",
+        "Wsng" : "Lordw_SnowGrass.tga",
         "Wsnw" : "Lordw_Snow.tga",
         "Ydtr" : "City_Dirt.tga",
         "Yblm" : "City_BlackMarble.tga",
@@ -95,10 +98,19 @@ class TopDownViewer:
         self.textureList = self.__texture__(mapData.mapInfo["groundTileSets"])
         draw = ImageDraw.Draw(img)
         self.__work__(img, draw, mapData, debug)
+        
+        self.__drawTrees_(draw, mapData)
         self.cleanup()
         return img
     def cleanup(self):
         del self.textureList
+    
+    def __drawTrees_(self, draw, mapData):
+        treeDump = simplejson.load(open("output/treeDump.json"))
+        for tree in treeDump:
+            draw.rectangle(((((tree["x"] - mapData.mapInfo["offsetX"]) / 4) - 2, (mapData.mapInfo["height"]*32 - (((tree["y"]- mapData.mapInfo["offsetY"]) / 4)-2))),
+                             ((tree["x"] - mapData.mapInfo["offsetX"]) / 4) + 2, (mapData.mapInfo["height"]*32 - (((tree["y"]- mapData.mapInfo["offsetY"]) / 4)+2))),
+                               fill=(0,0,0), outline=(0,0,0))
     def __texture__(self, groundTileSets):
         info = []
         for tileset in groundTileSets:
@@ -194,18 +206,18 @@ class TopDownViewer:
                     self.drawFlag(draw, x, y, 1, (0,0,0xFF),size=32)
                 if debug["blight"] and tile["flags"] & 2:
                     self.drawFlag(draw, x, y, 2, (0xFF,0,0xFF),size=32)
-                            
+               
                         
 if __name__ == "__main__":
     from read_w3e import ReadW3E
     import sys
     debugSettings = {
         "invalidTile" : True,
-        "validTile" : True,
-        "ramp" : True,
-        "height" : True,
+        "validTile" : False,
+        "ramp" : False,
+        "height" : False,
         "water" : True,
-        "blight" : True
+        "blight" : False
     }
     image = TopDownViewer()
     img = image.createImage(ReadW3E(sys.argv[1]), debugSettings)
