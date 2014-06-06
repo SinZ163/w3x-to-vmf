@@ -9,7 +9,17 @@ class DataReader():
             self.index = 0
         else:
             self.hdlr = filename
-            self.maxSize = os.path.getsize(self.hdlr.name)
+            
+            try:
+                self.maxSize = os.path.getsize(self.hdlr.name)
+            except:
+                original_pos = self.hdlr.tell()
+                
+                self.hdlr.seek(0, whence = 2)
+                self.maxSize = self.hdlr.tell() 
+                
+                self.hdlr.seek(original_pos)
+                
             self.index = self.hdlr.tell()
             
         
