@@ -561,11 +561,8 @@ class MPQArchive(object):
 
 ## Modified MPQ Reader for WC3 map files
 class WC3Map_MPQ(MPQArchive):
-    def __init__(self, filename, listfile=True):
-        if hasattr(filename, 'read'):
-            self.file = filename
-        else:
-            self.file = open(filename, 'rb')
+    def __init__(self, filehandler, listfile=True):
+        self.file = filehandler
             
         self.header = self.read_header()
         print(self.header)
@@ -639,6 +636,7 @@ class WC3Map_MPQ(MPQArchive):
             header["wc3map_mapFlags"] = datReader.flags()
             header["wc3map_maxPlayers"] = datReader.int()
             self.file.read(512 - datReader.index)
+            print ("Now position:", self.file.tell())
         else:
             ## If the magic isn't HM3W, we will skip the first 512 bytes of the 
             ## file anyway 
@@ -647,7 +645,8 @@ class WC3Map_MPQ(MPQArchive):
         print(self.file.tell())
         magic = self.file.read(4)
         self.file.seek(512)
-        print(magic)
+        print( len(magic))
+        print(magic, hex(ord(magic[3])) )
         
         if magic == b'MPQ\x1a':
             header.update(read_mpq_header())
@@ -667,7 +666,7 @@ class WC3Map_MPQ(MPQArchive):
         """Extract given files from the archive to disk."""
         ## Modification: Can extract files to a folder
         if folder != "":
-            path = folder+"/"
+            path = os.path.join(folder, "")
         else:
             path = ""
             
