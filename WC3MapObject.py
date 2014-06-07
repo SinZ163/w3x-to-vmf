@@ -2,6 +2,15 @@ import os
 
 from lib.mpyq import WC3Map_MPQ, UnsupportedCompressionAlgorithm
 
+from lib.ReadFiletype_Scripts.read_doo import ReadDoodad
+from lib.ReadFiletype_Scripts.read_object import ObjectReader
+from lib.ReadFiletype_Scripts.read_slk import ReadSLK
+from lib.ReadFiletype_Scripts.read_w3e import ReadW3E
+from lib.ReadFiletype_Scripts.read_w3i import WC3Info
+from lib.ReadFiletype_Scripts.read_wpm import ReadPathFile
+from lib.ReadFiletype_Scripts.read_wts import ReadWTS
+ 
+
 # This object will provide an interface for accessing the 
 # various data of a wc3 map. It will unpack the MPQ data from
 # the map, and it will automatically use the read_<insert file format>
@@ -30,7 +39,7 @@ class WC3Map():
                 if file != None:
                     print line, "found"
                     self.listfile.append(file)
-
+        
 
 if __name__ == "__main__":
     with open("input/trollsnelves.w3x", "rb") as f:

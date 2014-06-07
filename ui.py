@@ -8,8 +8,8 @@ import simplejson
 import traceback
 
 import lib.uiHelperFunctions as UIUtils
-from read_w3e import ReadW3E
-from read_object import ObjectReader, TranslationHandle
+from lib.ReadFiletype_Scripts.read_w3e import ReadW3E
+from lib.ReadFiletype_Scripts.read_object import ObjectReader, TranslationHandle
 
 from pprint import pprint as pprint
 
