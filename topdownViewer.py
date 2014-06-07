@@ -1,5 +1,8 @@
-from PIL import Image, ImageFont, ImageDraw
 import simplejson
+
+from PIL import Image, ImageFont, ImageDraw
+
+
 class TopDownViewer:
     textureLoc = "ui/WC3 Art/ground"
     textures = {
@@ -101,12 +104,19 @@ class TopDownViewer:
         
         self.__drawTrees_(draw, mapData)
         self.cleanup()
+        
         return img
+    
     def cleanup(self):
         del self.textureList
     
     def __drawTrees_(self, draw, mapData):
-        treeDump = simplejson.load(open("output/treeDump.json"))
+        try:
+            treeDump = simplejson.load(open("output/treeDump.json"))
+        except:
+            # No trees will be drawn today because the file is missing.
+            return
+        
         for tree in treeDump:
             draw.rectangle(((((tree["x"] - mapData.mapInfo["offsetX"]) / 4) - 2, (mapData.mapInfo["height"]*32 - (((tree["y"]- mapData.mapInfo["offsetY"]) / 4)-2))),
                              ((tree["x"] - mapData.mapInfo["offsetX"]) / 4) + 2, (mapData.mapInfo["height"]*32 - (((tree["y"]- mapData.mapInfo["offsetY"]) / 4)+2))),
@@ -152,6 +162,7 @@ class TopDownViewer:
     
     def averageColor(self, *args):
         print args
+        
     def drawFlag(self, draw, x, y, ring, colour, size=32):
         topLeft = (x*size+ring,y*size+ring)
         topRight = (x*size+(size-ring-1),y*size+ring)
@@ -165,6 +176,7 @@ class TopDownViewer:
         draw.line((topLeft,botLeft),fill=colour)
         #right
         draw.line((topRight,botRight),fill=colour)
+        
     def __work__(self, img, draw, mapData, debug):
         for x in xrange(mapData.mapInfo["width"]):
             for y in xrange(mapData.mapInfo["height"]):
@@ -209,8 +221,10 @@ class TopDownViewer:
                
                         
 if __name__ == "__main__":
-    from read_w3e import ReadW3E
     import sys
+    
+    from lib.ReadFiletype_Scripts.read_w3e import ReadW3E
+    
     debugSettings = {
         "invalidTile" : True,
         "validTile" : False,
@@ -219,6 +233,7 @@ if __name__ == "__main__":
         "water" : True,
         "blight" : False
     }
+    
     image = TopDownViewer()
     img = image.createImage(ReadW3E(sys.argv[1]), debugSettings)
     img.save("ui/tmp/test.png", "PNG")
