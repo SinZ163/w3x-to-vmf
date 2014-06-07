@@ -1,8 +1,8 @@
+from lib.DataReader import DataReader
+
 class ReadW3E():
-    from lib.DataReader import DataReader
-    
     def __init__(self, filename):
-        self.read = self.DataReader(filename)
+        self.read = DataReader(filename)
         self.mapInfo = self.ReadMap()
         
     def ReadMap(self):
@@ -10,7 +10,9 @@ class ReadW3E():
         mapInfo["info"] = []
         for i in xrange((mapInfo["width"])*(mapInfo["height"])):
             mapInfo["info"].append(self.ReadTile())
+            
         return mapInfo
+    
     def ReadHeader(self):
         data = {}
         data["fileID"] = self.read.charArray(4)
@@ -27,13 +29,16 @@ class ReadW3E():
         
         data["offsetX"] = self.read.float()
         data["offsetY"] = self.read.float()
+        
         return data
     
     def ReadTileset(self):
         length = self.read.int()
         info = [] 
+        
         for i in range(0,length):
             info.append(self.read.charArray(4))
+            
         return info
     
     def ReadTile(self):

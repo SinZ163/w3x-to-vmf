@@ -1,8 +1,8 @@
 import traceback #temp
 
-class ObjectReader():
-    from lib.DataReader import DataReader
+from lib.DataReader import DataReader
 
+class ObjectReader():
     #These are the file extentions that have more reading
     OptionalInts = [
             "w3d",
@@ -10,9 +10,10 @@ class ObjectReader():
             "w3q"
     ]
     variableTypes = []
+    
     def __init__(self, filename):
         self.filename = filename
-        self.read = self.DataReader(filename)
+        self.read = DataReader(filename)
         self.variableTypes = [
             self.read.int,
             self.read.float,
@@ -29,28 +30,37 @@ class ObjectReader():
         modInfo["ID"] = self.read.charArray(4)
         varType = self.read.int()
         fileSplit = self.filename.split(".")
+        
         if fileSplit[len(fileSplit)-1] in self.OptionalInts:
             modInfo["level"] = self.read.int()
             modInfo["pointer"] = self.read.int()
+            
         modInfo["value"] = self.variableTypes[varType]()
         self.read.int() #verify / end thing
+        
         return modInfo
+    
     def readObject(self):
         objectData = {}
         objectData["oldID"] = self.read.charArray(4)
         objectData["newID"] = self.read.charArray(4)
         modCount = self.read.int()
         objectData["mods"] = []
+        
         for i in xrange(modCount):
             objectData["mods"].append(self.readMod())
+            
         return objectData
+    
     def readTable(self):
         tmpLen = self.read.int()
         tmpInfo = []
         if tmpLen > 0:
             for i in xrange(tmpLen):
                 tmpInfo.append(self.readObject())
+                
         return tmpInfo
+    
 class TranslationHandle():
     def __init__(self, fileInfo):
         self.originalInfo = fileInfo
@@ -126,6 +136,7 @@ class TranslationHandle():
                 "name" : "Upgrades"
             }
         }
+        
         try:
             self.info = self.extentions[self.extention]["function"]()
         except:
@@ -137,17 +148,23 @@ class TranslationHandle():
         #THIS IS SO MESSY!!!! - SinZ 2014
         unknownName = "UnknownName"
         unknownCount = 0
+        
         for i in xrange(len(self.originalInfo.customInfo)):
             tmpInfo = {}
+            
             for j in xrange(len(self.originalInfo.customInfo[i]["mods"])):
                 if self.originalInfo.customInfo[i]["mods"][j]["ID"] in self.infoTable:
                     tmpInfo[self.infoTable[self.originalInfo.customInfo[i]["mods"][j]["ID"]]] = self.originalInfo.customInfo[i]["mods"][j]["value"]
+            
             if "Name" in tmpInfo:
                 dataTranslatedInfo[tmpInfo["Name"]] = tmpInfo
             else:
                 dataTranslatedInfo[unknownName+str(unknownCount)] = tmpInfo
                 unknownCount = unknownCount + 1
+                
         return dataTranslatedInfo
+    
+    
 if __name__ == "__main__":
     import simplejson
     import os
@@ -191,13 +208,16 @@ if __name__ == "__main__":
         os.makedirs('./output')
     except OSError:
         pass
+    
     outOriginal = "output/unknownOriginal.json"
     outCustom = "output/unknownCustom.json"
     outTrans = "output/unknownTranslated.json"
+    
     if filename[-3:] == "w3u":
         outOriginal = "output/unitOriginal.json"
         outCustom = "output/unitCustom.json"
         outTrans = "output/unitTranslated.json"
+        
     elif filename[-3:] == "w3t":
         outOriginal = "output/itemOriginal.json"
         outCustom = "output/itemCustom.json"

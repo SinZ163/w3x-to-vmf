@@ -1,10 +1,12 @@
 #menu minimap
 from lib.DataReader import DataReader
+
 class MenuMinimap:
     def __init__(self, filename):
         self.read = DataReader(filename)
         self.info = []
         self.__work__()
+        
     def __work__(self):
         unknown = self.read.int()
         count = self.read.int()

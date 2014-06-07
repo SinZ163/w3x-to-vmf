@@ -1,18 +1,22 @@
 #path map file
 from lib.DataReader import DataReader
+
 class ReadPathFile:
     def __init__(self, filename):
         self.read = DataReader(filename)
         self.info = {}
         self.__work__()
+        
     def __work__(self):  
         self.info["fileID"] = self.read.charArray(4) #usually MP3W
         self.info["fileVersion"] = self.read.int() #usually 0
         self.info["pathWidth"] = self.read.int() #mapWidth * 4
         self.info["pathHeight"] = self.read.int() #mapHeight * 4
         self.info["info"] = []
+        
         for x in xrange(0,self.info["pathWidth"]):
             xInfo = []
+            
             for y in xrange(0,self.info["pathHeight"]):
                 xInfo.append(self.read.byte())
                 '''
@@ -26,6 +30,7 @@ class ReadPathFile:
                 0x80: 1=unknown, 0=normal
                  '''
             self.info["info"].append(xInfo)
+            
 #WE DID IT ALREADY!
 if __name__ == "__main__":
     import os
