@@ -97,8 +97,8 @@ class TopDownViewer:
     
     def createImage(self, mapData, debug={"validTile" : False, "invalidTile" : False, "height" : False,
                                         "ramp" : False, "water" : False, "blight" : False}):
-        img = Image.new("RGB", (mapData.mapInfo["width"]*32, mapData.mapInfo["height"]*32))
-        self.textureList = self.__texture__(mapData.mapInfo["groundTileSets"])
+        img = Image.new("RGB", (mapData["width"]*32, mapData["height"]*32))
+        self.textureList = self.__texture__(mapData["groundTileSets"])
         draw = ImageDraw.Draw(img)
         self.__work__(img, draw, mapData, debug)
         
@@ -118,16 +118,27 @@ class TopDownViewer:
             return
         
         for tree in treeDump:
-            draw.rectangle(((((tree["x"] - mapData.mapInfo["offsetX"]) / 4) - 2, (mapData.mapInfo["height"]*32 - (((tree["y"]- mapData.mapInfo["offsetY"]) / 4)-2))),
-                             ((tree["x"] - mapData.mapInfo["offsetX"]) / 4) + 2, (mapData.mapInfo["height"]*32 - (((tree["y"]- mapData.mapInfo["offsetY"]) / 4)+2))),
-                               fill=(0,0,0), outline=(0,0,0))
+            draw.rectangle(
+                        (
+                            ( 
+                                ((tree["x"] - mapData["offsetX"]) / 4) - 2, 
+                                (mapData["height"]*32 - (((tree["y"]- mapData["offsetY"]) / 4)-2) ) 
+                            ),
+                              
+                                ((tree["x"] - mapData["offsetX"]) / 4) + 2, 
+                                (mapData["height"]*32 - (((tree["y"]- mapData["offsetY"]) / 4)+2))
+                        
+                        ), fill=(0,0,0), outline=(0,0,0) )
+            
     def __texture__(self, groundTileSets):
         info = []
+        
         for tileset in groundTileSets:
             if tileset in self.textures:               
                 textureInfo = []
                 tile = Image.open(self.textureLoc+"/"+self.textures[tileset])
                 width, height = tile.size
+                
                 for ix in xrange(width/64):
                     for iy in xrange(height/64):
                         
@@ -170,7 +181,7 @@ class TopDownViewer:
         botRight = (x*size+(size-ring-1),y*size+(size-ring-1))
         #top
         draw.line((topLeft,topRight),fill=colour)
-        #bot
+        #bottom
         draw.line((botLeft,botRight),fill=colour)
         #left
         draw.line((topLeft,botLeft),fill=colour)
@@ -178,18 +189,18 @@ class TopDownViewer:
         draw.line((topRight,botRight),fill=colour)
         
     def __work__(self, img, draw, mapData, debug):
-        for x in xrange(mapData.mapInfo["width"]):
-            for y in xrange(mapData.mapInfo["height"]):
-                index = y*mapData.mapInfo["width"] + x
+        for x in xrange(mapData["width"]):
+            for y in xrange(mapData["height"]):
+                index = y*mapData["width"] + x
                 
-                tile = mapData.mapInfo["info"][index]
+                tile = mapData["info"][index]
                 
                 
                 tiletype = tile["groundTextureType"]
                 #used only for writing text
-                type = mapData.mapInfo["groundTileSets"][tiletype]
+                type = mapData["groundTileSets"][tiletype]
                 
-                y = mapData.mapInfo["height"] - y-1
+                y = mapData["height"] - y-1
                 
                 #subindex = tile["textureDetails"]
                 subindex = 0
@@ -198,7 +209,8 @@ class TopDownViewer:
                     #texture, brightness = self.textures["dict"][type][subindex]
                     texture, brightness = self.textureList[tiletype][subindex]
                     if brightness == -1: #is it placeholder or not
-                        thisShouldErrorIntoExcept("hopefully")
+                        raise RuntimeError("Brightness value for {0} (subindex: {1}) equals -1".format(tiletype,
+                                                                                                       subindex))
                     img.paste(texture, (x*32, y*32))
                     
                     colorMod = 127.0/float(brightness)
@@ -212,6 +224,7 @@ class TopDownViewer:
                     if debug["invalidTile"]:
                         draw.text((x*32+1, y*32), str(hex(subindex)), font = self.font, fill = (255, 0, 33))
                         draw.text((x*32+1, y*32+15), str(type), font = self.font, fill = (140, 140, 140, 200))
+                        
                 if debug["ramp"] and tile["flags"] & 1:
                     self.drawFlag(draw, x, y, 0, (0xFF,0,0),size=32)
                 if debug["water"] and tile["flags"] & 4:
@@ -235,5 +248,10 @@ if __name__ == "__main__":
     }
     
     image = TopDownViewer()
-    img = image.createImage(ReadW3E(sys.argv[1]), debugSettings)
+    
+    filename = sys.argv[1]
+    with open(filename, "rb") as mapfile:
+        mapdata = ReadW3E(mapfile)
+    
+    img = image.createImage(mapdata, debugSettings)
     img.save("ui/tmp/test.png", "PNG")

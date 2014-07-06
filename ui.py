@@ -8,8 +8,8 @@ import simplejson
 import traceback
 
 import lib.uiHelperFunctions as UIUtils
-from lib.ReadFiletype_Scripts.read_w3e import ReadW3E
-from lib.ReadFiletype_Scripts.read_object import ObjectReader, TranslationHandle
+from lib.ReadFiletype.read_w3e import read_W3E
+from lib.ReadFiletype.read_object import read_object, translate_info
 
 from pprint import pprint as pprint
 
@@ -82,10 +82,11 @@ class TerrainTab(Tkinter.Frame):
         filename = askopenfilename(**options)
         self.filenameText.set(filename)
         if filename:
-            mapInfo = ReadW3E(filename)
+            with open(filename, "rb") as mapfile:
+                mapInfo = read_W3E(mapfile)
             
             if self.rawOption.get() == 1:
-                self.rawTab.setInfo(mapInfo.mapInfo)
+                self.rawTab.setInfo(mapInfo)
                 
             if self.topDownOption.get() == 1:
                 print("Time to generate a topdown")
@@ -94,7 +95,7 @@ class TerrainTab(Tkinter.Frame):
                 print("Generated.")
                 self.topDownTab.setImage(topdownImage)
                 
-            tmpInfo = mapInfo.mapInfo
+            tmpInfo = mapInfo
             del tmpInfo["info"]
             self.headerTab.setText(simplejson.dumps(tmpInfo, sort_keys=True, indent=4 * ' '))
         else:
@@ -330,12 +331,17 @@ class DataTab(Tkinter.Frame):
         self.filenameText.set(filename)
         
         if filename:
+            file_extension = filename.rpartition(".")[2]
+            
             #this is where we do stuff
-            fileInfo = ObjectReader(filename)
-            self.originalTab.setInfo(fileInfo.originalInfo)
-            self.customTab.setInfo(fileInfo.customInfo)
-            translated = TranslationHandle(fileInfo)
-            self.transTab.setInfo(translated.info)
+            with open(filename, "rb") as f:
+                fileInfo = read_object(f, file_extension)#ObjectReader(filename)
+                
+            self.originalTab.setInfo(fileInfo["originalInfo"])
+            self.customTab.setInfo(fileInfo["customInfo"])
+            
+            translated = translate_info(fileInfo["customInfo"], file_extension)
+            self.transTab.setInfo(translated)
             
 class InfoTab(Tkinter.Frame):
     def __init__(self, master=None):

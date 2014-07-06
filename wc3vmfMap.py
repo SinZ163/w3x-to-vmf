@@ -16,7 +16,7 @@ import lib.vmflib as vmflib
 import lib.vmflib.tools as tools
 
 
-from read_w3e import ReadW3E
+from lib.ReadFiletype.read_w3e import read_W3E
 from lib.dataTypes import QuadBlobs, Bytemap
 from lib.helperFunctions import make_number_divisible_by_n, map_list_with_vertex
 
@@ -43,11 +43,14 @@ class WarvmfMap():
     
     def __readWar3map__(self):
         start = timer()
-        self.data = ReadW3E(self.wc3_filename)
+        
+        with open(self.wc3_filename, "rb") as f:
+            self.wc3_mapinfo = read_W3E(f)
+            
         self.debug_timetaken["WC3 Map Reading"] = timer()-start
         
-        self.WC3map_xSize = self.data.mapInfo["width"]
-        self.WC3map_ySize = self.data.mapInfo["height"]
+        self.WC3map_xSize =  self.wc3_mapinfo["width"]
+        self.WC3map_ySize =  self.wc3_mapinfo["height"]
         self.WC3map_zSize = 15 # The maximal layer height for a wc3 map is 15 
         
         self.WC3map_heightmap, self.WC3map_rampmap, maxHeight = self.__war3_setup_bytemaps__()
@@ -63,7 +66,7 @@ class WarvmfMap():
         for x in xrange(self.WC3map_xSize):
             for y in xrange(self.WC3map_ySize):
                 index = y*self.WC3map_xSize + x
-                tile = self.data.mapInfo["info"][index]
+                tile =  self.wc3_mapinfo["info"][index]
                 
                 height = tile["layerHeight"]
                 
@@ -164,7 +167,7 @@ if __name__ == "__main__":
     print "WarvmfMap object initialized in {0} seconds".format(time.time() - start)
     midtime = time.time()
     
-    wc3map.generateVmf("displacement")
+    wc3map.generateVmf("brush")
     
     print "VMF generated in {0} seconds".format(time.time() - midtime)
     endtime = time.time()
