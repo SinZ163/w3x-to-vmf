@@ -36,6 +36,8 @@ class VmfGen():
         
         creationTime = time.clock()
         
+        directionmap = self.generate_rampDirection()
+        
         for ix in xrange(adjusted_WC3xSize//4):
             for iy in xrange(adjusted_WC3ySize//4):
                 
@@ -206,3 +208,66 @@ class VmfGen():
                     block.top().set_dispInfo(4, normals_list, distances_list)
                 
                 self.base.m.world.children.append(block)
+                
+    def generate_rampDirection(self):
+        heightmap = self.base.WC3map_heightmap
+        rampmap = self.base.WC3map_rampmap
+        
+        xsize = heightmap.maxX
+        ysize = heightmap.maxY
+        
+        #directionmap = Bytemap(xsize, ysize)
+        directionmap = {} 
+        
+        dont_check = {}
+        
+        for x in xrange(xsize):
+                for y in xrange(ysize):
+                    # We do not have to check a 
+                    index = x+xsize*y
+                    if index in dont_check:
+                        continue
+                    
+                    currentHeight = heightmap.getVal(x, y)
+                    rampflag = rampmap.getVal(x, y)
+                    
+                    breakLoop = False
+                    
+                    if rampflag == True:
+                        for ix in (-1, 0, 1):
+                            for iy in (-1, 0, 1):
+                                
+                                if ix != 0 or iy != 0:
+                                    height = heightmap.getVal(x+ix, y+iy)
+                                    ramp = rampmap.getVal(x+ix, y+iy)
+                                    
+                                    # The checked tile needs to have the ramp flag set.
+                                    # We assume that the height difference shouldn't exceed 1,
+                                    # but that needs to be confirmed.
+                                    # (The height difference also needs to be positive,
+                                    # otherwise we are looking at an upward slope.)
+                                    if ramp == True and (currentHeight - height) == 1:
+                                        directionmap[(x, y)] = (ix, iy)
+                                        
+                                else:
+                                    # ix=0, iy=0 is the middle, i.e. the current tile.
+                                    # We obviously don't need to check that.
+                                    pass
+                        
+                        if breakLoop:
+                            break
+                    
+                    
+        return directionmap
+                    
+                    
+                    
+                    
+                    
+                
+                
+                
+                
+                
+                
+        
