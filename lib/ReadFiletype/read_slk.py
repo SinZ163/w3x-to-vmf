@@ -9,7 +9,7 @@ def read_SLK(filehandle):
     curY = 0
     
     #with open(self.filename) as f:
-    for lineNumber, line in enumerate(f): 
+    for lineNumber, line in enumerate(filehandle): 
         if line[0:1] == "C":
             #Ok, this is a C record
             value = ""
@@ -64,5 +64,5 @@ if __name__ == "__main__":
         rowVals = []
         for x in sorted(row):
             rowVals.append(row[x].strip())
-        print(" | ".join(rowVals))"""
-        print("----------------------------")
+        print(" | ".join(rowVals))
+        print("----------------------------")"""

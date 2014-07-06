@@ -16,7 +16,7 @@ def read_WTS(filehandle):
     triggers = {}
     currentString = None
     
-    for lineNumber, line in enumerate(f):
+    for lineNumber, line in enumerate(filehandle):
         
         if currentString != None:
             if line.startswith("{"):
