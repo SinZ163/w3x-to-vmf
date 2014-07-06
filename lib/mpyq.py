@@ -341,7 +341,6 @@ class MPQArchive(object):
                 
                 ## If the Fix_Key flag is set, we need to calculate the final key
                 ## as '(base key + BlockOffset - ArchiveOffset) XOR FileSize'.
-                ## Is the following code correct?
                 if block_entry.flags&MPQ_FILE_FIX_KEY:
                     key = (key + offset - self.header['offset']) ^ block_entry.size
                 
@@ -353,11 +352,11 @@ class MPQArchive(object):
             if not block_entry.flags & MPQ_FILE_SINGLE_UNIT:
                 
                 if block_entry.flags & MPQ_FILE_SECTOR_CRC:
-                    print("yes crc")
+                    #print("yes crc")
                     crc = True
                     sectors += 1
                 else:
-                    print("no crc")
+                    #print("no crc")
                     crc = False
                 
                 ## If the file is encrypted, the sector offset table is encrypted, too.
