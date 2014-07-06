@@ -192,7 +192,7 @@ class EndOfFileException(Exception):
                     "Content of the last line: '{1}'").format(self.lineNumber,
                                                               self.lastLine)
     
-if __name__ == "__main__":
+"""if __name__ == "__main__":
     import os
     import simplejson
     
@@ -212,4 +212,4 @@ if __name__ == "__main__":
     with open("output/jass_f.json", "w") as f:
         f.write(simplejson.dumps(jass.functions, sort_keys=True, indent=4 * ' '))
     with open("output/jass_g.json", "w") as f:
-        f.write(simplejson.dumps(jass.globals, sort_keys=True, indent=4 * ' '))
+        f.write(simplejson.dumps(jass.globals, sort_keys=True, indent=4 * ' '))"""
