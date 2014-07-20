@@ -43,6 +43,7 @@ from io import BytesIO
 ## Modification by Yoshi2 & SinZ
 ## Comments prefixed with ## were not made by the original author, 
 ## but added as part of the modification of this MPQ library
+import logging
 from DataReader import DataReader
 
 
@@ -117,13 +118,15 @@ MPQBlockTableEntry.struct_format = '4I'
 
 class MPQArchive(object):
 
-    def __init__(self, filename, listfile=True):
+    def __init__(self, filename, listfile=True, strict = True, forceV1 = False):
         """Create a MPQArchive object.
 
         You can skip reading the listfile if you pass listfile=False
         to the constructor. The 'files' attribute will be unavailable
         if you do this.
         """
+        self.strict = strict
+        self.forceV1 = forceV1
         if hasattr(filename, 'read'):
             self.file = filename
         else:
@@ -135,40 +138,17 @@ class MPQArchive(object):
             self.files = self.read_file('(listfile)').splitlines()
         else:
             self.files = None
-
+            
     def read_header(self):
         """Read the header of a MPQ archive."""
-
-        def read_mpq_header(offset=None):
-            if offset:
-                self.file.seek(offset)
-            data = self.file.read(32)
-            header = MPQFileHeader._make(
-                struct.unpack(MPQFileHeader.struct_format, data))
-            header = header._asdict()
-            if header['format_version'] == 1:
-                data = self.file.read(12)
-                extended_header = MPQFileHeaderExt._make(
-                    struct.unpack(MPQFileHeaderExt.struct_format, data))
-                header.update(extended_header._asdict())
-            return header
-
-        def read_mpq_user_data_header():
-            data = self.file.read(16)
-            header = MPQUserDataHeader._make(
-                struct.unpack(MPQUserDataHeader.struct_format, data))
-            header = header._asdict()
-            header['content'] = self.file.read(header['user_data_header_size'])
-            return header
-
         magic = self.file.read(4)
         self.file.seek(0)
 
-        if magic == b'MPQ\x1a':
-            header = read_mpq_header()
+        if magic == b'MPQ\x1a' or self.forceV1 == True:
+            header = self.__read_mpq_header__()
             header['offset'] = 0
         elif magic == b'MPQ\x1b':
-            user_data_header = read_mpq_user_data_header()
+            user_data_header = self.__read_mpq_user_data_header__()
             header = read_mpq_header(user_data_header['mpq_header_offset'])
             header['offset'] = user_data_header['mpq_header_offset']
             header['user_data_header'] = user_data_header
@@ -176,6 +156,33 @@ class MPQArchive(object):
             raise ValueError("Invalid file header.")
 
         return header
+    
+    def __read_mpq_header__(self, offset=None):
+        if offset:
+            self.file.seek(offset)
+        data = self.file.read(32)
+        
+        header = MPQFileHeader._make(
+            struct.unpack(MPQFileHeader.struct_format, data))
+        header = header._asdict()
+        #print(header["format_version"])
+        if header['format_version'] == 1:
+            data = self.file.read(12)
+            extended_header = MPQFileHeaderExt._make(
+                struct.unpack(MPQFileHeaderExt.struct_format, data))
+            header.update(extended_header._asdict())
+            
+        return header
+
+    def __read_mpq_user_data_header__(self):
+        data = self.file.read(16)
+        header = MPQUserDataHeader._make(
+            struct.unpack(MPQUserDataHeader.struct_format, data))
+        header = header._asdict()
+        header['content'] = self.file.read(header['user_data_header_size'])
+        return header
+    
+   
 
     def read_table(self, table_type):
         """Read either the hash or block table of a MPQ archive."""
@@ -192,17 +199,26 @@ class MPQArchive(object):
         key = self._hash('(%s table)' % table_type, 'TABLE')
         
         self.file.seek(table_offset + self.header['offset'])
+        #print(table_offset, table_entries,self.header['offset'], "Oh my", key)
+        
+        
+        
         data = self.file.read(table_entries * 16)
         data = self._decrypt(data, key)
+        #print(len(data), table_entries)
         
         
 
         def unpack_entry(position):
             entry_data = data[position*16:position*16+16]
+            
+            if len(entry_data) == 0:
+                return None
+            
             return entry_class._make(
                 struct.unpack(entry_class.struct_format, entry_data))
 
-        return [unpack_entry(i) for i in range(table_entries)]
+        return [unpack_entry(i) for i in xrange(table_entries)]
 
     def get_hash_table_entry(self, filename):
         """Get the hash table entry corresponding to a given filename."""
@@ -214,76 +230,18 @@ class MPQArchive(object):
 
     def read_file(self, filename, force_decompress=False, raw = False):
         """Read a file from the MPQ archive."""
-
-        def decompress(data):
-            """Read the compression type and decompress file data."""
-            compression_type = ord(data[0:1])
-            data = data[1:]
-            
-            ## Compression type is actually a mask that contains data about which
-            ## compression algorithms are used. A sector can be compressed using
-            ## several compression algorithms.
-            otherTypes = 0x10 | 0x8 | 0x2 | 0x1 | 0x80 | 0x40
-            print(bin(compression_type), bin(otherTypes))
-            
-            ## A little check to give the program more room for exceptions.
-            ## Can be useful for debugging, might be removed later.
-            ## Flags: 
-            ## IMA ADPCM stereo:  0b10000000 
-            ## IMA ADPCM mono:    0b01000000
-            ## Unused:            0b00100000
-            ## bzip:              0b00010000 
-            ## Imploded:          0b00001000 
-            ## Unused:            0b00000100
-            ## zlib:              0b00000010 
-            ## Huffman:           0b00000001 
-            ## If any of those bits are set, something is not entirely correct
-             
-            if compression_type & ~otherTypes != 0:
-                raise RuntimeError("Compression Type has flags set which should not be set: {0},"
-                                   "can only handle the following flags: {1}".format(bin(compression_type), bin(otherTypes)))
-            
-            if compression_type & 0x10: 
-                print("Bz2 decompression...")
-                data = bz2.decompress(data)
-            
-            ## The Implode check might not belong here. According to documentation,
-            ## compressed data cannot be imploded, and vice versa.
-            if compression_type & 0x8: # 0b00001000
-                raise UnsupportedCompressionAlgorithm("Implode")
-            
-            if compression_type & 0x2:
-                print("zlib decompression...")
-                try:
-                    data = zlib.decompress(data, 15)
-                except zlib.error:
-                    ## Sometimes, the regular zlib decompress method fails due to invalid
-                    ## or truncated data. When that happens, it is very likely that decompressobj
-                    ## is able to decompress the data.
-                    print("Regular zlib decompress method failed. Using decompressObj.")
-                    
-                    zlib_decompressObj = zlib.decompressobj()
-                    data = zlib_decompressObj.decompress(data)
-            
-            if compression_type & 0x1:
-                raise UnsupportedCompressionAlgorithm("Huffman")
-            
-            if compression_type & 0x80:
-                raise UnsupportedCompressionAlgorithm("IMA ADPCM stereo")
-            
-            if compression_type & 0x40:
-                raise UnsupportedCompressionAlgorithm("IMA ADPCM mono")
-            
-            return data
-                
-
+        
+        if raw == True:
+            fileparts = []
+        
         hash_entry = self.get_hash_table_entry(filename)
         if hash_entry is None:
             return None
+        
         block_entry = self.block_table[hash_entry.block_table_index]
         
-        print("______")
-        print("File {0} HashEntry Offset: {1} BlockEntry Offset: {2}".format(filename, hash_entry, block_entry))
+        #print("______")
+        #print("File {0} HashEntry Offset: {1} BlockEntry Offset: {2}".format(filename, hash_entry, block_entry))
         
         # Read the block.
         if block_entry.flags & MPQ_FILE_EXISTS:
@@ -315,9 +273,9 @@ class MPQArchive(object):
             ## Is this the correct way to calculate it?
             sectorIndex = (offset - self.header['offset']) // (sector_size)
             
-            print(sector_size, sectors, sectorIndex, offset, sector_size, self.header['sector_size_shift'])
+            #print(sector_size, sectors, sectorIndex, offset, sector_size, self.header['sector_size_shift'])
             
-            print("{0} Filedata length: {1}".format(filename, len(file_data)))
+            #print("{0} Filedata length: {1}".format(filename, len(file_data)))
             
             ## If file is encrypted, create the decryption key as explained 
             ## in the MPQ documentation on http://www.wc3c.net/tools/specs/QuantamMPQFormat.txt
@@ -344,10 +302,10 @@ class MPQArchive(object):
                 if block_entry.flags&MPQ_FILE_FIX_KEY:
                     key = (key + offset - self.header['offset']) ^ block_entry.size
                 
-                print("Key:", key)
+                #print("Key:", key)
             
-            print("Implode: {0}, Compress: {1}, Encrypted: {2}, Fix Key: {3}".format((block_entry.flags&MPQ_FILE_IMPLODE) != 0, (block_entry.flags&MPQ_FILE_COMPRESS) != 0, 
-                                                                          (block_entry.flags & MPQ_FILE_ENCRYPTED) != 0, (block_entry.flags&MPQ_FILE_FIX_KEY) != 0))
+            #print("Implode: {0}, Compress: {1}, Encrypted: {2}, Fix Key: {3}".format((block_entry.flags&MPQ_FILE_IMPLODE) != 0, (block_entry.flags&MPQ_FILE_COMPRESS) != 0, 
+            #                                                              (block_entry.flags & MPQ_FILE_ENCRYPTED) != 0, (block_entry.flags&MPQ_FILE_FIX_KEY) != 0))
             
             if not block_entry.flags & MPQ_FILE_SINGLE_UNIT:
                 
@@ -379,7 +337,7 @@ class MPQArchive(object):
                 if raw == True:
                     rawData = BytesIO()
                 
-                print(positions)
+                #print(positions)
                 for i in range(len(positions) - (2 if crc else 1)):
                     
                     ## Each sector is decrypted using the key + the 0-based index of the sector.
@@ -399,7 +357,7 @@ class MPQArchive(object):
                         if (block_entry.flags & MPQ_FILE_COMPRESS and
                             (force_decompress or sector_bytes_left > len(sector))):
                             
-                            sector = decompress(sector)
+                            sector = decompress(sector, self.strict)
                             
                         sector_bytes_left -= len(sector)
                         result.write(sector)
@@ -412,7 +370,7 @@ class MPQArchive(object):
                 ## A single unit file should only contain a single sector, so we calculate
                 ## the key simply as key + sectorIndex
                 if block_entry.flags & MPQ_FILE_ENCRYPTED:
-                    print("SingleUnit data length:", len(file_data))
+                    #print("SingleUnit data length:", len(file_data))
                     sectorkey = key + sectorIndex
                     file_data = self._decrypt(file_data, sectorkey)
                 
@@ -560,14 +518,16 @@ class MPQArchive(object):
 
 ## Modified MPQ Reader for WC3 map files
 class WC3Map_MPQ(MPQArchive):
-    def __init__(self, filehandler, listfile=True):
+    def __init__(self, filehandler, listfile=True, strict = True, forceV1 = False):
         self.file = filehandler
+        self.strict = strict
+        self.forceV1 = forceV1
             
         self.header = self.read_header()
-        print(self.header)
+        #print(self.header)
         
         self.hash_table = self.read_table('hash')
-        print(self.hash_table)
+        #print(self.hash_table)
         
         self.block_table = self.read_table('block')
         
@@ -577,36 +537,13 @@ class WC3Map_MPQ(MPQArchive):
             self.files = None
     
     def read_header(self):
-        """Read the header of a MPQ archive."""
-
-        def read_mpq_header(offset=None):
-            if offset:
-                self.file.seek(offset)
-            data = self.file.read(32)
-            header = MPQFileHeader._make(
-                struct.unpack(MPQFileHeader.struct_format, data))
-            header = header._asdict()
-            
-            if header['format_version'] == 1:
-                
-                data = self.file.read(12)
-                extended_header = MPQFileHeaderExt._make(
-                    struct.unpack(MPQFileHeaderExt.struct_format, data))
-                header.update(extended_header._asdict())
-            return header
-
-        def read_mpq_user_data_header():
-            data = self.file.read(16)
-            header = MPQUserDataHeader._make(
-                struct.unpack(MPQUserDataHeader.struct_format, data))
-            header = header._asdict()
-            header['content'] = self.file.read(header['user_data_header_size'])
-            return header
-
+        #"""Read the header of a MPQ archive."""
+        ## Read the header of a WC3 MPQ archive
+        
         magic = self.file.read(4)
         self.file.seek(0)
         
-        print(magic)
+        #print(magic)
         
         if magic == "HM3W":
             datReader = DataReader(self.file)
@@ -617,6 +554,7 @@ class WC3Map_MPQ(MPQArchive):
             ## unknown
             datReader.int()
             header["wc3map_mapName"] = datReader.string()
+            print(header["wc3map_mapName"])
             """
             0x0001: 1=hide minimap in preview screens
             0x0002: 1=modify ally priorities
@@ -634,8 +572,7 @@ class WC3Map_MPQ(MPQArchive):
             """
             header["wc3map_mapFlags"] = datReader.flags()
             header["wc3map_maxPlayers"] = datReader.int()
-            self.file.read(512 - datReader.index)
-            print ("Now position:", self.file.tell())
+            self.file.seek(512)
         else:
             ## If the magic isn't HM3W, we will skip the first 512 bytes of the 
             ## file anyway 
@@ -647,12 +584,21 @@ class WC3Map_MPQ(MPQArchive):
         print( len(magic))
         print(magic, hex(ord(magic[3])) )
         
-        if magic == b'MPQ\x1a':
-            header.update(read_mpq_header())
-            header['offset'] = 512
+        if magic == b'MPQ\x1a' or self.forceV1 == True:
+            i = 1
+            
+            while magic != "MPQ\x1a":
+                i += 1
+                self.file.seek(512*i)
+                magic = self.file.read(4)
+            
+            self.file.seek(512*i)
+            header.update(self.__read_mpq_header__())
+            header['offset'] = 512*i
         elif magic == b'MPQ\x1b':
-            user_data_header = read_mpq_user_data_header()
-            header.update(read_mpq_header(user_data_header['mpq_header_offset']))
+            user_data_header = self.__read_mpq_user_data_header__()
+            header.update(self.__read_mpq_header__(user_data_header['mpq_header_offset']))
+            print(user_data_header['mpq_header_offset'])
             header['offset'] = user_data_header['mpq_header_offset']
             header['user_data_header'] = user_data_header
             
@@ -675,11 +621,97 @@ class WC3Map_MPQ(MPQArchive):
             f.write(data or "")
             f.close()
 
+            ## IMA ADPCM stereo:  0b10000000 
+            ## IMA ADPCM mono:    0b01000000
+            ## Unused:            0b00100000
+            ## bzip:              0b00010000 
+            ## Imploded:          0b00001000 
+            ## Unused:            0b00000100
+            ## zlib:              0b00000010 
+            ## Huffman:           0b00000001 
 class UnsupportedCompressionAlgorithm(Exception):
-    def __init__(self, algorithmName):
+    def __init__(self, algorithmName, compression_type):
         self.name = algorithmName
+        self.used_algorithms = []
+        
+        for algorithm in ( ("IMA ADPCM STEREO",  0b10000000),
+                           ("IMA ADPCM MONO",    0b01000000),
+                           ("bzip",              0b00010000),
+                           ("Imploded",          0b00001000),
+                           ("zlib",              0b00000010),
+                           ("Huffman",           0b00000001)):
+            name, flag = algorithm
+            if (compression_type & flag) != 0:
+                self.used_algorithms.append(name)
+            
+        
     def __str__(self):
-        return "The following algorithm is not yet supported: {0}".format(self.name)
+        return (
+                "The algorithm is not yet supported: {0}\n"
+                "A complete list of algorithms used in this sector: "
+                "{1}".format(self.name, ", ".join(self.used_algorithm) ) 
+                )
+
+def decompress(data, strict = True):
+    """Read the compression type and decompress file data."""
+    compression_type = ord(data[0:1])
+    data = data[1:]
+    
+    ## Compression type is actually a mask that contains data about which
+    ## compression algorithms are used. A sector can be compressed using
+    ## several compression algorithms.
+    otherTypes = 0x10 | 0x8 | 0x2 | 0x1 | 0x80 | 0x40
+    #print(bin(compression_type), bin(otherTypes))
+    
+    ## A little check to give the program more room for exceptions.
+    ## Can be useful for debugging, might be removed later.
+    ## Flags: 
+    ## IMA ADPCM stereo:  0b10000000 
+    ## IMA ADPCM mono:    0b01000000
+    ## Unused:            0b00100000
+    ## bzip:              0b00010000 
+    ## Imploded:          0b00001000 
+    ## Unused:            0b00000100
+    ## zlib:              0b00000010 
+    ## Huffman:           0b00000001 
+    ## If any of those bits are set, something is not entirely correct
+    
+    if strict and compression_type & ~otherTypes != 0:
+        raise RuntimeError("Compression Type has flags set which should not be set: {0},"
+                           "can only handle the following flags: {1}".format(bin(compression_type), bin(otherTypes)))
+    
+    if compression_type & 0x10: 
+        #print("Bz2 decompression...")
+        data = bz2.decompress(data)
+    
+    ## The Implode check might not belong here. According to documentation,
+    ## compressed data cannot be imploded, and vice versa.
+    if compression_type & 0x8: # 0b00001000
+        raise UnsupportedCompressionAlgorithm("Implode", compression_type)
+    
+    if compression_type & 0x2:
+        #print("zlib decompression...")
+        try:
+            data = zlib.decompress(data, 15)
+        except zlib.error:
+            ## Sometimes, the regular zlib decompress method fails due to invalid
+            ## or truncated data. When that happens, it is very likely that decompressobj
+            ## is able to decompress the data.
+            #print("Regular zlib decompress method failed. Using decompressObj.")
+            
+            zlib_decompressObj = zlib.decompressobj()
+            data = zlib_decompressObj.decompress(data)
+    
+    if compression_type & 0x1:
+        raise UnsupportedCompressionAlgorithm("Huffman", compression_type)
+    
+    if compression_type & 0x80:
+        raise UnsupportedCompressionAlgorithm("IMA ADPCM stereo", compression_type)
+    
+    if compression_type & 0x40:
+        raise UnsupportedCompressionAlgorithm("IMA ADPCM mono", compression_type)
+    
+    return data
 
 def main():
     import argparse
