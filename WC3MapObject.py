@@ -2,7 +2,8 @@ import os
 import traceback
 import simplejson
 
-from lib.mpyq import WC3Map_MPQ, UnsupportedCompressionAlgorithm
+from lib.mpyq.wc3_mpyq import WC3Map_MPQ
+from lib.mpyq.mpyq_compression import UnsupportedCompressionAlgorithm
 
 from lib.ReadFiletype.read_doo import read_doodad
 from lib.ReadFiletype.read_slk import read_SLK
@@ -21,32 +22,48 @@ class WC3Map():
     def __init__(self, filehandle, useListfile = False, strict = False, forceV1 = False):
         self.mpq = WC3Map_MPQ(filehandle, useListfile, strict, forceV1)
         self.listfile = []
+        #self.createListfile()
+    
+    # The createListfile method uses an external list of filenames
+    # for checking which files exist in the given wc3 map.
+    # Per default it uses the wc3Files.txt file,
+    # but a custom list can be supplied with the template argument.
+    def createListfile(self, template = None):
         
-    def createListfile(self):
-        standard_list = open(os.path.join("lib", "wc3Files.txt"), "r")
+        if template == None:
+            standard_list = open(os.path.join("lib", "wc3Files.txt"), "r")
+        else:
+            standard_list = template
         
-        for line in standard_list:
-            line = line.rstrip()
+        for filename in standard_list:
+            filename = filename.rstrip()
+            exists = self.mpq.file_exists(filename)
             
+            if exists == True:
+                print filename, "found"
+                self.listfile.append(filename)
+    
+    # Attempt to read all files listed in the listfile variable
+    # and put out any exception that appears.
+    def debug_tryAllFiles(self):
+        for filename in self.listfile:
             try:
-                file = self.mpq.read_file(line)
+                file = self.mpq.read_file(filename)
+                print filename, "is fine"
             except UnsupportedCompressionAlgorithm as error:
-                print line, "has unsupported compression: ",error.name, error.used_algorithms
-                self.listfile.append(file)
+                print filename, "has unsupported compression: ",error.name, error.used_algorithms, hex(error.compression_type)
             except Exception as error:
-                print line, "caused an exception:", str(error)
+                print filename, "caused an exception:", str(error)
                 traceback.print_exc()
-            else:
-                if file != None:
-                    print line, "found"
-                    self.listfile.append(file)
+                
+                
         
 
 if __name__ == "__main__":
     WCdirectory = "C:\\Games\\Warcraft III\\Maps\\CustomMaps"
     files = os.listdir(WCdirectory)
-
-    for filename in  files:
+    
+    for filename in files:
         path = os.path.join(WCdirectory, filename)
         if os.path.isdir(path):
             continue
@@ -55,9 +72,17 @@ if __name__ == "__main__":
         print path
         
         with open(path, "rb") as f:
-            try:
-                mymap = WC3Map(f, forceV1 = True)
-                mymap.createListfile()
-            except OverflowError:
-                print path, "CAUSES OVERFLOWERROR"
-                traceback.print_exc()
+            mymap = WC3Map(f, strict = False, forceV1 = True)
+            mymap.createListfile(template = open("lib/wc3Files_compact.txt"))
+            mymap.debug_tryAllFiles()
+            
+            ## Code for reading a file raw and writing each sector of the file
+            ## into seperate files in a debug_stuff/sectors/ directory.
+            ## Not recommended when reading more than one map at once.
+            #data = mymap.mpq.read_file("war3mapMap.blp", raw = True)
+            #for i, sector in enumerate(data):
+            #    with open(os.path.join("debug_stuff", 
+            #                           "sectors", 
+            #                           "sector_"+str(i)+"_"+str(sector[0])), "w") as f:
+            #        f.write(sector[1][1:])
+            
