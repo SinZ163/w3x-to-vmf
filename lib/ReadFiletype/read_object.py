@@ -1,5 +1,6 @@
 import traceback #temp
 
+import simplejson
 from lib.DataReader import DataReader
 
 def read_object(filehandle, filetype):
@@ -130,50 +131,9 @@ def __readMod__(read, filetype):
 # into full names.
 #
 
-infoTable = {
-        "icla" : "Classification",
-        "unam" : "Name",
-        "ides" : "Description",
-        "utip" : "ToolTip", #iunno
-        "utub" : "LongToolTip", #iunno
-        "iabi" : "AbilityList",
-        "iico" : "Icon",
-        "igol" : "GoldCost",
-        "ilum" : "LumberCost",
-        "iusa" : "Usable",
-        "iuse" : "Charges",
-        "iper" : "Perishable",
-        "isto" : "StockMax",
-        "istr" : "StockRegen",
-        "uhot" : "LegacyHotkey",
-        "isst" : "StockStart",
-        "ilev" : "Level",       #No idea
-        "idro" : "Droppable",   
-        "idrp" : "Drop",        #maybe IsDropped
-        "ihtp" : "HP",
-        "unsf" : "EditorSuffix", #should this even be in?
-        "utyp" : "Type",
-        "uhpm" : "HP",
-        "usca" : "ModelScale",
-        "ussc" : "Scale",
-        "uabi" : "AbilityList",
-        "ulum" : "LumberCost",
-        "uclb" : "blue value?",
-        "uclg" : "green value?",
-        "uclr" : "red value?",
-        #this is stats
-        "ustr" : "Base Strength",
-        "uagi" : "Base Agility",
-        "uint" : "Base Intelligence",
-        "ustp" : "Base Strength Gain",
-        "uagp" : "Base Agility Gain",
-        "uinp" : "Base Intelligence Gain",
-        "umpi" : "Base Mana ?",
-        
-        #Ability info
-        "anam" : "Name"
-    }
-
+infoFile = open("object_ids.json", "r")
+infoTable = simplejson.load(infoFile)
+infoFile.close()
 
 #
 # Full names of the 3-character extensions
@@ -214,13 +174,11 @@ def __dataTranslation__(infodata):
         
         for mod in objectDict["mods"]:
             modID = mod["ID"]
-            
-            if modID in infoTable:
-                translated_modID = infoTable[modID] 
+            if modID.upper() in infoTable:
+                translated_modID = infoTable[modID.upper()] 
                 modValue = mod["value"]
                 
                 tmpInfo[translated_modID] = modValue
-        
         if "Name" in tmpInfo:
             dataTranslatedInfo[tmpInfo["Name"]] = tmpInfo
         else:
