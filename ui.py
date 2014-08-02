@@ -2,10 +2,12 @@ import tkMessageBox
 import Tkinter
 import ttk
 import tkSimpleDialog
-from tkFileDialog import askopenfilename, asksaveasfilename
+from tkFileDialog import askopenfilename, asksaveasfilename, askopenfile
 
 import simplejson
 import traceback
+
+from WC3MapObject import WC3Map
 
 import lib.uiHelperFunctions as UIUtils
 from lib.ReadFiletype.read_w3e import read_W3E
@@ -24,6 +26,44 @@ except:
     print("no PIL, no topdown")
     print(traceback.format_exc())
 
+class MainTab(Tkinter.Frame):
+    def __init__(self, master=None):
+        Tkinter.Frame.__init__(self, master)
+        
+        self.openFrame = Tkinter.Frame(self)
+        
+        self.openButton = Tkinter.Button(self.openFrame, text="Open Warcraft III map", command=self.openFile)
+        self.openButton.pack(side=Tkinter.LEFT)
+        
+        self.filenameText = Tkinter.StringVar()
+        self.filename = Tkinter.Label(self.openFrame, textvariable=self.filenameText)
+        self.filename.pack(side=Tkinter.LEFT)
+        
+        self.openFrame.pack(side=Tkinter.TOP, anchor="n")
+        
+        self.optionFrame = Tkinter.Frame(self)
+        
+        self.filelist = Tkinter.Listbox(self, selectmode=Tkinter.EXTENDED)
+        self.filelist.pack(fill=Tkinter.BOTH, expand=1)
+        
+        self.pack(fill=Tkinter.BOTH, expand=1)
+        
+    def openFile(self):
+        self.filelist.delete(0, Tkinter.END)
+        options = {
+            "initialdir" : "input/",
+            "initialfile" : "",
+            "defaultextension" : ".w3x",
+            "filetypes"    : [("Warcraft III Frozen Throne map", ".w3x")],
+            "title" : "Open a Frozen Throne map"
+        }
+        file = askopenfile(mode="rb", **options)
+        self.filenameText.set(file.name)
+        
+        self.map = WC3Map(file)
+        self.map.createListfile(template=open("lib/wc3Files_compact.txt"))
+        for file in self.map.listfile:
+            self.filelist.insert(Tkinter.END, file)
 class TerrainTab(Tkinter.Frame):
     def __init__(self, master=None):
         Tkinter.Frame.__init__(self, master)
@@ -310,6 +350,7 @@ class DataTab(Tkinter.Frame):
         self.tabHandle.add(self.transTab, text="Translation")
         self.tabHandle.pack(fill=Tkinter.BOTH, expand=1)
         
+        self.jsonOutput = Tkinter.Button(self, text="Save as JSON", command=self.jsonOutput).pack(side=Tkinter.LEFT)
         self.pack(fill=Tkinter.BOTH, expand=1)
         
     def openFile(self):
@@ -337,12 +378,41 @@ class DataTab(Tkinter.Frame):
             with open(filename, "rb") as f:
                 fileInfo = read_object(f, file_extension)#ObjectReader(filename)
                 
+            self.fileInfo = fileInfo #for json output
+            
             self.originalTab.setInfo(fileInfo["originalInfo"])
             self.customTab.setInfo(fileInfo["customInfo"])
             
             translated = translate_info(fileInfo["customInfo"], file_extension)
             self.transTab.setInfo(translated)
-            
+    def jsonOutput(self):
+        if len(self.filenameText.get()) > 0:
+            #file is loaded?
+            currentTab = self.tabHandle.index(self.tabHandle.select())
+            if currentTab == 0:
+                #OriginalInfo
+                filename = self.filenameText.get().rpartition("/")[2]+"-original.json"
+                info = self.fileInfo["originalInfo"]
+            elif currentTab == 1:
+                #CustomInfo
+                filename = self.filenameText.get().rpartition("/")[2]+"-custom.json"
+                info = self.fileInfo["customInfo"]
+            elif currentTab == 2:
+                #Translation
+                filename = self.filenameText.get().rpartition("/")[2]+".json"
+                info = translate_info(self.fileInfo["customInfo"], self.filenameText.get().rpartition(".")[2])
+            else:
+                print("unknown tab")
+                return
+            options = {
+                "initialdir" : "output/",
+                "defaultextension" : ".json",
+                "filetypes" : [("JSON", ".json")],
+                "initialfile" : filename
+            }
+            newFilename = asksaveasfilename(**options)
+            with open(newFilename,"w") as f:
+                f.write(simplejson.dumps(info, sort_keys=True, indent=4 * ' '))
 class InfoTab(Tkinter.Frame):
     def __init__(self, master=None):
         Tkinter.Frame.__init__(self, master)
@@ -354,10 +424,12 @@ root = Tkinter.Tk()
 root.title("Warcraft III to Dota 2 conversion toolkit.")
 tabHandle = ttk.Notebook(root)
 
+mainTab = MainTab(tabHandle)
 terrainTab = TerrainTab(tabHandle)
 dataTab = DataTab(tabHandle)
 infoTab = InfoTab(tabHandle)
 
+tabHandle.add(mainTab, text="WC3 Map")
 tabHandle.add(terrainTab, text="Terrain")
 tabHandle.add(dataTab, text="Data")
 tabHandle.add(infoTab, text="Info")

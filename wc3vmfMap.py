@@ -159,15 +159,15 @@ if __name__ == "__main__":
     import sys
     start = time.time()
     wc3map = WarvmfMap(sys.argv[1], "output/war3map.vmf")
-    wc3map.wc3_tileSize = 64
-    wc3map.wc3_tileHeight = 64
+    wc3map.wc3_tileSize = 128
+    wc3map.wc3_tileHeight = 128
     
     wc3map.setup()
     
     print "WarvmfMap object initialized in {0} seconds".format(time.time() - start)
     midtime = time.time()
     
-    wc3map.generateVmf("brush")
+    wc3map.generateVmf("displacement")
     
     print "VMF generated in {0} seconds".format(time.time() - midtime)
     endtime = time.time()
