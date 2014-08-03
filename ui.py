@@ -4,6 +4,8 @@ import ttk
 import tkSimpleDialog
 from tkFileDialog import askopenfilename, asksaveasfilename, askopenfile
 
+import copy
+import io
 import simplejson
 import traceback
 
@@ -29,7 +31,8 @@ except:
 class MainTab(Tkinter.Frame):
     def __init__(self, master=None):
         Tkinter.Frame.__init__(self, master)
-        
+        self.tabHandle = ttk.Notebook(self)
+                
         self.openFrame = Tkinter.Frame(self)
         
         self.openButton = Tkinter.Button(self.openFrame, text="Open Warcraft III map", command=self.openFile)
@@ -41,11 +44,16 @@ class MainTab(Tkinter.Frame):
         
         self.openFrame.pack(side=Tkinter.TOP, anchor="n")
         
-        self.optionFrame = Tkinter.Frame(self)
-        
-        self.filelist = Tkinter.Listbox(self, selectmode=Tkinter.EXTENDED)
+        self.filelist = Tkinter.Listbox(self.tabHandle, selectmode=Tkinter.SINGLE)
+        self.filelist.bind("<Double-Button-1>", self.onSelect)
         self.filelist.pack(fill=Tkinter.BOTH, expand=1)
+
+        self.terrainTab = TerrainTab(self.tabHandle, w3x=True)
         
+        self.tabHandle.add(self.filelist, text="W3X Files")
+        self.tabHandle.add(self.terrainTab, text="Terrain", state="disabled")
+        self.tabHandle.pack(fill=Tkinter.BOTH, expand=1)
+                
         self.pack(fill=Tkinter.BOTH, expand=1)
         
     def openFile(self):
@@ -63,30 +71,41 @@ class MainTab(Tkinter.Frame):
         self.map = WC3Map(file)
         self.map.createListfile(template=open("lib/wc3Files_compact.txt"))
         for file in self.map.listfile:
+            if file == "war3map.w3e":
+                #We have terrain
+                self.tabHandle.tab(1, state="normal")
+                self.terrainTab.openFile(io.BytesIO(self.map.mpq.read_file("war3map.w3e")))
             self.filelist.insert(Tkinter.END, file)
-class TerrainTab(Tkinter.Frame):
-    def __init__(self, master=None):
-        Tkinter.Frame.__init__(self, master)
-        self.openFrame = Tkinter.Frame(self)
-        self.openButton = Tkinter.Button(self.openFrame, text="Open!", command=self.openFile).pack(side=Tkinter.LEFT)
         
-        self.filenameText = Tkinter.StringVar()
-        self.filename = Tkinter.Label(self.openFrame, textvariable=self.filenameText).pack(side=Tkinter.LEFT)
-        self.openFrame.pack()
-        #settings
+    def onSelect(self, event):
+        index = int(self.filelist.curselection()[0])
+        value = self.filelist.get(index)
+        print 'You selected item %d: "%s"' % (index, value)
+        
+class TerrainTab(Tkinter.Frame):
+    def __init__(self, master=None, w3x=False):
+        self.w3x = w3x
+    
+        Tkinter.Frame.__init__(self, master)
         self.settingsFrame = Tkinter.Frame(self)
         tmp="disabled"
         if useTopDown:
             tmp = "normal"
+            
+        if w3x == False:
+            self.openFrame = Tkinter.Frame(self)
+            self.openButton = Tkinter.Button(self.openFrame, text="Open!", command=self.openFile).pack(side=Tkinter.LEFT)
+            
+            self.filenameText = Tkinter.StringVar()
+            self.filename = Tkinter.Label(self.openFrame, textvariable=self.filenameText).pack(side=Tkinter.LEFT)
+            self.openFrame.pack()
+            
+            self.topDownOption = Tkinter.IntVar()
+            self.topDown = Tkinter.Checkbutton(self.settingsFrame, text="Generate TopDown (beta)", anchor="w", variable=self.topDownOption,state=tmp).pack(side=Tkinter.LEFT)
+            self.rawOption = Tkinter.IntVar()
+            self.rawButton = Tkinter.Checkbutton(self.settingsFrame,text="Visualise raw info (slow)", anchor="w", variable=self.rawOption).pack(side=Tkinter.LEFT)
         
         self.debugInfo = Tkinter.Button(self.settingsFrame, text="TopDown Settings",command=self.newDebugInfo, state = tmp).pack(side=Tkinter.LEFT)
-        
-        self.topDownOption = Tkinter.IntVar()
-        self.topDown = Tkinter.Checkbutton(self.settingsFrame, text="Generate TopDown (beta)", anchor="w", variable=self.topDownOption,state=tmp).pack(side=Tkinter.LEFT)
-        self.rawOption = Tkinter.IntVar()
-        self.rawButton = Tkinter.Checkbutton(self.settingsFrame,text="Visualise raw info (slow)", anchor="w", variable=self.rawOption).pack(side=Tkinter.LEFT)
-        
-        
         
         self.settingsFrame.pack()
         #end settings
@@ -110,36 +129,50 @@ class TerrainTab(Tkinter.Frame):
         self.debugSettings = {"validTile" : False, "invalidTile" : False, "height" : False,
                               "ramp" : False, "water" : False, "blight" : False}
     
-    def openFile(self):
-        
-        options = {
-            "initialdir" : "input/",
-            "initialfile" : "war3map.w3e",
-            "defaultextension" : ".w3e",
-            "filetypes"    : [("Warcraft III Terrain", ".w3e")],
-            "title" : "This is a title"
-        }
-        filename = askopenfilename(**options)
-        self.filenameText.set(filename)
-        if filename:
-            with open(filename, "rb") as mapfile:
-                mapInfo = read_W3E(mapfile)
+    def openFile(self, w3xInfo = None):
+        if self.w3x:
+            mapInfo = read_W3E(w3xInfo)
+            self.mapInfo = mapInfo
             
-            if self.rawOption.get() == 1:
-                self.rawTab.setInfo(mapInfo)
+            print("Time to generate a topdown")
+            #time to run TopDownViewer
+            topdownImage = self.WC3_Topdown_ImageGen.createImage(mapInfo, self.debugSettings)
+            print("Generated.")
+            self.topDownTab.setImage(topdownImage)
                 
-            if self.topDownOption.get() == 1:
-                print("Time to generate a topdown")
-                #time to run TopDownViewer
-                topdownImage = self.WC3_Topdown_ImageGen.createImage(mapInfo, self.debugSettings)
-                print("Generated.")
-                self.topDownTab.setImage(topdownImage)
-                
-            tmpInfo = mapInfo
+            tmpInfo = copy.copy(mapInfo)
             del tmpInfo["info"]
             self.headerTab.setText(simplejson.dumps(tmpInfo, sort_keys=True, indent=4 * ' '))
         else:
-            self.headerInfoText.set("")
+            options = {
+                "initialdir" : "input/",
+                "initialfile" : "war3map.w3e",
+                "defaultextension" : ".w3e",
+                "filetypes"    : [("Warcraft III Terrain", ".w3e")],
+                "title" : "This is a title"
+            }
+            filename = askopenfilename(**options)
+            self.filenameText.set(filename)
+            if filename:
+                with open(filename, "rb") as mapfile:
+                    mapInfo = read_W3E(mapfile)
+                    self.mapInfo = mapInfo
+                
+                if self.rawOption.get() == 1:
+                    self.rawTab.setInfo(mapInfo)
+                    
+                if self.topDownOption.get() == 1:
+                    print("Time to generate a topdown")
+                    #time to run TopDownViewer
+                    topdownImage = self.WC3_Topdown_ImageGen.createImage(mapInfo, self.debugSettings)
+                    print("Generated.")
+                    self.topDownTab.setImage(topdownImage)
+                    
+                tmpInfo = mapInfo
+                del tmpInfo["info"]
+                self.headerTab.setText(simplejson.dumps(tmpInfo, sort_keys=True, indent=4 * ' '))
+            else:
+                self.headerInfoText.set("")
             
     class TopDownTab(Tkinter.Frame):        
         def __init__(self, master=None):
@@ -256,10 +289,12 @@ class TerrainTab(Tkinter.Frame):
             def apply(self):
                 self.result = self.option.get()
     def newDebugInfo(self):
-        self.debugWindow = self.DApplication(self)
+        self.debugWindow = self.DApplication(self, self.mapInfo)
     
     class DApplication(tkSimpleDialog.Dialog):
-        def __init__(self, master=None):
+        def __init__(self, master=None, mapInfo=False):
+            self.mapInfo = mapInfo
+            
             self.debugSettings = dict(master.debugSettings)
             
             self.water = Tkinter.BooleanVar()
@@ -313,6 +348,9 @@ class TerrainTab(Tkinter.Frame):
             self.master.debugSettings["ramp"] = self.ramp.get()
             self.master.debugSettings["height"] = self.height.get()
             
+            if self.mapInfo:
+                topdownImage = self.master.WC3_Topdown_ImageGen.createImage(self.mapInfo, self.master.debugSettings)
+                self.master.topDownTab.setImage(topdownImage)
             
     class HeaderInfoTab(Tkinter.Frame):
         def __init__(self, master=None):

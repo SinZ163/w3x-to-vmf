@@ -15,7 +15,11 @@ class DataReader():
             except:
                 original_pos = self.hdlr.tell()
                 
-                self.hdlr.seek(0, whence = 2)
+                try:
+                    self.hdlr.seek(0, whence = 2)
+                except TypeError:
+                    #silly BytesIO
+                    self.hdlr.seek(0, 2)
                 self.maxSize = self.hdlr.tell() 
                 
                 self.hdlr.seek(original_pos)
