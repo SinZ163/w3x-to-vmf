@@ -50,8 +50,15 @@ class MainTab(Tkinter.Frame):
 
         self.terrainTab = TerrainTab(self.tabHandle, w3x=True)
         
+        self.unitTab = UIUtils.GenericTreeTab(self.tabHandle)
+        self.itemTab = UIUtils.GenericTreeTab(self.tabHandle)
+        self.abilTab = UIUtils.GenericTreeTab(self.tabHandle)
+        
         self.tabHandle.add(self.filelist, text="W3X Files")
         self.tabHandle.add(self.terrainTab, text="Terrain", state="disabled")
+        self.tabHandle.add(self.unitTab, text="Units", state="disabled")
+        self.tabHandle.add(self.itemTab, text="Items", state="disabled")
+        self.tabHandle.add(self.abilTab, text="Abilities", state="disabled")
         self.tabHandle.pack(fill=Tkinter.BOTH, expand=1)
                 
         self.pack(fill=Tkinter.BOTH, expand=1)
@@ -71,10 +78,23 @@ class MainTab(Tkinter.Frame):
         self.map = WC3Map(file)
         self.map.createListfile(template=open("lib/wc3Files_compact.txt"))
         for file in self.map.listfile:
+            file_extention = file.rpartition(".")[2]
             if file == "war3map.w3e":
                 #We have terrain
                 self.tabHandle.tab(1, state="normal")
                 self.terrainTab.openFile(io.BytesIO(self.map.mpq.read_file("war3map.w3e")))
+            if file_extention in ("w3t", "w3u", "w3a"):
+                #We have items, units or abilities
+                fileInfo = read_object(io.BytesIO(self.map.mpq.read_file(file)), file_extention)#ObjectReader(filename)
+                if file_extention == "w3u":
+                    self.tabHandle.tab(2, state="normal")
+                    self.unitTab.setInfo(translate_info(fileInfo["customInfo"], file_extention))
+                if file_extention == "w3t":
+                    self.tabHandle.tab(3, state="normal")
+                    self.itemTab.setInfo(translate_info(fileInfo["customInfo"], file_extention))
+                if file_extention == "w3a":
+                    self.tabHandle.tab(4, state="normal")
+                    self.abilTab.setInfo(translate_info(fileInfo["customInfo"], file_extention))
             self.filelist.insert(Tkinter.END, file)
         
     def onSelect(self, event):
