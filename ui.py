@@ -76,7 +76,9 @@ class MainTab(Tkinter.Frame):
         self.filenameText.set(file.name)
         
         self.map = WC3Map(file)
-        self.map.createListfile(template=open("lib/wc3Files_compact.txt"))
+        with open("lib/wc3Files_compact.txt", "r") as f:
+            self.map.createListfile(template=f)
+            
         for file in self.map.listfile:
             file_extention = file.rpartition(".")[2]
             if file == "war3map.w3e":
