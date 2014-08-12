@@ -1,6 +1,7 @@
 import os
 import traceback
 import simplejson
+from cStringIO import StringIO
 
 from lib.mpyq.wc3_mpyq import WC3Map_MPQ
 from lib.mpyq.mpyq_compression import UnsupportedCompressionAlgorithm
@@ -19,9 +20,9 @@ from lib.ReadFiletype.read_object import read_object
 # the map, and it will automatically use the read_<insert file format>
 # scripts to extract the information from the files.
 class WC3Map():
-    def __init__(self, filehandle, useListfile = False, strict = False, forceV1 = False):
+    def __init__(self, filehandle, useListfile = False, strict = True, forceV1 = False):
         self.mpq = WC3Map_MPQ(filehandle, useListfile, strict, forceV1)
-        self.listfile = []
+        self.listfile = {}
         #self.createListfile()
     
     # The createListfile method uses an external list of filenames
@@ -41,7 +42,7 @@ class WC3Map():
             
             if exists == True:
                 print filename, "found"
-                self.listfile.append(filename)
+                self.listfile[filename] = True
     
     # Attempt to read all files listed in the listfile variable
     # and put out any exception that appears.
@@ -55,6 +56,15 @@ class WC3Map():
             except Exception as error:
                 print filename, "caused an exception:", str(error)
                 traceback.print_exc()
+    
+    def read_file(self, filename):
+        file = self.mpq.read_file(filename)
+        if file != None:
+            filehdlr = StringIO(file)
+            return filehdlr
+        else:
+            # File has not been found.
+            return None
                 
                 
         
@@ -72,7 +82,7 @@ if __name__ == "__main__":
         print path
         
         with open(path, "rb") as f:
-            mymap = WC3Map(f, strict = False, forceV1 = True)
+            mymap = WC3Map(f, strict = True, forceV1 = True)
             mymap.createListfile(template = open("lib/wc3Files_compact.txt"))
             mymap.debug_tryAllFiles()
             
