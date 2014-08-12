@@ -80,13 +80,13 @@ else:
 if ability_file != None:
     abilityData = read_W3A(ability_file, triggerDB)
     
-    translated_abilityData = {"fileVersion" : itemData["fileVersion"],
+    translated_abilityData = {"fileVersion" : abilityData["fileVersion"],
                            "originalInfo" : translate_info(abilityData["originalInfo"], "w3a"),
                            "customInfo" : translate_info(abilityData["customInfo"], "w3a")}
     
     path = OUTPUTPATH+"war3map.w3a_abilityData.json"
     with open(path, "w") as f:
-        simplejson.dump(translated_itemData, fp = f, indent = " "*4)
+        simplejson.dump(translated_abilityData, fp = f, indent = " "*4)
     print "Wrote ability data to '{0}'".format(path)
 else:
     print "Did not dump any ability data."
@@ -94,7 +94,7 @@ else:
 if unit_file != None:
     unitData = read_W3U(unit_file, triggerDB)
     
-    translated_unitData = {"fileVersion" : itemData["fileVersion"],
+    translated_unitData = {"fileVersion" : unitData["fileVersion"],
                            "originalInfo" : translate_info(unitData["originalInfo"], "w3u"),
                            "customInfo" : translate_info(unitData["customInfo"], "w3u")}
     
