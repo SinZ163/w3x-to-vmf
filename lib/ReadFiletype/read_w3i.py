@@ -16,11 +16,14 @@ from lib.DataReader import DataReader
 #class WC3Info:
 #    def __init__(self, filename):
 #        self.read = DataReader(filename)
-def read_W3I(filehandle):    
+def read_W3I(filehandle, triggerStrings = None):    
 #    def ReadFile(self):
 #        self.info = {}
 #        self.ReadInfo()
     read = DataReader(filehandle)
+    if triggerStrings != None:
+        read.load_triggerDB(triggerStrings)
+        
     info = {}
     
     info["version"] = read.int()
