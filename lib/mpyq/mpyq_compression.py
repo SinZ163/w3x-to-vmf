@@ -21,7 +21,7 @@ class UnsupportedCompressionAlgorithm(Exception):
         return (
                 "The algorithm is not yet supported: {0}\n"
                 "A complete list of algorithms used in this sector: "
-                "{1}".format(self.name, ", ".join(self.used_algorithm) ) 
+                "{1}".format(self.name, ", ".join(self.used_algorithms) ) 
                 )
 
 def decompress(data, strict = True):
