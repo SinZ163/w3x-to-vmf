@@ -3,7 +3,7 @@ import traceback #temp
 import simplejson
 from lib.DataReader import DataReader
 
-def read_object(filehandle, filetype):
+def read_object(filehandle, filetype, triggerDB = None):
     readFile = {"w3u" : read_W3U,
                 "w3t" : read_W3T,
                 "w3b" : read_W3B,
@@ -18,32 +18,32 @@ def read_object(filehandle, filetype):
     return data
     
 
-def read_W3U(filehandle):
-    data = __read_generic_object__(filehandle, "w3u")
+def read_W3U(filehandle, triggerDB = None):
+    data = __read_generic_object__(filehandle, "w3u", triggerDB)
     return data
 
-def read_W3T(filehandle):
-    data = __read_generic_object__(filehandle, "w3t")
+def read_W3T(filehandle, triggerDB = None):
+    data = __read_generic_object__(filehandle, "w3t", triggerDB)
     return data
 
-def read_W3B(filehandle):
-    data = __read_generic_object__(filehandle, "w3b")
+def read_W3B(filehandle, triggerDB = None):
+    data = __read_generic_object__(filehandle, "w3b", triggerDB)
     return data
 
-def read_W3D(filehandle):
-    data = __read_generic_object__(filehandle, "w3d")
+def read_W3D(filehandle, triggerDB = None):
+    data = __read_generic_object__(filehandle, "w3d", triggerDB)
     return data
 
-def read_W3A(filehandle):
-    data = __read_generic_object__(filehandle, "w3a")
+def read_W3A(filehandle, triggerDB = None):
+    data = __read_generic_object__(filehandle, "w3a", triggerDB)
     return data
 
-def read_W3H(filehandle):
-    data = __read_generic_object__(filehandle, "w3h")
+def read_W3H(filehandle, triggerDB = None):
+    data = __read_generic_object__(filehandle, "w3h", triggerDB)
     return data
 
-def read_W3Q(filehandle):
-    data = __read_generic_object__(filehandle, "w3q")
+def read_W3Q(filehandle, triggerDB = None):
+    data = __read_generic_object__(filehandle, "w3q", triggerDB)
     return data
     
 
@@ -56,8 +56,10 @@ def read_W3Q(filehandle):
 #    ]
 #    variableTypes = []
     
-def __read_generic_object__(filehandle, filetype):
+def __read_generic_object__(filehandle, filetype, triggerDB = None):
     read = DataReader(filehandle)
+    if triggerDB != None:
+        read.load_triggerDB(triggerDB)
     #variableTypes = [
     #    read.int,
     #    read.float,
