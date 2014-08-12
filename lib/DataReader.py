@@ -174,7 +174,7 @@ class DataReader():
                 triggerID = int(number)
         
         if triggerID in self.TriggerDict:
-            return self.TriggerDict[triggerID]
+            return "\n".join(self.TriggerDict[triggerID])
         else:
             raise RuntimeError("Trigger ID doesn't exist: {0}".format(triggerID))
                 
