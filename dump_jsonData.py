@@ -98,7 +98,7 @@ if unit_file != None:
                            "originalInfo" : translate_info(unitData["originalInfo"], "w3u"),
                            "customInfo" : translate_info(unitData["customInfo"], "w3u")}
     
-    path = OUTPUTPATH+"war3map.w3u_unitData"
+    path = OUTPUTPATH+"war3map.w3u_unitData.json"
     with open(path, "w") as f:
         simplejson.dump(translated_unitData, fp = f, indent = " "*4)
     print "Wrote unit data to '{0}'".format(path)
