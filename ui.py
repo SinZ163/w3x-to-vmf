@@ -13,6 +13,7 @@ from WC3MapObject import WC3Map
 
 import lib.uiHelperFunctions as UIUtils
 from lib.ReadFiletype.read_w3e import read_W3E
+from lib.ReadFiletype.read_wts import read_WTS
 from lib.ReadFiletype.read_object import read_object, translate_info
 
 from pprint import pprint as pprint
@@ -75,28 +76,36 @@ class MainTab(Tkinter.Frame):
         file = askopenfile(mode="rb", **options)
         self.filenameText.set(file.name)
         
-        self.map = WC3Map(file)
+        self.map = WC3Map(file, forceV1=True)
         with open("lib/wc3Files_compact.txt", "r") as f:
             self.map.createListfile(template=f)
-            
+        
+        triggers = None
+        try:
+            triggers = read_WTS(io.BytesIO(self.map.mpq.read_file("war3map.wts")))
+        except:
+            triggers = None
         for file in self.map.listfile:
             file_extention = file.rpartition(".")[2]
-            if file == "war3map.w3e":
-                #We have terrain
-                self.tabHandle.tab(1, state="normal")
-                self.terrainTab.openFile(io.BytesIO(self.map.mpq.read_file("war3map.w3e")))
-            if file_extention in ("w3t", "w3u", "w3a"):
-                #We have items, units or abilities
-                fileInfo = read_object(io.BytesIO(self.map.mpq.read_file(file)), file_extention)#ObjectReader(filename)
-                if file_extention == "w3u":
-                    self.tabHandle.tab(2, state="normal")
-                    self.unitTab.setInfo(translate_info(fileInfo["customInfo"], file_extention))
-                if file_extention == "w3t":
-                    self.tabHandle.tab(3, state="normal")
-                    self.itemTab.setInfo(translate_info(fileInfo["customInfo"], file_extention))
-                if file_extention == "w3a":
-                    self.tabHandle.tab(4, state="normal")
-                    self.abilTab.setInfo(translate_info(fileInfo["customInfo"], file_extention))
+            try:
+                if file == "war3map.w3e":
+                    #We have terrain
+                    self.tabHandle.tab(1, state="normal")
+                    self.terrainTab.openFile(io.BytesIO(self.map.mpq.read_file("war3map.w3e")))
+                if file_extention in ("w3t", "w3u", "w3a"):
+                    #We have items, units or abilities
+                    fileInfo = read_object(io.BytesIO(self.map.mpq.read_file(file)), file_extention, triggerDB=triggers)#ObjectReader(filename)
+                    if file_extention == "w3u":
+                        self.tabHandle.tab(2, state="normal")
+                        self.unitTab.setInfo(translate_info(fileInfo["customInfo"], file_extention))
+                    if file_extention == "w3t":
+                        self.tabHandle.tab(3, state="normal")
+                        self.itemTab.setInfo(translate_info(fileInfo["customInfo"], file_extention))
+                    if file_extention == "w3a":
+                        self.tabHandle.tab(4, state="normal")
+                        self.abilTab.setInfo(translate_info(fileInfo["customInfo"], file_extention))
+            except:
+                pass
             self.filelist.insert(Tkinter.END, file)
         
     def onSelect(self, event):

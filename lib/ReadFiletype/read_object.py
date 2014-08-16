@@ -14,7 +14,7 @@ def read_object(filehandle, filetype, triggerDB = None):
     
     #read = DataReader(filehandle)
     
-    data = readFile[filetype](filehandle)
+    data = readFile[filetype](filehandle, triggerDB)
     return data
     
 

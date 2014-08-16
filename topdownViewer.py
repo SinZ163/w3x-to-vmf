@@ -224,25 +224,45 @@ class TopDownViewer:
                     if debug["invalidTile"]:
                         draw.text((x*32+1, y*32), str(hex(subindex)), font = self.font, fill = (255, 0, 33))
                         draw.text((x*32+1, y*32+15), str(type), font = self.font, fill = (140, 140, 140, 200))
-                        
+                if debug["height"]:
+                    draw.text((x*32+1, y*32), str(tile["layerHeight"]), font = self.font, fill = (0, 0, 0))
+                    try:
+                        if x > 0: #not on the left side
+                            if tile["layerHeight"] > mapData["info"][index-1]["layerHeight"]:
+                                draw.line(((x*32,y*32), (x*32,y*32+31)), fill=(0,0,0))
+                        if x < mapData["width"]: #not on the right side
+                            if tile["layerHeight"] > mapData["info"][index+1]["layerHeight"]:
+                                draw.line(((x*32+31,y*32), (x*32+31,y*32+31)), fill=(0,0,0))
+                        if y > 0: #not on the top side
+                            if tile["layerHeight"] > mapData["info"][index+mapData["width"]]["layerHeight"]:
+                                draw.line(((x*32,y*32), (x*32+31,y*32)), fill=(0,0,0))
+                                #draw.text((x*32+8, y*32), str(mapData["info"][index+mapData["width"]]["layerHeight"]), font = self.font, fill = (0, 0, 255))
+                        if y < mapData["height"]:
+                            if tile["layerHeight"] > mapData["info"][index-mapData["width"]]["layerHeight"]:
+                                draw.line(((x*32,y*32+31), (x*32+31,y*32+31)), fill=(0,0,0))
+                                #draw.text((x*32+1, y*32+11), str(mapData["info"][index-mapData["width"]]["layerHeight"]), font = self.font, fill = (0, 255, 255))
+                            
+                    except:
+                        pass
+                    
                 if debug["ramp"] and tile["flags"] & 1:
-                    self.drawFlag(draw, x, y, 0, (0xFF,0,0),size=32)
+                    self.drawFlag(draw, x, y, 1, (0xFF,0,0),size=32)
                 if debug["water"] and tile["flags"] & 4:
-                    self.drawFlag(draw, x, y, 1, (0,0,0xFF),size=32)
+                    self.drawFlag(draw, x, y, 2, (0,0,0xFF),size=32)
                 if debug["blight"] and tile["flags"] & 2:
-                    self.drawFlag(draw, x, y, 2, (0xFF,0,0xFF),size=32)
+                    self.drawFlag(draw, x, y, 3, (0xFF,0,0xFF),size=32)
                
                         
 if __name__ == "__main__":
     import sys
     
-    from lib.ReadFiletype_Scripts.read_w3e import ReadW3E
+    from lib.ReadFiletype.read_w3e import read_W3E as ReadW3E
     
     debugSettings = {
         "invalidTile" : True,
         "validTile" : False,
-        "ramp" : False,
-        "height" : False,
+        "ramp" : True,
+        "height" : True,
         "water" : True,
         "blight" : False
     }
