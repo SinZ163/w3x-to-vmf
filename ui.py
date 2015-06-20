@@ -122,7 +122,7 @@ class MainTab(Tkinter.Frame):
             "initialfile" : self.filenameText.get()+"-"+value
         }
         newFilename = asksaveasfilename(**options)
-        with open(newFilename,"w") as f:
+        with open(newFilename,"wb") as f:
             f.write(io.BytesIO(self.map.mpq.read_file(value)).read())
         
 class TerrainTab(Tkinter.Frame):
