@@ -115,6 +115,15 @@ class MainTab(Tkinter.Frame):
         index = int(self.filelist.curselection()[0])
         value = self.filelist.get(index)
         print 'You selected item %d: "%s"' % (index, value)
+        options = {
+            "initialdir" : "output/",
+            "defaultextension" : value.rpartition(".")[2],
+            "filetypes" : [("File", value.rpartition(".")[2])],
+            "initialfile" : self.filenameText.get()+"-"+value
+        }
+        newFilename = asksaveasfilename(**options)
+        with open(newFilename,"w") as f:
+            f.write(io.BytesIO(self.map.mpq.read_file(value)).read())
         
 class TerrainTab(Tkinter.Frame):
     def __init__(self, master=None, w3x=False):
