@@ -31,6 +31,8 @@ except:
 
 class MainTab(Tkinter.Frame):
     def __init__(self, master=None):
+        self.name = "MainTab"
+    
         Tkinter.Frame.__init__(self, master)
         self.tabHandle = ttk.Notebook(self)
                 
@@ -97,15 +99,16 @@ class MainTab(Tkinter.Frame):
                     fileInfo = read_object(io.BytesIO(self.map.mpq.read_file(file)), file_extention, triggerDB=triggers)#ObjectReader(filename)
                     if file_extention == "w3u":
                         self.tabHandle.tab(2, state="normal")
-                        self.unitTab.setInfo(translate_info(fileInfo["customInfo"], file_extention))
+                        print("SETTING INFO")
+                        self.unitTab.setInfo(translate_info(fileInfo["customInfo"], file_extention), file_extention, self.filenameText.get())
                     if file_extention == "w3t":
                         self.tabHandle.tab(3, state="normal")
-                        self.itemTab.setInfo(translate_info(fileInfo["customInfo"], file_extention))
+                        self.itemTab.setInfo(translate_info(fileInfo["customInfo"], file_extention), file_extention, self.filenameText.get())
                     if file_extention == "w3a":
                         self.tabHandle.tab(4, state="normal")
-                        self.abilTab.setInfo(translate_info(fileInfo["customInfo"], file_extention))
+                        self.abilTab.setInfo(translate_info(fileInfo["customInfo"], file_extention), file_extention, self.filenameText.get())
             except:
-                pass
+                print(traceback.format_exc())
             self.filelist.insert(Tkinter.END, file)
         
     def onSelect(self, event):
@@ -396,6 +399,8 @@ class TerrainTab(Tkinter.Frame):
     
 class DataTab(Tkinter.Frame):
     def __init__(self, master=None):
+        self.name = "DataTab"
+    
         Tkinter.Frame.__init__(self, master)
         #Row 0
         self.settingFrame = Tkinter.Frame(self)
@@ -419,7 +424,7 @@ class DataTab(Tkinter.Frame):
         self.tabHandle.add(self.transTab, text="Translation")
         self.tabHandle.pack(fill=Tkinter.BOTH, expand=1)
         
-        self.jsonOutput = Tkinter.Button(self, text="Save as JSON", command=self.jsonOutput).pack(side=Tkinter.LEFT)
+        #self.jsonOutput = Tkinter.Button(self, text="Save as JSON", command=UIUtils.jsonOutput).pack(side=Tkinter.LEFT)
         self.pack(fill=Tkinter.BOTH, expand=1)
         
     def openFile(self):
@@ -449,39 +454,11 @@ class DataTab(Tkinter.Frame):
                 
             self.fileInfo = fileInfo #for json output
             
-            self.originalTab.setInfo(fileInfo["originalInfo"])
-            self.customTab.setInfo(fileInfo["customInfo"])
+            self.originalTab.setInfo(fileInfo["originalInfo"], "original", filename)
+            self.customTab.setInfo(fileInfo["customInfo"], "custom", filename)
             
             translated = translate_info(fileInfo["customInfo"], file_extension)
-            self.transTab.setInfo(translated)
-    def jsonOutput(self):
-        if len(self.filenameText.get()) > 0:
-            #file is loaded?
-            currentTab = self.tabHandle.index(self.tabHandle.select())
-            if currentTab == 0:
-                #OriginalInfo
-                filename = self.filenameText.get().rpartition("/")[2]+"-original.json"
-                info = self.fileInfo["originalInfo"]
-            elif currentTab == 1:
-                #CustomInfo
-                filename = self.filenameText.get().rpartition("/")[2]+"-custom.json"
-                info = self.fileInfo["customInfo"]
-            elif currentTab == 2:
-                #Translation
-                filename = self.filenameText.get().rpartition("/")[2]+".json"
-                info = translate_info(self.fileInfo["customInfo"], self.filenameText.get().rpartition(".")[2])
-            else:
-                print("unknown tab")
-                return
-            options = {
-                "initialdir" : "output/",
-                "defaultextension" : ".json",
-                "filetypes" : [("JSON", ".json")],
-                "initialfile" : filename
-            }
-            newFilename = asksaveasfilename(**options)
-            with open(newFilename,"w") as f:
-                f.write(simplejson.dumps(info, sort_keys=True, indent=4 * ' '))
+            self.transTab.setInfo(translated, "translated", filename)
 class InfoTab(Tkinter.Frame):
     def __init__(self, master=None):
         Tkinter.Frame.__init__(self, master)
