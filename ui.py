@@ -100,13 +100,13 @@ class MainTab(Tkinter.Frame):
                     if file_extention == "w3u":
                         self.tabHandle.tab(2, state="normal")
                         print("SETTING INFO")
-                        self.unitTab.setInfo(translate_info(fileInfo["customInfo"], file_extention), file_extention, self.filenameText.get())
+                        self.unitTab.setInfo(translate_info(fileInfo, file_extention), file_extention, self.filenameText.get())
                     if file_extention == "w3t":
                         self.tabHandle.tab(3, state="normal")
-                        self.itemTab.setInfo(translate_info(fileInfo["customInfo"], file_extention), file_extention, self.filenameText.get())
+                        self.itemTab.setInfo(translate_info(fileInfo, file_extention), file_extention, self.filenameText.get())
                     if file_extention == "w3a":
                         self.tabHandle.tab(4, state="normal")
-                        self.abilTab.setInfo(translate_info(fileInfo["customInfo"], file_extention), file_extention, self.filenameText.get())
+                        self.abilTab.setInfo(translate_info(fileInfo, file_extention), file_extention, self.filenameText.get())
             except:
                 print(traceback.format_exc())
             self.filelist.insert(Tkinter.END, file)
@@ -166,8 +166,8 @@ class TerrainTab(Tkinter.Frame):
         self.tabHandle.pack(fill=Tkinter.BOTH, expand=1)
         #end tabs
         self.pack(fill=Tkinter.BOTH, expand=1)
-        
-        self.WC3_Topdown_ImageGen = TopDownViewer()
+        if useTopDown:
+            self.WC3_Topdown_ImageGen = TopDownViewer()
         
         self.debugSettings = {"validTile" : False, "invalidTile" : False, "height" : False,
                               "ramp" : False, "water" : False, "blight" : False}
@@ -466,7 +466,7 @@ class DataTab(Tkinter.Frame):
             self.originalTab.setInfo(fileInfo["originalInfo"], "original", filename)
             self.customTab.setInfo(fileInfo["customInfo"], "custom", filename)
             
-            translated = translate_info(fileInfo["customInfo"], file_extension)
+            translated = translate_info(fileInfo, file_extension)
             self.transTab.setInfo(translated, "translated", filename)
 class InfoTab(Tkinter.Frame):
     def __init__(self, master=None):

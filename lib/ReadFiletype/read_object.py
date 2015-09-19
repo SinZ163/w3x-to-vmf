@@ -171,7 +171,7 @@ def __dataTranslation__(infodata):
     # THIS IS FAR TOO MESSY FOR MY TASTE!!! - Yoshi2 2014
     unknownCount = 0
     
-    for i, objectDict in enumerate(infodata):
+    for i, objectDict in enumerate(infodata["originalInfo"]):
         tmpInfo = {}
         
         for mod in objectDict["mods"]:
@@ -181,14 +181,33 @@ def __dataTranslation__(infodata):
                 modValue = mod["value"]
                 
                 tmpInfo[translated_modID] = modValue
-        if "Name" in tmpInfo:
-            dataTranslatedInfo[tmpInfo["Name"]] = tmpInfo
+        dataTranslatedInfo[objectDict["oldID"].upper()] = tmpInfo
+        
+    for i, objectDict in enumerate(infodata["customInfo"]):
+        if objectDict["oldID"] in dataTranslatedInfo:
+            tmpInfo = dataTranslatedInfo[objectDict["oldID"]]
         else:
-            unknownName = "UnknownName_{0}".format(unknownCount)
-            dataTranslatedInfo[unknownName] = tmpInfo
-            
+            tmpInfo = {}
+        
+        for mod in objectDict["mods"]:
+            modID = mod["ID"]
+            if modID.upper() in infoTable:
+                translated_modID = infoTable[modID.upper()] 
+                modValue = mod["value"]
+                
+                tmpInfo[translated_modID] = modValue
+        dataTranslatedInfo[objectDict["newID"].upper()] = tmpInfo
+    
+    namedInfo = {}
+    for i, objectDict in dataTranslatedInfo.iteritems():
+        #print(i)
+        #print(objectDict)
+        if "Name" in objectDict:
+            namedInfo[objectDict["Name"]] = objectDict
+        else:
+            namedInfo["UnknownName_{0}".format(unknownCount)] = objectDict
             unknownCount += 1
-            
-    return dataTranslatedInfo
+        
+    return namedInfo
     
     
