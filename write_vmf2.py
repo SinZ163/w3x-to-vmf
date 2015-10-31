@@ -19,6 +19,12 @@ def write(f, indent, string):
 wc3fileName = "input/TreeTag,TFI_5.13 (1).w3x-war3map.w3e" #TODO: Replace with better system
 doodadFileName = "input/TreeTag,TFI_5.13 (1).w3x-war3map.doo"
 dotafileName = "output/war3map_treetag_t.vmf" # ^
+if len(sys.argv)>0:
+    wc3fileName = sys.argv[0]
+if len(sys.argv)>1:
+    doodadFileName = sys.argv[1]
+if len(sys.argv)>2:
+    dotafileName = sys.argv[2]
 print("Starting up...")
 
 with open(wc3fileName, "rb") as f:
